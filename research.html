@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 14x Problem — Thinking Labs by Temple Academy</title>
+<meta name="description" content="New research: students are 14x more likely to get the wrong answer when AI answers first. And their confidence goes up. Here's what that means for your child.">
+<meta property="og:title" content="The 14x Problem — Thinking Labs by Temple Academy">
+<meta property="og:description" content="Students had 14x lower odds of answering correctly when AI gave a wrong answer first. Confidence went up. Accuracy collapsed.">
+<meta property="og:url" content="https://thinkinglabs.academy/research">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink: #0f0e0c; --paper: #f5f0e8; --amber: #c8860a; --amber-light: #f2c96e; --red: #b83232; --green: #2a6e3f; --rule: #d4c9b0; }
+  body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+
+  .nav { position: sticky; top: 0; z-index: 100; background: var(--ink); padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper); text-decoration: none; }
+  .nav-cta { background: var(--amber); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; text-decoration: none; }
+
+  .page { max-width: 680px; margin: 0 auto; padding: 60px 32px 80px; position: relative; z-index: 1; }
+
+  .masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 48px; flex-wrap: wrap; gap: 8px; }
+  .brand { font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .brand-sub { font-size: 10px; letter-spacing: 0.12em; color: #888; font-weight: 300; }
+
+  .stat-block { margin: 0 0 40px; display: flex; align-items: flex-start; }
+  .stat-number { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(110px, 26vw, 190px); line-height: 0.85; color: var(--ink); letter-spacing: -0.04em; flex-shrink: 0; }
+  .stat-x { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(44px, 9vw, 68px); color: var(--amber); line-height: 1; margin-top: 16px; }
+  .stat-label { padding: 8px 0 0 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 14px; }
+  .stat-label-main { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px, 3.5vw, 24px); line-height: 1.25; max-width: 220px; }
+  .stat-source { margin-top: 10px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; }
+
+  .rule { border: none; border-top: 1px solid var(--rule); margin: 40px 0; }
+  .section-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; color: var(--amber); margin-bottom: 14px; }
+
+  h1 { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(26px, 5.5vw, 40px); line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em; }
+  .lead { font-size: clamp(15px, 2.5vw, 17px); line-height: 1.75; color: #2a2a2a; margin-bottom: 24px; font-weight: 300; }
+  .lead strong { font-weight: 500; color: var(--ink); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); margin: 36px 0; border: 1px solid var(--rule); }
+  .stat-cell { background: var(--paper); padding: 20px 12px; text-align: center; }
+  .stat-cell-number { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(24px, 5vw, 36px); line-height: 1; color: var(--ink); }
+  .stat-cell-number.highlight { color: var(--red); }
+  .stat-cell-label { margin-top: 6px; font-size: 11px; line-height: 1.4; color: #666; font-weight: 300; }
+
+  .pullquote { border-left: 4px solid var(--amber); padding: 16px 24px; margin: 36px 0; background: rgba(200,134,10,0.06); }
+  .pullquote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(15px, 2.8vw, 19px); line-height: 1.5; }
+  .pullquote cite { display: block; margin-top: 10px; font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; }
+
+  .endorsement { border: 1px solid var(--rule); padding: 24px; margin: 36px 0; background: #fff; }
+  .endorsement-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; margin-bottom: 12px; }
+  .endorsement-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(15px, 2.5vw, 18px); line-height: 1.55; color: var(--ink); }
+  .endorsement-attr { margin-top: 14px; font-size: 11px; color: #888; letter-spacing: 0.06em; }
+  .endorsement-attr a { color: var(--amber); text-decoration: none; font-weight: 500; }
+
+  .fix-block { background: var(--ink); color: var(--paper); padding: 36px 32px; margin: 40px 0; }
+  .fix-block .section-label { color: var(--amber-light); margin-bottom: 16px; }
+  .fix-block h2 { font-family: 'Playfair Display', serif; font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; }
+  .fix-block p { font-size: 14px; line-height: 1.8; color: #ccc; font-weight: 300; }
+  .fix-block strong { color: var(--paper); font-weight: 500; }
+
+  .program-row { display: flex; gap: 24px; margin: 36px 0; flex-wrap: wrap; }
+  .program-item { flex: 1; min-width: 110px; }
+  .program-item-number { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 30px; color: var(--amber); line-height: 1; }
+  .program-item-label { margin-top: 4px; font-size: 12px; color: #666; font-weight: 300; line-height: 1.4; }
+
+  .cta-block { margin: 40px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cta-card { border: 1.5px solid; padding: 24px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .cta-card.parent-card { border-color: var(--amber); background: rgba(200,134,10,0.04); }
+  .cta-card.student-card { border-color: var(--green); background: rgba(42,110,63,0.04); }
+  .cta-who { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
+  .parent-card .cta-who { color: var(--amber); }
+  .student-card .cta-who { color: var(--green); }
+  .cta-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; line-height: 1.2; color: var(--ink); }
+  .cta-desc { font-size: 12px; line-height: 1.6; color: #555; font-weight: 300; flex: 1; }
+  .cta-link { display: block; padding: 12px 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; text-align: center; margin-top: 4px; }
+  .parent-card .cta-link { background: var(--amber); color: #fff; }
+  .student-card .cta-link { background: var(--green); color: #fff; }
+  .cta-url { font-size: 10px; color: #aaa; letter-spacing: 0.06em; word-break: break-all; text-align: center; }
+
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+  .footer-tagline { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: #666; max-width: 300px; line-height: 1.5; }
+  .footer-links { text-align: right; font-size: 11px; line-height: 2; }
+  .footer-links a { color: var(--amber); text-decoration: none; display: block; }
+  .closing { margin-top: 40px; font-size: 12px; color: #aaa; letter-spacing: 0.06em; text-align: center; font-style: italic; }
+
+  @media (max-width: 500px) {
+    .page { padding: 40px 20px 60px; }
+    .cta-block { grid-template-columns: 1fr; }
+    .nav { padding: 12px 20px; }
+    .fix-block { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="https://thinkinglabs.academy">Thinking Labs by Temple Academy</a>
+  <a class="nav-cta" href="https://cognitive-gap-assessment.vercel.app/register">Free Assessment →</a>
+</nav>
+
+<div class="page">
+
+  <div class="masthead">
+    <div>
+      <div class="brand">The 14× Problem</div>
+      <div class="brand-sub">Research Brief · April 2026</div>
+    </div>
+    <div class="brand-sub">thinkinglabs.academy/research</div>
+  </div>
+
+  <div class="stat-block">
+    <div class="stat-number">14</div>
+    <div class="stat-x">×</div>
+    <div class="stat-label">
+      <div class="stat-label-main">more likely to get the wrong answer when AI answers first</div>
+      <div class="stat-source">Shaw & Nave, 2026 · SSRN</div>
+    </div>
+  </div>
+
+  <div class="section-label">What the research says</div>
+  <h1>Your child doesn't use AI.<br>They yield to it.</h1>
+
+  <p class="lead">A peer-reviewed study published in January 2026 tested what happens when students get an answer from AI before working through a problem themselves. The results were not subtle.</p>
+  <p class="lead">When the AI gave a wrong answer, students had <strong>fourteen times lower odds</strong> of getting it right compared to working alone. Worse: their <strong>confidence went up</strong> at the same moment their accuracy collapsed.</p>
+
+  <div class="stats-row">
+    <div class="stat-cell">
+      <div class="stat-cell-number">45.8%</div>
+      <div class="stat-cell-label">Correct working alone — no AI</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-number">71%</div>
+      <div class="stat-cell-label">Correct when AI was right</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-number highlight">31.5%</div>
+      <div class="stat-cell-label">Correct when AI was wrong</div>
+    </div>
+  </div>
+
+  <p class="lead">This isn't carelessness. Researchers call it <strong>"cognitive surrender"</strong> — the moment a student stops building the answer and starts adopting the machine's judgment as their own.</p>
+
+  <div class="pullquote">
+    <p>"The machine did not merely move answers. It raised confidence even when it was wrong. That miscalibrated metacognition may be the most dangerous part of the whole arrangement."</p>
+    <cite>— Dr. Colin Lewis, The One Percent Rule, April 2026</cite>
+  </div>
+
+  <hr class="rule">
+
+  <div class="endorsement">
+    <div class="endorsement-label">Peer response · April 14, 2026</div>
+    <div class="endorsement-quote">"I really like the idea of a tool-free first week Syd. We've spent a decade trying to make everything frictionless, only to find that friction is where the actual learning is stored. It moves the conversation from cheating to judgment."</div>
+    <div class="endorsement-attr">— Dr. Colin Lewis, <a href="https://onepercentrule.substack.com" target="_blank">The One Percent Rule</a> · 30,000+ subscribers</div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">The good news</div>
+  <p class="lead">The same study identified <strong>"the Independents"</strong> — students who worked through problems before turning to AI. Under pressure, they kept their edge. That posture is trainable. <strong>Ownership before extension. Attempt before delegation.</strong> That's what Thinking Labs builds.</p>
+
+  <div class="fix-block">
+    <div class="section-label">The program</div>
+    <h2>Six weeks to build the student who doesn't surrender.</h2>
+    <p>Thinking Labs is a 6-week cohort for students ages 12 and up. <strong>Week 1 is completely tool-free by design.</strong> Students build five cognitive dimensions — independent reasoning, information evaluation, persistence, communication and defense, and AI relationship. The goal is not to block AI. It's to build the student who can <strong>wield it</strong> instead of yield to it.</p>
+  </div>
+
+  <div class="program-row">
+    <div class="program-item">
+      <div class="program-item-number">6</div>
+      <div class="program-item-label">weeks, live cohort</div>
+    </div>
+    <div class="program-item">
+      <div class="program-item-number">5</div>
+      <div class="program-item-label">cognitive dimensions assessed</div>
+    </div>
+    <div class="program-item">
+      <div class="program-item-number">12</div>
+      <div class="program-item-label">students max per cohort</div>
+    </div>
+    <div class="program-item">
+      <div class="program-item-number">20+</div>
+      <div class="program-item-label">years in the classroom</div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Start here — it's free</div>
+  <p class="lead">Two versions. Parents see the big picture. Students go deep on their own thinking. Both 15 minutes. Both free.</p>
+
+  <div class="cta-block">
+    <div class="cta-card parent-card">
+      <div class="cta-who">For Parents</div>
+      <div class="cta-title">Cognitive Gap Assessment</div>
+      <div class="cta-desc">Answer questions about your child's thinking habits across 5 dimensions. Get a full score and interpretation report.</div>
+      <a class="cta-link" href="https://cognitive-gap-assessment.vercel.app/register">Take the Assessment →</a>
+      <div class="cta-url">cognitive-gap-assessment.vercel.app/register</div>
+    </div>
+    <div class="cta-card student-card">
+      <div class="cta-who">For Students</div>
+      <div class="cta-title">Student Self-Assessment</div>
+      <div class="cta-desc">Students answer for themselves. Same 5 dimensions. Builds self-awareness and gives a baseline before the program begins.</div>
+      <a class="cta-link" href="https://cognitive-gap-assessment.vercel.app/student/register">Take the Assessment →</a>
+      <div class="cta-url">cognitive-gap-assessment.vercel.app/student/register</div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="footer">
+    <div class="footer-tagline">"Your child can get any answer in seconds. I teach them what to do when the answer isn't enough."<br><br>— Syd Malaxos, Founder</div>
+    <div class="footer-links">
+      <a href="https://smalaxos.substack.com">smalaxos.substack.com</a>
+      <a href="mailto:smalax0172@gmail.com">smalax0172@gmail.com</a>
+      <a href="https://thinkinglabs.academy">thinkinglabs.academy</a>
+    </div>
+  </div>
+
+  <div class="closing">Love is law. Let your lantern burn bright.</div>
+
+</div>
+</body>
+</html>

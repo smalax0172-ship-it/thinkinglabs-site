@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinking Labs by Temple Academy — Ownership Before Extension</title>
+<meta name="description" content="Your child can get any answer in seconds. Thinking Labs teaches them what to do when the answer isn't enough. A 6-week cognitive development program by Syd Malaxos.">
+<meta property="og:title" content="Thinking Labs by Temple Academy">
+<meta property="og:description" content="Your child can get any answer in seconds. We teach them what to do when the answer isn't enough.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thinkinglabs.academy">
+<meta property="og:image" content="https://thinkinglabs.academy/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Thinking Labs by Temple Academy">
+<meta name="twitter:description" content="Your child can get any answer in seconds. We teach them what to do when the answer isn't enough.">
+<meta name="twitter:image" content="https://thinkinglabs.academy/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --charcoal: #1a1a1a; --warm-black: #0d0b09; --cream: #f5f0e8; --warm-cream: #ebe4d6;
+  --gold: #c9a84c; --gold-dim: #a68a3e; --gold-glow: rgba(201, 168, 76, 0.15);
+  --teal: #3d8c7e; --teal-light: #4fa898; --rust: #9b4a3c;
+  --text-dark: #2a2420; --text-mid: #5a524a; --text-light: #8a8278;
+  --border: #d4cbbf; --section-alt: #faf7f2; --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Source Sans 3', -apple-system, sans-serif; color: var(--text-dark); background: var(--cream); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; }
+a { color: var(--teal); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--teal-light); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(245, 240, 232, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(212, 203, 191, 0.6); transition: box-shadow 0.3s; }
+nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--charcoal); letter-spacing: 0.02em; }
+.nav-brand span { font-weight: 400; color: var(--text-mid); font-size: 0.72rem; display: block; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 1px; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--text-mid); letter-spacing: 0.02em; position: relative; }
+.nav-links a:not(.nav-cta):hover { color: var(--charcoal); }
+.nav-links a:not(.nav-cta)::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: var(--gold); transition: width 0.3s; }
+.nav-links a:not(.nav-cta):hover::after { width: 100%; }
+.nav-cta { background: var(--charcoal); color: var(--cream) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.25s; }
+.nav-cta:hover { background: #2a2a2a; color: var(--cream) !important; transform: translateY(-1px); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--charcoal); margin: 5px 0; border-radius: 1px; transition: 0.3s; }
+.mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.mobile-toggle.open span:nth-child(2) { opacity: 0; }
+.mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--warm-black); position: relative; overflow: hidden; padding: 120px 24px 80px; }
+.hero::before { content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 900px; height: 900px; background: radial-gradient(ellipse, rgba(201, 168, 76, 0.1) 0%, rgba(201, 168, 76, 0.03) 40%, transparent 70%); pointer-events: none; animation: pulse-glow 8s ease-in-out infinite; }
+@keyframes pulse-glow { 0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } }
+.hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 200px; background: linear-gradient(to top, var(--warm-black), transparent); pointer-events: none; }
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; }
+.hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 7px 20px; border-radius: 2px; margin-bottom: 44px; animation: fadeDown 0.8s ease both; }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+.hero h1 { font-size: clamp(2.4rem, 5.2vw, 3.8rem); color: var(--cream); font-weight: 500; margin-bottom: 28px; line-height: 1.12; animation: fadeUp 0.9s ease 0.15s both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
+.hero-sub { font-size: 1.15rem; color: rgba(245, 240, 232, 0.6); line-height: 1.75; max-width: 600px; margin: 0 auto 48px; font-weight: 300; animation: fadeUp 0.9s ease 0.3s both; }
+.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.9s ease 0.45s both; }
+.btn-primary { display: inline-block; background: var(--gold); color: var(--warm-black); padding: 15px 38px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25); }
+.btn-primary:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201, 168, 76, 0.35); }
+.btn-secondary { display: inline-block; border: 1px solid rgba(245, 240, 232, 0.2); color: var(--cream); padding: 15px 38px; font-weight: 500; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; }
+.btn-secondary:hover { border-color: rgba(245, 240, 232, 0.5); color: #fff; transform: translateY(-2px); }
+.hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; animation: fadeUp 1s ease 0.7s both; }
+.hero-scroll span { display: block; width: 20px; height: 32px; border: 1.5px solid rgba(245,240,232,0.25); border-radius: 10px; margin: 0 auto; position: relative; }
+.hero-scroll span::after { content: ''; display: block; width: 3px; height: 6px; background: rgba(245,240,232,0.4); border-radius: 2px; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: scroll-dot 2s ease infinite; }
+@keyframes scroll-dot { 0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); } 50% { opacity: 0.3; transform: translateX(-50%) translateY(10px); } }
+.featured-in { padding: 48px 0; background: var(--cream); border-bottom: 1px solid var(--border); }
+.featured-inner { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.featured-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+.featured-logos { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+.featured-item { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; color: var(--text-mid); letter-spacing: 0.02em; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+.featured-item:hover { color: var(--charcoal); }
+.featured-item .fi-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.problem { padding: 100px 0; background: var(--cream); }
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.problem-text h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 24px; color: var(--charcoal); }
+.problem-text p { margin-bottom: 18px; color: var(--text-mid); font-size: 1.05rem; line-height: 1.7; }
+.problem-text p em { color: var(--text-dark); font-style: italic; }
+.problem-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.stat-card { background: white; padding: 30px 24px; border-radius: 8px; border: 1px solid var(--border); transition: transform 0.3s, box-shadow 0.3s; }
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.06); }
+.stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 700; color: var(--teal); line-height: 1; }
+.stat-label { font-size: 0.88rem; color: var(--text-mid); margin-top: 8px; line-height: 1.45; }
+.stat-source { font-size: 0.7rem; color: var(--text-light); margin-top: 8px; font-style: italic; }
+.framework { padding: 100px 0; background: var(--section-alt); }
+.section-header { text-align: center; max-width: 680px; margin: 0 auto 60px; }
+.section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 16px; }
+.section-header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 18px; color: var(--charcoal); }
+.section-header p { color: var(--text-mid); font-size: 1.05rem; line-height: 1.65; }
+.dimensions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.dim-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px 20px; text-align: center; transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+.dim-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); transform: scaleX(0); transition: transform 0.3s; }
+.dim-card:hover::before { transform: scaleX(1); }
+.dim-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.07); border-color: var(--teal); }
+.dim-number { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; color: var(--teal); margin-bottom: 12px; }
+.dim-card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--charcoal); font-weight: 600; }
+.dim-card p { font-size: 0.84rem; color: var(--text-mid); line-height: 1.5; }
+.principle { padding: 120px 0; background: var(--warm-black); color: var(--cream); text-align: center; position: relative; overflow: hidden; }
+.principle::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 65%); }
+.principle-content { position: relative; max-width: 700px; margin: 0 auto; }
+.principle h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 500; margin-bottom: 28px; line-height: 1.25; }
+.principle h2 em { color: var(--gold); font-style: italic; }
+.principle p { font-size: 1.1rem; color: rgba(245,240,232,0.55); line-height: 1.8; margin-bottom: 16px; }
+.principle-divider { width: 60px; height: 1px; background: var(--gold); margin: 40px auto 0; opacity: 0.4; }
+.products { padding: 100px 0; background: var(--cream); }
+.product-ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.product-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 36px 30px; transition: transform 0.3s, box-shadow 0.3s; position: relative; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.06); }
+.product-card.featured { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal), 0 4px 20px rgba(61, 140, 126, 0.1); }
+.product-card.featured::before { content: 'START HERE'; position: absolute; top: -11px; left: 30px; background: var(--teal); color: white; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; padding: 4px 14px; border-radius: 2px; }
+.product-tag { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); margin-bottom: 10px; }
+.product-price { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; }
+.product-price .free-label { color: var(--teal); }
+.product-card h3 { font-size: 1.15rem; margin-bottom: 12px; color: var(--charcoal); }
+.product-card p { font-size: 0.9rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; flex: 1; }
+.product-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.88rem; color: var(--teal); transition: gap 0.2s; }
+.product-link:hover { gap: 10px; }
+.product-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.product-link:hover svg { transform: translateX(2px); }
+.cohort-cta { padding: 100px 0; background: var(--warm-black); color: var(--cream); text-align: center; position: relative; overflow: hidden; }
+.cohort-cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+.cohort-cta::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+.cohort-content { max-width: 680px; margin: 0 auto; position: relative; }
+.cohort-content .section-label { color: var(--gold); }
+.cohort-content h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 20px; }
+.cohort-content > p { font-size: 1.05rem; color: rgba(245,240,232,0.55); margin-bottom: 12px; }
+.cohort-details { display: flex; gap: 44px; justify-content: center; margin: 40px 0; flex-wrap: wrap; }
+.cohort-detail { text-align: center; }
+.cohort-detail strong { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); font-weight: 600; }
+.cohort-detail span { font-size: 0.78rem; color: rgba(245,240,232,0.4); letter-spacing: 0.06em; text-transform: uppercase; }
+.cohort-cta .btn-primary { margin-top: 8px; }
+.about { padding: 100px 0; background: var(--section-alt); }
+.about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+.about-bio h2 { font-size: 1.8rem; margin-bottom: 20px; }
+.about-bio p { color: var(--text-mid); font-size: 1rem; margin-bottom: 14px; line-height: 1.7; }
+.about-bio p em { color: var(--text-dark); }
+.about-links { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.about-link-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; font-weight: 500; color: var(--text-mid); transition: all 0.25s; background: white; }
+.about-link-pill:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+.about-link-pill svg { width: 14px; height: 14px; }
+.cred-items { display: flex; flex-direction: column; gap: 18px; }
+.cred-item { display: flex; gap: 18px; align-items: flex-start; background: white; padding: 24px; border-radius: 8px; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+.cred-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+.cred-icon { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: var(--charcoal); display: flex; align-items: center; justify-content: center; color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; }
+.cred-item h4 { font-size: 1rem; margin-bottom: 4px; color: var(--charcoal); }
+.cred-item p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; }
+.resources { padding: 80px 0; background: var(--cream); }
+.resource-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.resource-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 40px 36px; transition: transform 0.2s, box-shadow 0.2s; }
+.resource-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.resource-card h3 { font-size: 1.35rem; margin-bottom: 12px; }
+.resource-card p { color: var(--text-mid); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; }
+.subscribe { padding: 80px 0; background: var(--warm-black); }
+.subscribe-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 900px; margin: 0 auto; }
+.subscribe-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--cream); font-weight: 500; margin-bottom: 14px; }
+.subscribe-text p { font-size: 0.95rem; color: rgba(245,240,232,0.5); line-height: 1.65; }
+.subscribe-form { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.subscribe-btn { display: inline-block; background: var(--gold); color: var(--warm-black); padding: 16px 40px; font-weight: 600; font-size: 1rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25); }
+.subscribe-btn:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201, 168, 76, 0.35); }
+.subscribe-note { font-size: 0.82rem; color: rgba(245,240,232,0.35); }
+footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,232,0.5); font-size: 0.85rem; }
+.footer-top { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 48px; padding-bottom: 40px; border-bottom: 1px solid rgba(245,240,232,0.08); }
+.footer-brand h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); font-weight: 600; margin-bottom: 8px; }
+.footer-brand p { font-size: 0.85rem; max-width: 320px; line-height: 1.65; margin-bottom: 20px; }
+.footer-social { display: flex; gap: 12px; }
+.footer-social a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(245,240,232,0.15); display: flex; align-items: center; justify-content: center; color: rgba(245,240,232,0.5); transition: all 0.25s; }
+.footer-social a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.footer-social a svg { width: 16px; height: 16px; }
+.footer-col h5 { font-family: 'Source Sans 3', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245,240,232,0.35); margin-bottom: 18px; }
+.footer-col a { display: block; color: rgba(245,240,232,0.55); font-size: 0.88rem; margin-bottom: 10px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom { margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-lantern { font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(201,168,76,0.4); font-size: 0.92rem; }
+.fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-delay-1 { transition-delay: 0.1s; }
+@media (max-width: 1024px) { .dimensions { grid-template-columns: repeat(3, 1fr); } .product-ladder { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .problem-grid { grid-template-columns: 1fr; gap: 48px; } .about-grid { grid-template-columns: 1fr; gap: 40px; } .resource-row { grid-template-columns: 1fr; } .footer-top { grid-template-columns: 1fr; gap: 32px; } .nav-links { display: none; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); } .mobile-toggle { display: block; } }
+@media (max-width: 700px) { .dimensions { grid-template-columns: repeat(2, 1fr); } .product-ladder { grid-template-columns: 1fr; } .problem-stats { grid-template-columns: 1fr; } .cohort-details { flex-direction: column; gap: 20px; } .hero-actions { flex-direction: column; align-items: center; } .featured-inner { flex-direction: column; gap: 20px; } .about-links { flex-direction: column; } .subscribe-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; } .subscribe-form { align-items: center; } }
+@media (max-width: 480px) { .dimensions { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav id="nav"><div class="nav-inner">
+<a href="#" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="#problem">The Problem</a><a href="#framework">Five Dimensions</a><a href="#products">Programs</a><a href="#about">About</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
+
+<section class="hero"><div class="hero-content">
+<div class="hero-badge">Cognitive Development &bull; Ages 12 and up</div>
+<h1>Your child can get any answer<br>in seconds. <em>Now what?</em></h1>
+<p class="hero-sub">Thinking Labs teaches students what to do when the answer isn't enough. Before AI extends their thinking, they need to own it.</p>
+<div class="hero-actions">
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="btn-primary" target="_blank">Take the Free Assessment</a>
+<a href="https://a.co/d/0adownwx" class="btn-secondary" target="_blank">Read the Book</a>
+</div></div><div class="hero-scroll"><span></span></div></section>
+
+<section class="featured-in"><div class="container"><div class="featured-inner">
+<div class="featured-label">Featured In</div>
+<div class="featured-logos">
+<a href="https://stemmagazine.com" class="featured-item" target="_blank"><span class="fi-dot"></span> STEM Magazine</a>
+<a href="https://a.co/d/0adownwx" class="featured-item" target="_blank"><span class="fi-dot"></span> Amazon Books</a>
+<a href="https://smalaxos.substack.com" class="featured-item" target="_blank"><span class="fi-dot"></span> Substack</a>
+</div></div></div></section>
+
+<section class="problem" id="problem"><div class="container"><div class="problem-grid">
+<div class="problem-text fade-in">
+<h2>AI didn't create this problem. It exposed it.</h2>
+<p>Students have always had gaps in how they reason, evaluate information, and defend what they know. AI just made those gaps impossible to ignore.</p>
+<p>When a student can generate a polished essay in twelve seconds, the question stops being <em>what do they know?</em> and becomes <em>what can they do without the tool?</em></p>
+<p>Most schools are racing to integrate AI. Almost none are asking whether students can think without it first.</p>
+</div>
+<div class="problem-stats fade-in fade-in-delay-1">
+<div class="stat-card"><div class="stat-number">63%</div><div class="stat-label">of students believe AI harms their critical thinking</div><div class="stat-source">RAND Corporation, 2024</div></div>
+<div class="stat-card"><div class="stat-number">86%</div><div class="stat-label">of teachers say students can't explain their own answers</div><div class="stat-source">National survey data</div></div>
+<div class="stat-card"><div class="stat-number">0</div><div class="stat-label">schools teaching cognitive ownership before AI access</div><div class="stat-source">The integration gap</div></div>
+<div class="stat-card"><div class="stat-number">6 wks</div><div class="stat-label">to build measurable independence across all five dimensions</div><div class="stat-source">Thinking Labs program</div></div>
+</div></div></div></section>
+
+<section class="framework" id="framework"><div class="container">
+<div class="section-header fade-in"><div class="section-label">The Five Dimensions of Cognitive Ownership</div><h2>We measure what schools don't</h2><p>Every student has a unique cognitive profile. Our assessment maps five dimensions &mdash; not what they know, but how they think.</p></div>
+<div class="dimensions fade-in fade-in-delay-1">
+<div class="dim-card"><div class="dim-number">01</div><h3>Independent Reasoning</h3><p>Does your child try before outsourcing? Can they start a problem without being told how?</p></div>
+<div class="dim-card"><div class="dim-number">02</div><h3>Information Evaluation</h3><p>Can your child walk through their reasoning and distinguish signal from noise?</p></div>
+<div class="dim-card"><div class="dim-number">03</div><h3>Cognitive Persistence</h3><p>Does your child catch mistakes and push through difficulty &mdash; or bail at the first sign of friction?</p></div>
+<div class="dim-card"><div class="dim-number">04</div><h3>Communication &amp; Defense</h3><p>Can your child explain and defend their thinking under direct questioning?</p></div>
+<div class="dim-card"><div class="dim-number">05</div><h3>AI &amp; Tool Relationship</h3><p>Does your child use AI to extend their thinking &mdash; or to replace it entirely?</p></div>
+</div></div></section>
+
+<section class="principle"><div class="container"><div class="principle-content fade-in">
+<div class="section-label" style="color: var(--gold);">The Core Principle</div>
+<h2><em>Ownership before extension.</em></h2>
+<p>AI is the most powerful learning tool ever created. But a student who can't think independently doesn't get extended by AI &mdash; they get replaced by it.</p>
+<p>We build the foundation first. Then &mdash; and only then &mdash; the tools become powerful.</p>
+<div class="principle-divider"></div>
+</div></div></section>
+
+<section class="products" id="products"><div class="container">
+<div class="section-header fade-in"><div class="section-label">Programs &amp; Resources</div><h2>Start where you are</h2><p>The assessment shows you where your child stands. The book gives you the framework. The programs build from there.</p></div>
+<div class="product-ladder fade-in fade-in-delay-1">
+
+<div class="product-card featured">
+<div class="product-tag">Start here &mdash; it's free</div>
+<div class="product-price"><span class="free-label">FREE</span></div>
+<h3>Cognitive Ownership Assessment</h3>
+<p>50 questions across five dimensions. 5 minutes. Find out exactly where your child owns their thinking and where they've outsourced it. Personalized results instantly.</p>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="product-link" target="_blank">Take the free assessment <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-tag">Understand the framework</div>
+<div class="product-price">$9.99</div>
+<h3>The Book</h3>
+<p><em>Cognitive Sovereignty Under Compression</em> &mdash; the research, the framework, and why this matters now. Kindle $9.99, paperback $17.99. As featured in STEM Magazine.</p>
+<a href="https://a.co/d/0adownwx" class="product-link" target="_blank">Get the book <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-tag">Build the skills</div>
+<div class="product-price">$65 each</div>
+<h3>Mini Course Workbooks</h3>
+<p>Five dimension-specific workbooks. 5 weeks each. 12 exercises with parent coaching notes. Start with your child's weakest dimension from the assessment.</p>
+<a href="https://smalax5.gumroad.com" class="product-link" target="_blank">Browse workbooks <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-tag">Best value</div>
+<div class="product-price">$249</div>
+<h3>Complete Bundle</h3>
+<p>All five workbooks plus the Welcome Guide. Every dimension covered. The full at-home cognitive development curriculum at a significant savings.</p>
+<a href="https://smalax5.gumroad.com/l/sgkbnx" class="product-link" target="_blank">Get the bundle <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-tag">Live program</div>
+<div class="product-price">$1,150</div>
+<h3>Thinking Labs Cohort</h3>
+<p>The live 6-week program. Small groups. Real-time challenges. Ends with a capstone oral defense &mdash; no AI, no notes, no slides.</p>
+<a href="https://smalax5.gumroad.com/l/tjvtn" class="product-link" target="_blank">Inquire about enrollment <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-tag">For schools</div>
+<div class="product-price">$5K&ndash;$15K</div>
+<h3>School &amp; District Programs</h3>
+<p>Bring Thinking Labs to your school. Title I eligible. Curriculum, assessment infrastructure, and instructor training included.</p>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Partnership+Inquiry" class="product-link" target="_blank">Contact for schools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+</div></div></section>
+
+<section class="cohort-cta" id="cohort"><div class="container"><div class="cohort-content fade-in">
+<div class="section-label">Now Enrolling</div>
+<h2>Cohort 1 &mdash; Limited Seats</h2>
+<p>Six weeks. Small group. One capstone oral defense where your child proves they own their thinking.</p>
+<div class="cohort-details">
+<div class="cohort-detail"><strong>May 4 &ndash; June 8</strong><span>2026</span></div>
+<div class="cohort-detail"><strong>6 Weeks</strong><span>60 min / session</span></div>
+<div class="cohort-detail"><strong>Ages 12 and up</strong><span>Small groups</span></div>
+<div class="cohort-detail"><strong>$1,150</strong><span>Per student</span></div>
+</div>
+<a href="https://smalax5.gumroad.com/l/tjvtn" class="btn-primary" target="_blank">Reserve a Seat</a>
+</div></div></section>
+
+<section class="about" id="about"><div class="container"><div class="about-grid fade-in">
+<div class="about-bio">
+<div class="section-label">About the Founder</div>
+<h2>Syd Malaxos</h2>
+<p>Chemistry and physics teacher. Over twenty years in the classroom. Master's in chemical physics from Brandeis. Research background at Harvard.</p>
+<p>Published in the <em>Journal of Physical Chemistry A</em>. Featured in <em>STEM Magazine</em>. Built the assessment, wrote the book, designed every workbook.</p>
+<p>This isn't theory from a conference stage. It's methodology from a teacher who watches students think &mdash; and stop thinking &mdash; every single day.</p>
+<div class="about-links">
+<a href="https://smalaxos.substack.com" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg> Substack</a>
+<a href="https://www.linkedin.com/in/syd-m-04464b3/" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn</a>
+<a href="https://a.co/d/0adownwx" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7l1.5 9L12 22l7.5-6L21 7l-9-5zm0 2.18L18.12 7.5 12 11.82 5.88 7.5 12 4.18z"/></svg> Book</a>
+<a href="https://smalax5.gumroad.com" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 12h8M8 17h4"/></svg> Store</a>
+</div></div>
+<div class="cred-items">
+<div class="cred-item"><div class="cred-icon">P</div><div><h4>Peer-Reviewed Research</h4><p>Published in J. Phys. Chem. A (Tuttle, Malaxos, Coe, 2002) &mdash; cited 71 times. Built on rigorous scientific methodology.</p></div></div>
+<div class="cred-item"><div class="cred-icon">S</div><div><h4>STEM Magazine</h4><p>"The Integration Gap" &mdash; reaching 520,000+ readers. The case for ownership before extension, at national scale.</p></div></div>
+<div class="cred-item"><div class="cred-icon">B</div><div><h4>The Book</h4><p><em>Cognitive Sovereignty Under Compression</em> &mdash; 11 chapters on why students must own their reasoning before AI tools become meaningful.</p></div></div>
+<div class="cred-item"><div class="cred-icon">20</div><div><h4>Two Decades Teaching</h4><p>Public school. Real students. Every framework in this program was built in a classroom and refined by watching what actually works.</p></div></div>
+</div></div></div></section>
+
+<section class="resources"><div class="container"><div class="resource-row fade-in">
+<div class="resource-card"><h3>Read the Substack</h3><p>The ongoing series on cognitive sovereignty, AI in education, and what it means to think independently in an age of instant answers.</p><a href="https://smalaxos.substack.com" class="product-link" target="_blank">smalaxos.substack.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+<div class="resource-card"><h3>Browse the Store</h3><p>Workbooks, the complete bundle, and cohort enrollment. Everything your family needs to build cognitive ownership &mdash; all in one place.</p><a href="https://smalax5.gumroad.com" class="product-link" target="_blank">smalax5.gumroad.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+</div></div></section>
+
+<section class="subscribe"><div class="container"><div class="subscribe-inner fade-in">
+<div class="subscribe-text"><h2>Stay sharp</h2><p>Weekly essays on cognitive sovereignty, AI in education, and what it means to think independently. Free. No spam. Unsubscribe anytime.</p></div>
+<div class="subscribe-form"><a href="https://smalaxos.substack.com/subscribe" class="subscribe-btn" target="_blank">Subscribe &mdash; it's free</a><p class="subscribe-note">Join on Substack. New essays every week.</p></div>
+</div></div></section>
+
+<footer><div class="container">
+<div class="footer-top">
+<div class="footer-brand"><h4>Thinking Labs by Temple Academy</h4><p>Building cognitive ownership before AI extension. Because the answer was never the point.</p>
+<div class="footer-social">
+<a href="https://www.linkedin.com/in/syd-m-04464b3/" target="_blank" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+<a href="https://smalaxos.substack.com" target="_blank" aria-label="Substack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+</div></div>
+<div class="footer-col"><h5>Programs</h5>
+<a href="https://cognitive-gap-assessment.vercel.app/register" target="_blank">Free Assessment</a>
+<a href="https://a.co/d/0adownwx" target="_blank">The Book</a>
+<a href="https://smalax5.gumroad.com" target="_blank">Workbooks &amp; Store</a>
+<a href="https://smalax5.gumroad.com/l/tjvtn" target="_blank">Cohort Enrollment</a>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Inquiry" target="_blank">School Programs</a>
+</div>
+<div class="footer-col"><h5>Connect</h5>
+<a href="https://smalaxos.substack.com" target="_blank">Substack</a>
+<a href="https://www.linkedin.com/in/syd-m-04464b3/" target="_blank">LinkedIn</a>
+<a href="https://stemmagazine.com" target="_blank">STEM Magazine</a>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com" target="_blank"><span class="__cf_email__" data-cfemail="0b78666a676a733b3a3c394b6c666a626725686466">[email&#160;protected]</span></a>
+</div></div>
+<div class="footer-bottom"><span>&copy; 2026 Temple Academy. All rights reserved.</span><span class="footer-lantern">"Love is law, let your lantern burn bright."</span></div>
+</div></footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40); });
+document.getElementById('mobileToggle').addEventListener('click', function() { this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open'); });
+const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } }); }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { e.preventDefault(); const target = document.querySelector(a.getAttribute('href')); if (target) target.scrollIntoView({
