@@ -9,6 +9,9 @@
 <meta property="og:description" content="Your child can get any answer in seconds. We teach them what to do when the answer isn't enough.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thinkinglabs.academy">
+<link rel="canonical" href="https://thinkinglabs.academy/" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MXGYCR94NP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MXGYCR94NP');</script>
 <meta property="og:image" content="https://thinkinglabs.academy/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -56,18 +59,18 @@ nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
 @keyframes pulse-glow { 0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } }
 .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 200px; background: linear-gradient(to top, var(--warm-black), transparent); pointer-events: none; }
 .hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; }
-.hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 7px 20px; border-radius: 2px; margin-bottom: 44px; animation: fadeDown 0.8s ease both; }
+.hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 7px 20px; border-radius: 2px; margin-bottom: 44px; animation: none; opacity: 1; }
 @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-.hero h1 { font-size: clamp(2.4rem, 5.2vw, 3.8rem); color: var(--cream); font-weight: 500; margin-bottom: 28px; line-height: 1.12; animation: fadeUp 0.9s ease 0.15s both; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero h1 { font-size: clamp(2.4rem, 5.2vw, 3.8rem); color: var(--cream); font-weight: 500; margin-bottom: 28px; line-height: 1.12; opacity: 1; }
+@keyframes fadeUp { from { opacity: 1; } to { opacity: 1; } }
 .hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
-.hero-sub { font-size: 1.15rem; color: rgba(245, 240, 232, 0.6); line-height: 1.75; max-width: 600px; margin: 0 auto 48px; font-weight: 300; animation: fadeUp 0.9s ease 0.3s both; }
-.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.9s ease 0.45s both; }
+.hero-sub { font-size: 1.15rem; color: rgba(245, 240, 232, 0.6); line-height: 1.75; max-width: 600px; margin: 0 auto 48px; font-weight: 300; opacity: 1; }
+.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 1; }
 .btn-primary { display: inline-block; background: var(--gold); color: var(--warm-black); padding: 15px 38px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25); }
 .btn-primary:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201, 168, 76, 0.35); }
 .btn-secondary { display: inline-block; border: 1px solid rgba(245, 240, 232, 0.2); color: var(--cream); padding: 15px 38px; font-weight: 500; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; }
 .btn-secondary:hover { border-color: rgba(245, 240, 232, 0.5); color: #fff; transform: translateY(-2px); }
-.hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; animation: fadeUp 1s ease 0.7s both; }
+.hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; opacity: 1; }
 .hero-scroll span { display: block; width: 20px; height: 32px; border: 1.5px solid rgba(245,240,232,0.25); border-radius: 10px; margin: 0 auto; position: relative; }
 .hero-scroll span::after { content: ''; display: block; width: 3px; height: 6px; background: rgba(245,240,232,0.4); border-radius: 2px; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: scroll-dot 2s ease infinite; }
 @keyframes scroll-dot { 0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); } 50% { opacity: 0.3; transform: translateX(-50%) translateY(10px); } }
@@ -124,6 +127,16 @@ nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
 .product-link:hover { gap: 10px; }
 .product-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
 .product-link:hover svg { transform: translateX(2px); }
+.student-story { padding: 100px 0; background: var(--section-alt); }
+.story-stack { display: grid; gap: 32px; }
+.story-card { max-width: 820px; margin: 0 auto; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 52px 56px; box-shadow: 0 18px 50px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+.story-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
+.story-card .section-label { margin-bottom: 12px; }
+.story-card h2 { font-size: clamp(1.9rem, 3vw, 2.7rem); color: var(--charcoal); margin-bottom: 28px; }
+.story-card p { color: var(--text-mid); font-size: 1.05rem; line-height: 1.75; margin-bottom: 18px; }
+.story-card blockquote { margin: 32px 0; padding: 26px 32px; border-left: 3px solid var(--gold); background: var(--section-alt); font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.5rem, 2.5vw, 2.1rem); font-style: italic; color: var(--charcoal); line-height: 1.35; }
+.story-close { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; color: var(--charcoal); line-height: 1.5; margin-top: 8px; }
+.story-close span { display: block; color: var(--teal); }
 .cohort-cta { padding: 100px 0; background: var(--warm-black); color: var(--cream); text-align: center; position: relative; overflow: hidden; }
 .cohort-cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
 .cohort-cta::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
@@ -178,12 +191,12 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 .footer-col a:hover { color: var(--cream); }
 .footer-bottom { margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .footer-lantern { font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(201,168,76,0.4); font-size: 0.92rem; }
-.fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.fade-in { opacity: 1; transform: translateY(0); transition: opacity 0.8s ease, transform 0.8s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 .fade-in-delay-1 { transition-delay: 0.1s; }
 @media (max-width: 1024px) { .dimensions { grid-template-columns: repeat(3, 1fr); } .product-ladder { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) { .problem-grid { grid-template-columns: 1fr; gap: 48px; } .about-grid { grid-template-columns: 1fr; gap: 40px; } .resource-row { grid-template-columns: 1fr; } .footer-top { grid-template-columns: 1fr; gap: 32px; } .nav-links { display: none; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); } .mobile-toggle { display: block; } }
-@media (max-width: 700px) { .dimensions { grid-template-columns: repeat(2, 1fr); } .product-ladder { grid-template-columns: 1fr; } .problem-stats { grid-template-columns: 1fr; } .cohort-details { flex-direction: column; gap: 20px; } .hero-actions { flex-direction: column; align-items: center; } .featured-inner { flex-direction: column; gap: 20px; } .about-links { flex-direction: column; } .subscribe-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; } .subscribe-form { align-items: center; } }
+@media (max-width: 700px) { .student-story { padding: 80px 0; } .story-card { padding: 38px 28px; } .story-card blockquote { padding: 22px 24px; } .dimensions { grid-template-columns: repeat(2, 1fr); } .product-ladder { grid-template-columns: 1fr; } .problem-stats { grid-template-columns: 1fr; } .cohort-details { flex-direction: column; gap: 20px; } .hero-actions { flex-direction: column; align-items: center; } .featured-inner { flex-direction: column; gap: 20px; } .about-links { flex-direction: column; } .subscribe-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; } .subscribe-form { align-items: center; } }
 @media (max-width: 480px) { .dimensions { grid-template-columns: 1fr; } }
 </style>
 <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
@@ -198,7 +211,7 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 </div></div></nav>
 
 <section class="hero"><div class="hero-content">
-<div class="hero-badge">Cognitive Development &bull; Ages 12&ndash;17</div>
+<div class="hero-badge">Cognitive Development &bull; Ages 13 and up</div>
 <h1>Your child can get any answer<br>in seconds. <em>Now what?</em></h1>
 <p class="hero-sub">Thinking Labs teaches students what to do when the answer isn't enough. Before AI extends their thinking, they need to own it.</p>
 <div class="hero-actions">
@@ -238,6 +251,34 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 <div class="dim-card"><div class="dim-number">05</div><h3>AI &amp; Tool Relationship</h3><p>Does your child use AI to extend their thinking &mdash; or to replace it entirely?</p></div>
 </div></div></section>
 
+<section class="student-story"><div class="container"><div class="story-stack">
+<div class="story-card fade-in">
+<div class="section-label">From inside Cohort 1</div>
+<h2>From Inside Cohort 1</h2>
+<p>M came in like a lot of sharp kids: quick with answers, uncomfortable when she didn&rsquo;t have one.</p>
+<p>The change wasn&rsquo;t that she learned more facts. It was that she discovered something most students are never taught:</p>
+<p>It&rsquo;s okay not to know.</p>
+<p>It&rsquo;s okay to ask the question.</p>
+<p>Over time, she started catching her own patterns, regulating her frustration, and staying with problems instead of reaching for the fastest answer.</p>
+<p>In her own words:</p>
+<blockquote>&ldquo;It is great, but hard.&rdquo;</blockquote>
+<div class="story-close">That&rsquo;s the work.<span>Not easier thinking. Owned thinking.</span></div>
+</div>
+<div class="story-card fade-in fade-in-delay-1">
+<div class="section-label">We think we know more than we do</div>
+<h2>The Soap Experiment</h2>
+<p>In one study, people were asked a simple question:</p>
+<p>How does soap work?</p>
+<p>Most participants were confident they knew the answer.</p>
+<p>Then they were asked to explain it.</p>
+<p>Confidence dropped immediately.</p>
+<p>The lesson wasn&rsquo;t about soap. It was about thinking.</p>
+<p>Many of us mistake familiarity for understanding. We recognize an idea, a process, or a term and assume we truly understand it. But when we have to explain it clearly, gaps appear.</p>
+<p>That moment is not failure.</p>
+<div class="story-close"><span>It&rsquo;s the beginning of ownership.</span></div>
+</div>
+</div></div></section>
+
 <section class="principle"><div class="container"><div class="principle-content fade-in">
 <div class="section-label" style="color: var(--gold);">The Core Principle</div>
 <h2><em>Ownership before extension.</em></h2>
@@ -256,6 +297,13 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 <h3>Cognitive Ownership Assessment</h3>
 <p>50 questions across five dimensions. 5 minutes. Find out exactly where your child owns their thinking and where they've outsourced it. Personalized results instantly.</p>
 <a href="https://cognitive-gap-assessment.vercel.app/register" class="product-link" target="_blank">Take the free assessment <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="product-card">
+<div class="product-price">$29</div>
+<h3>Assessment Interpretation Guide</h3>
+<p>Understand your child's score and know exactly what to do next.</p>
+<a href="https://smalax5.gumroad.com/l/nvoevj" class="product-link" target="_blank">Get the interpretation guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 </div>
 
 <div class="product-card">
@@ -300,17 +348,11 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 
 </div></div></section>
 
+
 <section class="cohort-cta" id="cohort"><div class="container"><div class="cohort-content fade-in">
-<div class="section-label">Now Enrolling</div>
-<h2>Cohort 1 &mdash; Limited Seats</h2>
-<p>Six weeks. Small group. One capstone oral defense where your child proves they own their thinking.</p>
-<div class="cohort-details">
-<div class="cohort-detail"><strong>May 4 &ndash; June 8</strong><span>2026</span></div>
-<div class="cohort-detail"><strong>6 Weeks</strong><span>60 min / session</span></div>
-<div class="cohort-detail"><strong>Ages 12&ndash;17</strong><span>Small groups</span></div>
-<div class="cohort-detail"><strong>$1,150</strong><span>Per student</span></div>
-</div>
-<a href="https://smalax5.gumroad.com/l/tjvtn" class="btn-primary" target="_blank">Reserve a Seat</a>
+<div class="section-label">Cohorts &mdash; Now Forming</div>
+<p>New cohorts open throughout the year. Small groups, six weeks, ending in a live oral defense where your child proves they own their thinking &mdash; no AI, no notes, no slides. Seats are limited by design. Ask about the next available cohort.</p>
+<a href="https://smalax5.gumroad.com/l/tjvtn" class="btn-primary" target="_blank">Ask About the Next Cohort &rarr;</a>
 </div></div></section>
 
 <section class="about" id="about"><div class="container"><div class="about-grid fade-in">
@@ -372,4 +414,7 @@ window.addEventListener('scroll', () => { document.getElementById('nav').classLi
 document.getElementById('mobileToggle').addEventListener('click', function() { this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open'); });
 const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } }); }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { e.preventDefault(); const target = document.querySelector(a.getAttribute('href')); if (target) target.scrollIntoView({
+document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { e.preventDefault(); const target = document.querySelector(a.getAttribute('href')); if (target) target.scrollIntoView({ behavior: 'smooth' }); }); });
+</script>
+</body>
+</html>
