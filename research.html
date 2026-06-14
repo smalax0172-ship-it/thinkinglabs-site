@@ -7,123 +7,165 @@
 <meta name="description" content="New research: students are 14x more likely to get the wrong answer when AI answers first. And their confidence goes up. Here's what that means for your child.">
 <meta property="og:title" content="The 14x Problem — Thinking Labs by Temple Academy">
 <meta property="og:description" content="Students had 14x lower odds of answering correctly when AI gave a wrong answer first. Confidence went up. Accuracy collapsed.">
+<meta property="og:type" content="article">
 <meta property="og:url" content="https://thinkinglabs.academy/research">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="canonical" href="https://thinkinglabs.academy/research.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --ink: #0f0e0c; --paper: #f5f0e8; --amber: #c8860a; --amber-light: #f2c96e; --red: #b83232; --green: #2a6e3f; --rule: #d4c9b0; }
-  body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --charcoal: #1a1a1a; --warm-black: #0d0b09; --cream: #f5f0e8; --warm-cream: #ebe4d6;
+  --gold: #c9a84c; --gold-dim: #a68a3e; --gold-glow: rgba(201, 168, 76, 0.15);
+  --teal: #3d8c7e; --teal-light: #4fa898; --rust: #9b4a3c;
+  --text-dark: #2a2420; --text-mid: #5a524a; --text-light: #8a8278;
+  --border: #d4cbbf; --section-alt: #faf7f2; --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Source Sans 3', -apple-system, sans-serif; color: var(--text-dark); background: var(--cream); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; }
+a { color: var(--teal); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--teal-light); }
 
-  .nav { position: sticky; top: 0; z-index: 100; background: var(--ink); padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; }
-  .nav-brand { font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper); text-decoration: none; }
-  .nav-cta { background: var(--amber); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; text-decoration: none; }
+/* Nav — shared with index.html */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(245, 240, 232, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(212, 203, 191, 0.6); transition: box-shadow 0.3s; }
+nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--charcoal); letter-spacing: 0.02em; }
+.nav-brand span { font-weight: 400; color: var(--text-mid); font-size: 0.72rem; display: block; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 1px; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--text-mid); letter-spacing: 0.02em; position: relative; }
+.nav-links a:not(.nav-cta):hover { color: var(--charcoal); }
+.nav-links a:not(.nav-cta)::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: var(--gold); transition: width 0.3s; }
+.nav-links a:not(.nav-cta):hover::after { width: 100%; }
+.nav-cta { background: var(--charcoal); color: var(--cream) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.25s; }
+.nav-cta:hover { background: #2a2a2a; color: var(--cream) !important; transform: translateY(-1px); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--charcoal); margin: 5px 0; border-radius: 1px; transition: 0.3s; }
+.mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.mobile-toggle.open span:nth-child(2) { opacity: 0; }
+.mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
 
-  .page { max-width: 680px; margin: 0 auto; padding: 60px 32px 80px; position: relative; z-index: 1; }
+/* Article */
+.page { max-width: 720px; margin: 0 auto; padding: 120px 24px 80px; position: relative; }
 
-  .masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 48px; flex-wrap: wrap; gap: 8px; }
-  .brand { font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
-  .brand-sub { font-size: 10px; letter-spacing: 0.12em; color: #888; font-weight: 300; }
+.masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--charcoal); padding-bottom: 12px; margin-bottom: 48px; flex-wrap: wrap; gap: 8px; }
+.brand { font-weight: 600; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); }
+.brand-sub { font-size: 10px; letter-spacing: 0.12em; color: var(--text-light); font-weight: 400; text-transform: uppercase; }
 
-  .stat-block { margin: 0 0 40px; display: flex; align-items: flex-start; }
-  .stat-number { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(110px, 26vw, 190px); line-height: 0.85; color: var(--ink); letter-spacing: -0.04em; flex-shrink: 0; }
-  .stat-x { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(44px, 9vw, 68px); color: var(--amber); line-height: 1; margin-top: 16px; }
-  .stat-label { padding: 8px 0 0 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 14px; }
-  .stat-label-main { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px, 3.5vw, 24px); line-height: 1.25; max-width: 220px; }
-  .stat-source { margin-top: 10px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; }
+.stat-block { margin: 0 0 40px; display: flex; align-items: flex-start; }
+.stat-number { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(110px, 26vw, 190px); line-height: 0.85; color: var(--charcoal); letter-spacing: -0.04em; flex-shrink: 0; }
+.stat-x { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(44px, 9vw, 68px); color: var(--gold); line-height: 1; margin-top: 16px; }
+.stat-label { padding: 8px 0 0 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 14px; }
+.stat-label-main { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 3.5vw, 26px); line-height: 1.25; max-width: 240px; color: var(--charcoal); }
+.stat-source { margin-top: 10px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); }
 
-  .rule { border: none; border-top: 1px solid var(--rule); margin: 40px 0; }
-  .section-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; color: var(--amber); margin-bottom: 14px; }
+.rule { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.section-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; color: var(--gold-dim); margin-bottom: 14px; }
 
-  h1 { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(26px, 5.5vw, 40px); line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em; }
-  .lead { font-size: clamp(15px, 2.5vw, 17px); line-height: 1.75; color: #2a2a2a; margin-bottom: 24px; font-weight: 300; }
-  .lead strong { font-weight: 500; color: var(--ink); }
+h1 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(30px, 5.5vw, 46px); line-height: 1.12; margin-bottom: 20px; letter-spacing: -0.01em; color: var(--charcoal); }
+.lead { font-size: clamp(16px, 2.5vw, 18px); line-height: 1.75; color: var(--text-mid); margin-bottom: 24px; }
+.lead strong { font-weight: 600; color: var(--text-dark); }
 
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); margin: 36px 0; border: 1px solid var(--rule); }
-  .stat-cell { background: var(--paper); padding: 20px 12px; text-align: center; }
-  .stat-cell-number { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(24px, 5vw, 36px); line-height: 1; color: var(--ink); }
-  .stat-cell-number.highlight { color: var(--red); }
-  .stat-cell-label { margin-top: 6px; font-size: 11px; line-height: 1.4; color: #666; font-weight: 300; }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin: 36px 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.stat-cell { background: #fff; padding: 22px 12px; text-align: center; }
+.stat-cell-number { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(28px, 5vw, 40px); line-height: 1; color: var(--charcoal); }
+.stat-cell-number.highlight { color: var(--rust); }
+.stat-cell-label { margin-top: 6px; font-size: 12px; line-height: 1.4; color: var(--text-mid); }
 
-  .pullquote { border-left: 4px solid var(--amber); padding: 16px 24px; margin: 36px 0; background: rgba(200,134,10,0.06); }
-  .pullquote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(15px, 2.8vw, 19px); line-height: 1.5; }
-  .pullquote cite { display: block; margin-top: 10px; font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; }
+.pullquote { border-left: 3px solid var(--gold); padding: 16px 24px; margin: 36px 0; background: var(--gold-glow); border-radius: 0 6px 6px 0; }
+.pullquote p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 2.8vw, 23px); line-height: 1.45; color: var(--charcoal); }
+.pullquote cite { display: block; margin-top: 12px; font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); }
 
-  .endorsement { border: 1px solid var(--rule); padding: 24px; margin: 36px 0; background: #fff; }
-  .endorsement-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; margin-bottom: 12px; }
-  .endorsement-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(15px, 2.5vw, 18px); line-height: 1.55; color: var(--ink); }
-  .endorsement-attr { margin-top: 14px; font-size: 11px; color: #888; letter-spacing: 0.06em; }
-  .endorsement-attr a { color: var(--amber); text-decoration: none; font-weight: 500; }
+.endorsement { border: 1px solid var(--border); border-radius: 8px; padding: 26px; margin: 36px 0; background: #fff; box-shadow: var(--card-shadow); }
+.endorsement-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; }
+.endorsement-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 2.5vw, 22px); line-height: 1.5; color: var(--charcoal); }
+.endorsement-attr { margin-top: 14px; font-size: 12px; color: var(--text-mid); letter-spacing: 0.04em; }
+.endorsement-attr a { color: var(--teal); font-weight: 600; }
 
-  .fix-block { background: var(--ink); color: var(--paper); padding: 36px 32px; margin: 40px 0; }
-  .fix-block .section-label { color: var(--amber-light); margin-bottom: 16px; }
-  .fix-block h2 { font-family: 'Playfair Display', serif; font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; }
-  .fix-block p { font-size: 14px; line-height: 1.8; color: #ccc; font-weight: 300; }
-  .fix-block strong { color: var(--paper); font-weight: 500; }
+.fix-block { background: var(--warm-black); color: var(--cream); padding: 40px 36px; margin: 40px 0; border-radius: 10px; }
+.fix-block .section-label { color: var(--gold); margin-bottom: 16px; }
+.fix-block h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 4vw, 32px); font-weight: 600; line-height: 1.2; margin-bottom: 16px; color: var(--cream); }
+.fix-block p { font-size: 15px; line-height: 1.8; color: rgba(245,240,232,0.7); }
+.fix-block strong { color: var(--cream); font-weight: 600; }
 
-  .program-row { display: flex; gap: 24px; margin: 36px 0; flex-wrap: wrap; }
-  .program-item { flex: 1; min-width: 110px; }
-  .program-item-number { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 30px; color: var(--amber); line-height: 1; }
-  .program-item-label { margin-top: 4px; font-size: 12px; color: #666; font-weight: 300; line-height: 1.4; }
+.program-row { display: flex; gap: 24px; margin: 36px 0; flex-wrap: wrap; }
+.program-item { flex: 1; min-width: 110px; }
+.program-item-number { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 34px; color: var(--teal); line-height: 1; }
+.program-item-label { margin-top: 4px; font-size: 12px; color: var(--text-mid); line-height: 1.4; }
 
-  .cta-block { margin: 40px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .cta-card { border: 1.5px solid; padding: 24px 20px; display: flex; flex-direction: column; gap: 10px; }
-  .cta-card.parent-card { border-color: var(--amber); background: rgba(200,134,10,0.04); }
-  .cta-card.student-card { border-color: var(--green); background: rgba(42,110,63,0.04); }
-  .cta-who { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
-  .parent-card .cta-who { color: var(--amber); }
-  .student-card .cta-who { color: var(--green); }
-  .cta-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; line-height: 1.2; color: var(--ink); }
-  .cta-desc { font-size: 12px; line-height: 1.6; color: #555; font-weight: 300; flex: 1; }
-  .cta-link { display: block; padding: 12px 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; text-align: center; margin-top: 4px; }
-  .parent-card .cta-link { background: var(--amber); color: #fff; }
-  .student-card .cta-link { background: var(--green); color: #fff; }
-  .cta-url { font-size: 10px; color: #aaa; letter-spacing: 0.06em; word-break: break-all; text-align: center; }
+.cta-block { margin: 40px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cta-card { border: 1.5px solid; border-radius: 10px; padding: 26px 22px; display: flex; flex-direction: column; gap: 10px; }
+.cta-card.parent-card { border-color: var(--gold); background: var(--gold-glow); }
+.cta-card.student-card { border-color: var(--teal); background: rgba(61,140,126,0.06); }
+.cta-who { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; }
+.parent-card .cta-who { color: var(--gold-dim); }
+.student-card .cta-who { color: var(--teal); }
+.cta-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 22px; line-height: 1.2; color: var(--charcoal); }
+.cta-desc { font-size: 13px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+.cta-link { display: block; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; text-align: center; border-radius: 4px; margin-top: 4px; transition: transform 0.2s; }
+.cta-link:hover { transform: translateY(-1px); }
+.parent-card .cta-link { background: var(--gold); color: var(--warm-black); }
+.student-card .cta-link { background: var(--teal); color: #fff; }
+.cta-url { font-size: 10px; color: var(--text-light); letter-spacing: 0.04em; word-break: break-all; text-align: center; }
 
-  .footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
-  .footer-tagline { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: #666; max-width: 300px; line-height: 1.5; }
-  .footer-links { text-align: right; font-size: 11px; line-height: 2; }
-  .footer-links a { color: var(--amber); text-decoration: none; display: block; }
-  .closing { margin-top: 40px; font-size: 12px; color: #aaa; letter-spacing: 0.06em; text-align: center; font-style: italic; }
+.founder-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 2.6vw, 22px); line-height: 1.5; color: var(--charcoal); margin: 8px 0 0; }
+.founder-note span { display: block; margin-top: 10px; font-size: 13px; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-light); }
 
-  @media (max-width: 500px) {
-    .page { padding: 40px 20px 60px; }
-    .cta-block { grid-template-columns: 1fr; }
-    .nav { padding: 12px 20px; }
-    .fix-block { padding: 28px 20px; }
-  }
+/* Footer — shared with index.html */
+footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,232,0.5); font-size: 0.85rem; }
+.footer-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.footer-top { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 48px; padding-bottom: 40px; border-bottom: 1px solid rgba(245,240,232,0.08); }
+.footer-brand h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); font-weight: 600; margin-bottom: 8px; }
+.footer-brand p { font-size: 0.85rem; max-width: 320px; line-height: 1.65; margin-bottom: 20px; }
+.footer-social { display: flex; gap: 12px; }
+.footer-social a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(245,240,232,0.15); display: flex; align-items: center; justify-content: center; color: rgba(245,240,232,0.5); transition: all 0.25s; }
+.footer-social a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.footer-social a svg { width: 16px; height: 16px; }
+.footer-col h5 { font-family: 'Source Sans 3', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245,240,232,0.35); margin-bottom: 18px; }
+.footer-col a { display: block; color: rgba(245,240,232,0.55); font-size: 0.88rem; margin-bottom: 10px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom { margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-lantern { font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(201,168,76,0.4); font-size: 0.92rem; }
+
+@media (max-width: 900px) { .nav-links { display: none; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); } .mobile-toggle { display: block; } .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 520px) { .page { padding: 100px 20px 60px; } .cta-block { grid-template-columns: 1fr; } .fix-block { padding: 30px 22px; } }
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <a class="nav-brand" href="https://thinkinglabs.academy">Thinking Labs by Temple Academy</a>
-  <a class="nav-cta" href="https://cognitive-gap-assessment.vercel.app/register">Free Assessment →</a>
-</nav>
+<nav id="nav"><div class="nav-inner">
+<a href="index.html" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="schools.html">Schools</a><a href="index.html#about">About</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
 
 <div class="page">
 
   <div class="masthead">
     <div>
-      <div class="brand">The 14× Problem</div>
-      <div class="brand-sub">Research Brief · April 2026</div>
+      <div class="brand">The 14&times; Problem</div>
+      <div class="brand-sub">Research Brief</div>
     </div>
     <div class="brand-sub">thinkinglabs.academy/research</div>
   </div>
 
   <div class="stat-block">
     <div class="stat-number">14</div>
-    <div class="stat-x">×</div>
+    <div class="stat-x">&times;</div>
     <div class="stat-label">
       <div class="stat-label-main">more likely to get the wrong answer when AI answers first</div>
-      <div class="stat-source">Shaw & Nave, 2026 · SSRN</div>
+      <div class="stat-source">Shaw &amp; Nave, 2026 &middot; SSRN</div>
     </div>
   </div>
 
   <div class="section-label">What the research says</div>
   <h1>Your child doesn't use AI.<br>They yield to it.</h1>
 
-  <p class="lead">A peer-reviewed study published in January 2026 tested what happens when students get an answer from AI before working through a problem themselves. The results were not subtle.</p>
+  <p class="lead">A peer-reviewed study tested what happens when students get an answer from AI before working through a problem themselves. The results were not subtle.</p>
   <p class="lead">When the AI gave a wrong answer, students had <strong>fourteen times lower odds</strong> of getting it right compared to working alone. Worse: their <strong>confidence went up</strong> at the same moment their accuracy collapsed.</p>
 
   <div class="stats-row">
@@ -145,15 +187,15 @@
 
   <div class="pullquote">
     <p>"The machine did not merely move answers. It raised confidence even when it was wrong. That miscalibrated metacognition may be the most dangerous part of the whole arrangement."</p>
-    <cite>— Dr. Colin Lewis, The One Percent Rule, April 2026</cite>
+    <cite>— Dr. Colin Lewis, The One Percent Rule</cite>
   </div>
 
   <hr class="rule">
 
   <div class="endorsement">
-    <div class="endorsement-label">Peer response · April 14, 2026</div>
+    <div class="endorsement-label">Peer response</div>
     <div class="endorsement-quote">"I really like the idea of a tool-free first week Syd. We've spent a decade trying to make everything frictionless, only to find that friction is where the actual learning is stored. It moves the conversation from cheating to judgment."</div>
-    <div class="endorsement-attr">— Dr. Colin Lewis, <a href="https://onepercentrule.substack.com" target="_blank">The One Percent Rule</a> · 30,000+ subscribers</div>
+    <div class="endorsement-attr">— Dr. Colin Lewis, <a href="https://onepercentrule.substack.com" target="_blank">The One Percent Rule</a> &middot; 30,000+ subscribers</div>
   </div>
 
   <hr class="rule">
@@ -189,7 +231,7 @@
   <hr class="rule">
 
   <div class="section-label">Start here — it's free</div>
-  <p class="lead">Two versions. Parents see the big picture. Students go deep on their own thinking. Both 15 minutes. Both free.</p>
+  <p class="lead">Two versions. Parents see the big picture. Students go deep on their own thinking. Both five minutes. Both free.</p>
 
   <div class="cta-block">
     <div class="cta-card parent-card">
@@ -210,17 +252,36 @@
 
   <hr class="rule">
 
-  <div class="footer">
-    <div class="footer-tagline">"Your child can get any answer in seconds. I teach them what to do when the answer isn't enough."<br><br>— Syd Malaxos, Founder</div>
-    <div class="footer-links">
-      <a href="https://smalaxos.substack.com">smalaxos.substack.com</a>
-      <a href="mailto:smalax0172@gmail.com">smalax0172@gmail.com</a>
-      <a href="https://thinkinglabs.academy">thinkinglabs.academy</a>
-    </div>
-  </div>
-
-  <div class="closing">Love is law. Let your lantern burn bright.</div>
+  <p class="founder-note">"Your child can get any answer in seconds. I teach them what to do when the answer isn't enough."<span>— Syd Malaxos, Founder</span></p>
 
 </div>
+
+<footer><div class="footer-container">
+<div class="footer-top">
+<div class="footer-brand"><h4>Thinking Labs by Temple Academy</h4><p>Building cognitive ownership before AI extension. Because the answer was never the point.</p>
+<div class="footer-social">
+<a href="https://www.linkedin.com/in/syd-malaxos-04464b3/" target="_blank" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+<a href="https://smalaxos.substack.com" target="_blank" aria-label="Substack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+</div></div>
+<div class="footer-col"><h5>Programs</h5>
+<a href="https://cognitive-gap-assessment.vercel.app/register" target="_blank">Free Assessment</a>
+<a href="https://a.co/d/0adownwx" target="_blank">The Book</a>
+<a href="https://smalax5.gumroad.com" target="_blank">Workbooks &amp; Store</a>
+<a href="https://smalax5.gumroad.com/l/tjvtn" target="_blank">Cohort Enrollment</a>
+<a href="schools.html">School Programs</a>
+</div>
+<div class="footer-col"><h5>Connect</h5>
+<a href="https://smalaxos.substack.com" target="_blank">Substack</a>
+<a href="https://www.linkedin.com/in/syd-malaxos-04464b3/" target="_blank">LinkedIn</a>
+<a href="https://stemmagazine.com" target="_blank">STEM Magazine</a>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com" target="_blank">Contact</a>
+</div></div>
+<div class="footer-bottom"><span>&copy; 2026 Temple Academy. All rights reserved.</span><span class="footer-lantern">"Love is law. Let your lantern burn bright."</span></div>
+</div></footer>
+
+<script>
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40); });
+document.getElementById('mobileToggle').addEventListener('click', function() { this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open'); });
+</script>
 </body>
 </html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Critical Thinking Curriculum for Title I Schools | Thinking Labs by Temple Academy</title>
+<meta name="description" content="Bring Thinking Labs to your school or district. An AI critical thinking curriculum that is Title I eligible — including curriculum, assessment infrastructure, and instructor training. Built by a teacher with over twenty years in the classroom.">
+<meta property="og:title" content="AI Critical Thinking Curriculum for Schools & Districts — Thinking Labs">
+<meta property="og:description" content="Title I eligible. Curriculum, assessment infrastructure, and instructor training, built around the five dimensions of cognitive ownership.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thinkinglabs.academy/schools">
+<link rel="canonical" href="https://thinkinglabs.academy/schools.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --charcoal: #1a1a1a; --warm-black: #0d0b09; --cream: #f5f0e8; --warm-cream: #ebe4d6;
+  --gold: #c9a84c; --gold-dim: #a68a3e; --gold-glow: rgba(201, 168, 76, 0.15);
+  --teal: #3d8c7e; --teal-light: #4fa898; --rust: #9b4a3c;
+  --text-dark: #2a2420; --text-mid: #5a524a; --text-light: #8a8278;
+  --border: #d4cbbf; --section-alt: #faf7f2; --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Source Sans 3', -apple-system, sans-serif; color: var(--text-dark); background: var(--cream); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; }
+a { color: var(--teal); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--teal-light); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav — shared with index.html */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(245, 240, 232, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(212, 203, 191, 0.6); transition: box-shadow 0.3s; }
+nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--charcoal); letter-spacing: 0.02em; }
+.nav-brand span { font-weight: 400; color: var(--text-mid); font-size: 0.72rem; display: block; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 1px; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--text-mid); letter-spacing: 0.02em; position: relative; }
+.nav-links a:not(.nav-cta):hover { color: var(--charcoal); }
+.nav-links a:not(.nav-cta)::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: var(--gold); transition: width 0.3s; }
+.nav-links a:not(.nav-cta):hover::after { width: 100%; }
+.nav-cta { background: var(--charcoal); color: var(--cream) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.25s; }
+.nav-cta:hover { background: #2a2a2a; color: var(--cream) !important; transform: translateY(-1px); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--charcoal); margin: 5px 0; border-radius: 1px; transition: 0.3s; }
+.mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.mobile-toggle.open span:nth-child(2) { opacity: 0; }
+.mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+/* Hero */
+.hero { min-height: 88vh; display: flex; align-items: center; justify-content: center; background: var(--warm-black); position: relative; overflow: hidden; padding: 140px 24px 90px; }
+.hero::before { content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 900px; height: 900px; background: radial-gradient(ellipse, rgba(201, 168, 76, 0.1) 0%, rgba(201, 168, 76, 0.03) 40%, transparent 70%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 200px; background: linear-gradient(to top, var(--warm-black), transparent); pointer-events: none; }
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 820px; }
+.hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 7px 20px; border-radius: 2px; margin-bottom: 40px; }
+.hero h1 { font-size: clamp(2.3rem, 5vw, 3.6rem); color: var(--cream); font-weight: 500; margin-bottom: 26px; line-height: 1.12; }
+.hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
+.hero-sub { font-size: 1.15rem; color: rgba(245, 240, 232, 0.62); line-height: 1.75; max-width: 640px; margin: 0 auto 44px; font-weight: 300; }
+.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { display: inline-block; background: var(--gold); color: var(--warm-black); padding: 15px 38px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25); }
+.btn-primary:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201, 168, 76, 0.35); }
+.btn-secondary { display: inline-block; border: 1px solid rgba(245, 240, 232, 0.2); color: var(--cream); padding: 15px 38px; font-weight: 500; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; }
+.btn-secondary:hover { border-color: rgba(245, 240, 232, 0.5); color: #fff; transform: translateY(-2px); }
+
+/* Sections */
+.section { padding: 96px 0; }
+.section.alt { background: var(--section-alt); }
+.section-header { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+.section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 16px; }
+.section-header h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); margin-bottom: 18px; color: var(--charcoal); }
+.section-header p { color: var(--text-mid); font-size: 1.05rem; line-height: 1.7; }
+
+.lede { max-width: 760px; margin: 0 auto; }
+.lede p { font-size: 1.12rem; color: var(--text-mid); line-height: 1.85; margin-bottom: 22px; }
+.lede p strong { color: var(--text-dark); font-weight: 600; }
+.lede p em { color: var(--text-dark); font-style: italic; }
+
+.include-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.include-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 36px 30px; transition: transform 0.3s, box-shadow 0.3s; }
+.include-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.06); }
+.include-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+.include-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--charcoal); }
+.include-card p { font-size: 0.95rem; color: var(--text-mid); line-height: 1.6; }
+
+.dimensions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.dim-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 30px 18px; text-align: center; }
+.dim-number { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+.dim-card h3 { font-size: 0.98rem; margin-bottom: 8px; color: var(--charcoal); }
+.dim-card p { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
+
+.proof { max-width: 820px; margin: 0 auto; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 52px 56px; box-shadow: 0 18px 50px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+.proof::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
+.proof h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); color: var(--charcoal); margin-bottom: 22px; }
+.proof p { color: var(--text-mid); font-size: 1.05rem; line-height: 1.8; margin-bottom: 18px; }
+.proof blockquote { margin: 28px 0 0; padding: 22px 28px; border-left: 3px solid var(--gold); background: var(--section-alt); font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-style: italic; color: var(--charcoal); line-height: 1.4; }
+
+.cred-row { display: flex; gap: 44px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+.cred-stat { text-align: center; max-width: 220px; }
+.cred-stat strong { display: block; font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--teal); font-weight: 700; line-height: 1; }
+.cred-stat span { display: block; font-size: 0.9rem; color: var(--text-mid); margin-top: 8px; line-height: 1.45; }
+
+.pricing { max-width: 720px; margin: 0 auto; text-align: center; }
+.pricing-band { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.6rem, 6vw, 4rem); font-weight: 700; color: var(--charcoal); line-height: 1; margin-bottom: 12px; }
+.pricing-note { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 560px; margin: 0 auto 8px; }
+.title-one { display: inline-block; margin-top: 18px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); border: 1px solid var(--teal); border-radius: 100px; padding: 7px 18px; }
+
+/* Final CTA */
+.contact-cta { padding: 110px 0; background: var(--warm-black); color: var(--cream); text-align: center; position: relative; overflow: hidden; }
+.contact-cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+.contact-content { max-width: 680px; margin: 0 auto; position: relative; }
+.contact-content .section-label { color: var(--gold); }
+.contact-content h2 { font-size: clamp(1.9rem, 3vw, 2.7rem); margin-bottom: 18px; color: var(--cream); }
+.contact-content p { font-size: 1.08rem; color: rgba(245,240,232,0.6); margin-bottom: 32px; line-height: 1.75; }
+
+/* Footer — shared with index.html */
+footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,232,0.5); font-size: 0.85rem; }
+.footer-top { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 48px; padding-bottom: 40px; border-bottom: 1px solid rgba(245,240,232,0.08); }
+.footer-brand h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); font-weight: 600; margin-bottom: 8px; }
+.footer-brand p { font-size: 0.85rem; max-width: 320px; line-height: 1.65; margin-bottom: 20px; }
+.footer-social { display: flex; gap: 12px; }
+.footer-social a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(245,240,232,0.15); display: flex; align-items: center; justify-content: center; color: rgba(245,240,232,0.5); transition: all 0.25s; }
+.footer-social a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.footer-social a svg { width: 16px; height: 16px; }
+.footer-col h5 { font-family: 'Source Sans 3', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245,240,232,0.35); margin-bottom: 18px; }
+.footer-col a { display: block; color: rgba(245,240,232,0.55); font-size: 0.88rem; margin-bottom: 10px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom { margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-lantern { font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(201,168,76,0.4); font-size: 0.92rem; }
+
+@media (max-width: 1024px) { .dimensions { grid-template-columns: repeat(3, 1fr); } .include-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) { .nav-links { display: none; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); } .mobile-toggle { display: block; } .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 700px) { .include-grid { grid-template-columns: 1fr; } .dimensions { grid-template-columns: repeat(2, 1fr); } .proof { padding: 38px 28px; } .hero-actions { flex-direction: column; align-items: center; } .cred-row { gap: 28px; } }
+@media (max-width: 480px) { .dimensions { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+<a href="index.html" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="schools.html">Schools</a><a href="index.html#about">About</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
+
+<section class="hero"><div class="hero-content">
+<div class="hero-badge">For Schools &amp; Districts</div>
+<h1>An AI critical thinking curriculum<br>for <em>Title I</em> schools.</h1>
+<p class="hero-sub">If you are searching for an AI critical thinking curriculum that a Title I school can actually fund, start here. Thinking Labs brings cognitive ownership to your students — curriculum, assessment infrastructure, and instructor training, built by a public school teacher with over twenty years in the classroom.</p>
+<div class="hero-actions">
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Partnership+Inquiry" class="btn-primary" target="_blank">Start a Partnership Conversation</a>
+<a href="index.html#framework" class="btn-secondary">See the Framework</a>
+</div></div></section>
+
+<section class="section"><div class="container">
+<div class="section-header">
+<div class="section-label">Why this, why now</div>
+<h2>Your students can get any answer in seconds</h2>
+</div>
+<div class="lede">
+<p>An <strong>AI critical thinking curriculum for Title I schools</strong> has to do more than warn students away from the tools. It has to build the thinking the tools are quietly replacing. That is what Thinking Labs is designed to do.</p>
+<p>Most schools are racing to integrate AI. Almost none are asking whether students can think <em>without</em> it first. The gap between a polished answer and a defended one is widening — and it does not show up on a grade report until it is too late.</p>
+<p>Thinking Labs measures and builds <strong>cognitive ownership</strong> across five dimensions, then proves it with a capstone oral defense. No AI. No notes. No slides. Just a student who can explain and defend what they know.</p>
+</div>
+</div></section>
+
+<section class="section alt"><div class="container">
+<div class="section-header">
+<div class="section-label">What a partnership includes</div>
+<h2>Everything your team needs to run it</h2>
+<p>A complete program your school can stand up — not a one-off workshop.</p>
+</div>
+<div class="include-grid">
+<div class="include-card"><div class="include-num">01</div><h3>Curriculum</h3><p>The full Thinking Labs sequence, built around the five dimensions of cognitive ownership and a tool-free first week by design.</p></div>
+<div class="include-card"><div class="include-num">02</div><h3>Assessment Infrastructure</h3><p>The Cognitive Gap Assessment as a baseline and progress measure, so growth is visible across every student and cohort.</p></div>
+<div class="include-card"><div class="include-num">03</div><h3>Instructor Training</h3><p>Your teachers are trained to deliver the program and run the capstone oral defense the way it was designed to be run.</p></div>
+</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="section-header">
+<div class="section-label">The framework</div>
+<h2>We measure what schools don't</h2>
+<p>Not what students know — how they think. Five dimensions, assessed and built over the program.</p>
+</div>
+<div class="dimensions">
+<div class="dim-card"><div class="dim-number">01</div><h3>Independent Reasoning</h3><p>Do they try before outsourcing?</p></div>
+<div class="dim-card"><div class="dim-number">02</div><h3>Information Evaluation</h3><p>Can they tell signal from noise?</p></div>
+<div class="dim-card"><div class="dim-number">03</div><h3>Cognitive Persistence</h3><p>Do they push through friction?</p></div>
+<div class="dim-card"><div class="dim-number">04</div><h3>Communication &amp; Defense</h3><p>Can they defend their thinking?</p></div>
+<div class="dim-card"><div class="dim-number">05</div><h3>AI &amp; Tool Relationship</h3><p>Do they extend or replace their thinking?</p></div>
+</div>
+</div></section>
+
+<section class="section alt"><div class="container">
+<div class="proof">
+<div class="section-label">The proof point</div>
+<h2>The capstone oral defense</h2>
+<p>Every Thinking Labs student ends the program by defending their reasoning out loud, under direct questioning — no AI, no notes, no slides. It is the moment a polished answer becomes an owned one, and it is the clearest evidence a school can show that the thinking is real.</p>
+<blockquote>"Your child can get any answer in seconds. We teach them what to do when the answer isn't enough."</blockquote>
+</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="section-header">
+<div class="section-label">Who builds it</div>
+<h2>Methodology from the classroom, not the conference stage</h2>
+</div>
+<div class="cred-row">
+<div class="cred-stat"><strong>20+</strong><span>years teaching chemistry and physics in public school</span></div>
+<div class="cred-stat"><strong>STEM</strong><span>"The Integration Gap," featured in STEM Magazine</span></div>
+<div class="cred-stat"><strong>5</strong><span>dimensions of cognitive ownership, assessed and built</span></div>
+</div>
+</div></section>
+
+<section class="section alt"><div class="container">
+<div class="section-header">
+<div class="section-label">Investment</div>
+<h2>Built to fit a school budget</h2>
+</div>
+<div class="pricing">
+<div class="pricing-band">$5K&ndash;$15K</div>
+<p class="pricing-note">School and district partnerships are scoped to your size and goals, and include curriculum, assessment infrastructure, and instructor training.</p>
+<span class="title-one">Title I Eligible</span>
+</div>
+</div></section>
+
+<section class="contact-cta"><div class="container"><div class="contact-content">
+<div class="section-label">Bring it to your school</div>
+<h2>Start the conversation</h2>
+<p>Tell us about your school or district and what you are trying to build. We will help you scope a partnership that fits.</p>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Partnership+Inquiry" class="btn-primary" target="_blank">Contact for School Partnerships</a>
+</div></div></section>
+
+<footer><div class="container">
+<div class="footer-top">
+<div class="footer-brand"><h4>Thinking Labs by Temple Academy</h4><p>Building cognitive ownership before AI extension. Because the answer was never the point.</p>
+<div class="footer-social">
+<a href="https://www.linkedin.com/in/syd-malaxos-04464b3/" target="_blank" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+<a href="https://smalaxos.substack.com" target="_blank" aria-label="Substack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+</div></div>
+<div class="footer-col"><h5>Programs</h5>
+<a href="https://cognitive-gap-assessment.vercel.app/register" target="_blank">Free Assessment</a>
+<a href="https://a.co/d/0adownwx" target="_blank">The Book</a>
+<a href="https://smalax5.gumroad.com" target="_blank">Workbooks &amp; Store</a>
+<a href="https://smalax5.gumroad.com/l/tjvtn" target="_blank">Cohort Enrollment</a>
+<a href="schools.html">School Programs</a>
+</div>
+<div class="footer-col"><h5>Connect</h5>
+<a href="https://smalaxos.substack.com" target="_blank">Substack</a>
+<a href="https://www.linkedin.com/in/syd-malaxos-04464b3/" target="_blank">LinkedIn</a>
+<a href="https://stemmagazine.com" target="_blank">STEM Magazine</a>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Partnership+Inquiry" target="_blank">Contact</a>
+</div></div>
+<div class="footer-bottom"><span>&copy; 2026 Temple Academy. All rights reserved.</span><span class="footer-lantern">"Love is law. Let your lantern burn bright."</span></div>
+</div></footer>
+
+<script>
+window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40); });
+document.getElementById('mobileToggle').addEventListener('click', function() { this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open'); });
+</script>
+</body>
+</html>
