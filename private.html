@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Private Track — Thinking Labs by Temple Academy</title>
+<meta name="description" content="A private cognitive development track for families who want their child read by name. Virtual. National. Every paid seat funds a seat for a student who could not otherwise afford it.">
+<meta property="og:title" content="The Private Track — Thinking Labs by Temple Academy">
+<meta property="og:description" content="A teacher with Harvard, Brandeis, and Tufts behind him reads your child by name. Virtual. National. Every paid seat funds a free one.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thinkinglabs.academy/private.html">
+<meta property="og:image" content="https://thinkinglabs.academy/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Private Track — Thinking Labs by Temple Academy">
+<meta name="twitter:description" content="A teacher with Harvard, Brandeis, and Tufts behind him reads your child by name. Virtual. National.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --charcoal: #1a1a1a; --warm-black: #0d0b09; --cream: #f5f0e8; --warm-cream: #ebe4d6;
+  --gold: #c9a84c; --gold-dim: #a68a3e; --gold-glow: rgba(201, 168, 76, 0.15);
+  --teal: #3d8c7e; --teal-light: #4fa898; --rust: #9b4a3c;
+  --text-dark: #2a2420; --text-mid: #5a524a; --text-light: #8a8278;
+  --border: #d4cbbf; --section-alt: #faf7f2; --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  --ink: #14110d; --ink-soft: #1f1b15; --ink-line: rgba(201,168,76,0.18);
+  --on-ink: rgba(245,240,232,0.92); --on-ink-mid: rgba(245,240,232,0.6); --on-ink-dim: rgba(245,240,232,0.4);
+}
+html { scroll-behavior: smooth; font-size: 16px; background: var(--ink); }
+body { font-family: 'Source Sans 3', -apple-system, sans-serif; color: var(--on-ink); background: var(--ink); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; }
+a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+a:hover { color: #d4b35a; }
+.container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(13, 11, 9, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--ink-line); transition: box-shadow 0.3s; }
+nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+.nav-inner { max-width: 1040px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--cream); letter-spacing: 0.02em; }
+.nav-brand span { font-weight: 400; color: var(--on-ink-mid); font-size: 0.72rem; display: block; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 1px; }
+.nav-links { display: flex; gap: 26px; align-items: center; }
+.nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--on-ink-mid); letter-spacing: 0.02em; position: relative; }
+.nav-links a:not(.nav-cta):hover { color: var(--cream); }
+.nav-links a:not(.nav-cta)::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: var(--gold); transition: width 0.3s; }
+.nav-links a:not(.nav-cta):hover::after { width: 100%; }
+.nav-cta { background: var(--gold); color: var(--warm-black) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.25s; }
+.nav-cta:hover { background: #d4b35a; color: var(--warm-black) !important; transform: translateY(-1px); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--cream); margin: 5px 0; border-radius: 1px; transition: 0.3s; }
+.mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.mobile-toggle.open span:nth-child(2) { opacity: 0; }
+.mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+.mobile-menu { display: none; }
+
+/* HERO */
+.hero { min-height: 94vh; display: flex; align-items: center; justify-content: center; background: var(--warm-black); position: relative; overflow: hidden; padding: 130px 24px 90px; }
+.hero::before { content: ''; position: absolute; top: -28%; left: 50%; transform: translateX(-50%); width: 1000px; height: 1000px; background: radial-gradient(ellipse, rgba(201, 168, 76, 0.12) 0%, rgba(201, 168, 76, 0.035) 42%, transparent 70%); pointer-events: none; animation: pulse-glow 9s ease-in-out infinite; }
+@keyframes pulse-glow { 0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } }
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 760px; }
+.hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.32); padding: 7px 22px; border-radius: 2px; margin-bottom: 40px; animation: fadeDown 0.8s ease both; }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+.hero h1 { font-size: clamp(2.4rem, 5.2vw, 3.7rem); color: var(--cream); font-weight: 500; margin-bottom: 26px; line-height: 1.12; animation: fadeUp 0.9s ease 0.15s both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero h1 em { font-style: italic; color: var(--gold); font-weight: 500; }
+.hero-sub { font-size: 1.16rem; color: var(--on-ink-mid); line-height: 1.75; max-width: 580px; margin: 0 auto 44px; font-weight: 300; animation: fadeUp 0.9s ease 0.3s both; }
+.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.9s ease 0.45s both; }
+.btn-primary { display: inline-block; background: var(--gold); color: var(--warm-black); padding: 15px 38px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(201, 168, 76, 0.22); }
+.btn-primary:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201, 168, 76, 0.32); }
+.btn-secondary { display: inline-block; border: 1px solid rgba(245, 240, 232, 0.22); color: var(--cream); padding: 15px 38px; font-weight: 500; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.3s; }
+.btn-secondary:hover { border-color: rgba(245, 240, 232, 0.5); color: #fff; transform: translateY(-2px); }
+
+/* SECTION SCAFFOLD */
+section { position: relative; }
+.sec { padding: 96px 0; background: var(--ink); }
+.sec-alt { background: var(--ink-soft); }
+.eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; display: block; text-align: center; }
+.sec h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); color: var(--cream); font-weight: 500; text-align: center; max-width: 760px; margin: 0 auto 20px; line-height: 1.18; }
+.sec h2 em { font-style: italic; color: var(--gold); }
+.sec-lede { font-size: 1.1rem; color: var(--on-ink-mid); max-width: 620px; margin: 0 auto 56px; text-align: center; font-weight: 300; }
+
+/* OPENING ARGUMENT */
+.argument { max-width: 680px; margin: 0 auto; }
+.argument p { font-size: 1.18rem; color: var(--on-ink); margin-bottom: 26px; line-height: 1.7; font-weight: 300; }
+.argument p strong { font-weight: 600; color: var(--cream); }
+.argument .pull { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-style: italic; color: var(--gold); line-height: 1.35; text-align: center; margin: 44px 0; font-weight: 500; }
+
+/* TIERS */
+.tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 8px; align-items: stretch; }
+.tier { background: var(--ink); border: 1px solid var(--ink-line); border-radius: 8px; padding: 38px 30px; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.tier:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.4); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+.tier-anchor { border-color: rgba(201,168,76,0.5); background: linear-gradient(180deg, rgba(201,168,76,0.05), rgba(13,11,9,0)); }
+.tier-rank { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.tier h3 { font-size: 1.55rem; color: var(--cream); font-weight: 600; margin-bottom: 6px; }
+.tier-tag { font-size: 0.86rem; color: var(--on-ink-mid); font-style: italic; margin-bottom: 22px; min-height: 2.4em; }
+.tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.3rem; color: var(--gold); font-weight: 600; margin-bottom: 4px; line-height: 1; }
+.tier-price small { font-size: 0.95rem; color: var(--on-ink-mid); font-weight: 400; font-family: 'Source Sans 3', sans-serif; }
+.tier-price-note { font-size: 0.8rem; color: var(--on-ink-dim); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 26px; }
+.tier ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
+.tier li { font-size: 0.94rem; color: var(--on-ink); padding: 9px 0 9px 26px; position: relative; line-height: 1.5; border-bottom: 1px solid rgba(245,240,232,0.06); }
+.tier li:last-child { border-bottom: none; }
+.tier li::before { content: ''; position: absolute; left: 4px; top: 17px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.tier-btn { display: block; text-align: center; padding: 13px 20px; border-radius: 4px; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.02em; transition: all 0.25s; }
+.tier-btn-solid { background: var(--gold); color: var(--warm-black); }
+.tier-btn-solid:hover { background: #d4b35a; color: var(--warm-black); transform: translateY(-1px); }
+.tier-btn-outline { border: 1px solid rgba(201,168,76,0.4); color: var(--gold); }
+.tier-btn-outline:hover { border-color: var(--gold); color: #d4b35a; }
+.tier-held .tier-price { color: var(--on-ink-mid); }
+
+/* HELD COHORT NOTE */
+.held-note { font-size: 0.82rem; color: var(--on-ink-dim); text-align: center; margin-top: 28px; font-style: italic; }
+
+/* PROFILE READ FEATURE */
+.read-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; max-width: 920px; margin: 0 auto; }
+.read-text p { font-size: 1.08rem; color: var(--on-ink); margin-bottom: 20px; font-weight: 300; line-height: 1.7; }
+.read-text p strong { color: var(--cream); font-weight: 600; }
+.read-card { background: var(--ink); border: 1px solid var(--ink-line); border-radius: 8px; padding: 36px; }
+.read-card h4 { font-size: 1.3rem; color: var(--gold); margin-bottom: 18px; font-weight: 600; }
+.read-card ol { list-style: none; counter-reset: step; }
+.read-card li { counter-increment: step; padding: 14px 0 14px 44px; position: relative; font-size: 0.96rem; color: var(--on-ink); border-bottom: 1px solid rgba(245,240,232,0.07); line-height: 1.55; }
+.read-card li:last-child { border-bottom: none; }
+.read-card li::before { content: counter(step); position: absolute; left: 0; top: 13px; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.4); color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+/* SCHOLARSHIP BANNER */
+.scholarship { background: var(--warm-black); border-top: 1px solid var(--ink-line); border-bottom: 1px solid var(--ink-line); position: relative; overflow: hidden; }
+.scholarship::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 800px; height: 800px; background: radial-gradient(ellipse, rgba(61,140,126,0.1) 0%, transparent 65%); pointer-events: none; }
+.scholarship-inner { max-width: 720px; margin: 0 auto; text-align: center; position: relative; z-index: 2; padding: 88px 24px; }
+.scholarship h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); color: var(--cream); font-weight: 500; margin-bottom: 24px; line-height: 1.25; }
+.scholarship .big-line { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); }
+.scholarship p { font-size: 1.12rem; color: var(--on-ink-mid); font-weight: 300; line-height: 1.7; max-width: 560px; margin: 0 auto 14px; }
+.scholarship p strong { color: var(--cream); font-weight: 600; }
+
+/* WHO / FOUNDER STRIP */
+.founder { display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 720px; margin: 0 auto; text-align: center; }
+.founder p { font-size: 1.1rem; color: var(--on-ink); font-weight: 300; line-height: 1.75; margin-bottom: 8px; }
+.founder .creds { font-size: 0.92rem; color: var(--on-ink-mid); letter-spacing: 0.03em; margin-top: 18px; }
+.founder .creds span { color: var(--gold); }
+
+/* FAQ */
+.faq { max-width: 720px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--ink-line); padding: 26px 0; }
+.faq-item h4 { font-size: 1.18rem; color: var(--cream); margin-bottom: 10px; font-weight: 600; }
+.faq-item p { font-size: 1rem; color: var(--on-ink-mid); font-weight: 300; line-height: 1.65; }
+
+/* FINAL CTA */
+.final { background: var(--warm-black); text-align: center; padding: 100px 24px; position: relative; overflow: hidden; }
+.final::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 900px; height: 900px; background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 65%); pointer-events: none; }
+.final-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+.final h2 { font-size: clamp(2rem, 4vw, 2.9rem); color: var(--cream); font-weight: 500; margin-bottom: 22px; line-height: 1.2; }
+.final h2 em { font-style: italic; color: var(--gold); }
+.final p { font-size: 1.12rem; color: var(--on-ink-mid); margin-bottom: 40px; font-weight: 300; }
+
+/* FOOTER */
+footer { background: var(--ink); border-top: 1px solid var(--ink-line); padding: 56px 0 40px; }
+.footer-top { text-align: center; margin-bottom: 36px; }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--cream); margin-bottom: 8px; }
+.footer-tag { font-size: 0.95rem; color: var(--on-ink-mid); font-weight: 300; max-width: 440px; margin: 0 auto; }
+.footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-bottom: 36px; }
+.footer-links a { font-size: 0.88rem; color: var(--on-ink-mid); }
+.footer-links a:hover { color: var(--gold); }
+.footer-bottom { text-align: center; font-size: 0.82rem; color: var(--on-ink-dim); padding-top: 28px; border-top: 1px solid rgba(245,240,232,0.06); }
+.footer-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); font-size: 1rem; margin-top: 12px; }
+
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: block; }
+  .read-grid { grid-template-columns: 1fr; gap: 36px; }
+  .tiers { grid-template-columns: 1fr; }
+  .sec { padding: 72px 0; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="https://thinkinglabs.academy" class="nav-brand">Thinking Labs<span>by Temple Academy</span></a>
+    <div class="nav-links">
+      <a href="#argument">The Case</a>
+      <a href="#read">The Profile Read</a>
+      <a href="#tracks">The Tracks</a>
+      <a href="#scholarship">The Scholarship</a>
+      <a href="https://thinkinglabs.academy">Public Site</a>
+      <a href="#start" class="nav-cta">Request a Profile</a>
+    </div>
+    <button class="mobile-toggle" id="mobileToggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">By Application • Virtual • National</span>
+    <h1>Most parents are told <em>where their child ranks.</em> Almost none are told <em>how their child thinks.</em></h1>
+    <p class="hero-sub">A private track for families who want their child read by name. The work is virtual, so the room is national. Every paid seat funds a seat for a student who could not otherwise afford one.</p>
+    <div class="hero-actions">
+      <a href="#read" class="btn-primary">See What a Profile Read Is</a>
+      <a href="#tracks" class="btn-secondary">View the Tracks</a>
+    </div>
+  </div>
+</header>
+
+<!-- OPENING ARGUMENT -->
+<section class="sec" id="argument">
+  <div class="container">
+    <span class="eyebrow">The Case</span>
+    <h2>Your child can get any answer in seconds. <em>That is exactly the problem.</em></h2>
+    <div class="argument">
+      <p>The grades still come home. The test scores still look fine. So most parents never find out what happened underneath.</p>
+      <p>A child who can produce a finished essay in twelve seconds has learned something. They have learned that the finished thing is what matters. Not the reasoning that should have produced it. The reasoning is the part that was skipped.</p>
+      <p>You cannot see that on a report card. A report card measures output. It was never built to measure whether your child can think without the tool in their hand.</p>
+      <p class="pull">When the answer is free, the only thing left worth owning is the thinking behind it.</p>
+      <p>That is what this track measures, and then builds. Not what your child knows. <strong>What your child can do when the answer is taken away.</strong></p>
+      <p>It starts with one conversation. A teacher reads your specific child, by name, and tells you exactly where the gaps are and what those gaps predict.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROFILE READ -->
+<section class="sec sec-alt" id="read">
+  <div class="container">
+    <span class="eyebrow">The First Step</span>
+    <h2>The Thinking Profile</h2>
+    <p class="sec-lede">The assessment is free and takes about ten minutes. What you pay for is the read. A teacher who has spent over twenty years watching students think sits down with you and tells you what the numbers actually mean for your child.</p>
+    <div class="read-grid">
+      <div class="read-text">
+        <p>Most assessments hand you a score and leave you to guess what it means. This does the opposite.</p>
+        <p>Your child takes the free five dimension assessment. Then you and Syd meet on a private video call. He walks you through your child's profile, dimension by dimension, by name.</p>
+        <p><strong>The human on the call is the product.</strong> A chemistry and physics teacher with research training reading your child the way he has read thousands of students, and telling you the truth about what he sees.</p>
+        <p>You leave knowing where your child owns their thinking, where they have quietly handed it to a tool, and what that predicts for the next two years.</p>
+      </div>
+      <div class="read-card">
+        <h4>What the call gives you</h4>
+        <ol>
+          <li>Your child's full profile across all five dimensions, read out loud and explained.</li>
+          <li>The one dimension that matters most for your child right now, named.</li>
+          <li>What the current pattern predicts if nothing changes.</li>
+          <li>A clear first move, whether or not you ever enroll in anything else.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE TRACKS -->
+<section class="sec" id="tracks">
+  <div class="container">
+    <span class="eyebrow">The Tracks</span>
+    <h2>Three ways in. <em>One standard.</em></h2>
+    <p class="sec-lede">Start with a profile read. Move to the cohort when you want the full program. Choose the private track when you want the work built entirely around your child.</p>
+    <div class="tiers">
+
+      <!-- TIER 1 -->
+      <div class="tier">
+        <div class="tier-rank">First Step</div>
+        <h3>The Thinking Profile</h3>
+        <p class="tier-tag">A teacher reads your child by name.</p>
+        <div class="tier-price">$300&ndash;$500</div>
+        <div class="tier-price-note">One private findings call</div>
+        <ul>
+          <li>The free five dimension assessment</li>
+          <li>A private video call with Syd</li>
+          <li>Your child's full profile, explained dimension by dimension</li>
+          <li>The gaps named and what they predict</li>
+          <li>A clear first move you can make right away</li>
+        </ul>
+        <a href="#start" class="tier-btn tier-btn-solid">Request a Profile Read</a>
+      </div>
+
+      <!-- TIER 2 -->
+      <div class="tier">
+        <div class="tier-rank">The Program</div>
+        <h3>The Cohort</h3>
+        <p class="tier-tag">The full six week program, live and virtual.</p>
+        <div class="tier-price">$2,400</div>
+        <div class="tier-price-note">Six weeks • Seats by application</div>
+        <ul>
+          <li>Six weeks, live, small groups, national</li>
+          <li>Real time challenges built around the five dimensions</li>
+          <li>Ends in a capstone oral defense, no AI, no notes, no slides</li>
+          <li>Your child proves they own their thinking out loud</li>
+          <li>Every seat funds a seat for a student who could not otherwise pay</li>
+        </ul>
+        <a href="#start" class="tier-btn tier-btn-outline">Ask About the Next Cohort</a>
+      </div>
+
+      <!-- TIER 3 — ANCHOR -->
+      <div class="tier tier-anchor">
+        <div class="tier-rank">The Anchor</div>
+        <h3>The Private Track</h3>
+        <p class="tier-tag">The work built entirely around your child.</p>
+        <div class="tier-price">$5,000<small>+</small></div>
+        <div class="tier-price-note">One family, fully private</div>
+        <ul>
+          <li>One on one work with Syd, start to finish</li>
+          <li>A plan built around your child's exact profile</li>
+          <li>Private sessions on your schedule, fully virtual</li>
+          <li>Direct access between sessions</li>
+          <li>The capstone defense, witnessed and assessed</li>
+          <li>Every private seat funds a full scholarship seat</li>
+        </ul>
+        <a href="#start" class="tier-btn tier-btn-solid">Apply for the Private Track</a>
+      </div>
+
+    </div>
+    <p class="held-note">All three tracks are open now. Every paid seat funds a full scholarship seat for a student who could not otherwise afford one.</p>
+  </div>
+</section>
+
+<!-- SCHOLARSHIP -->
+<section class="scholarship" id="scholarship">
+  <div class="scholarship-inner">
+    <span class="eyebrow">The Reason This Exists</span>
+    <h2>Every paid seat funds a seat for a student <span class="big-line">who could not otherwise afford one.</span></h2>
+    <p>One to one. Literal. When your family enrolls, a student who would never have had access gets the same six weeks, the same teacher, the same standard.</p>
+    <p><strong>The work is virtual, so the reach is national.</strong> A family in one zip code pays, and a student in another gets a seat. The thing you are buying for your child quietly opens the same door for a child you will never meet.</p>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="sec sec-alt">
+  <div class="container">
+    <span class="eyebrow">Who Reads Your Child</span>
+    <h2>Syd Malaxos</h2>
+    <div class="founder">
+      <p>Chemistry and physics teacher. Over twenty years in the classroom. This is not theory from a conference stage. It is methodology from a teacher who watches students think, and stop thinking, every single day.</p>
+      <p>He built the assessment, wrote the book, and designed every part of the program. When you book a profile read, he is the one on the call.</p>
+      <p class="creds"><span>Harvard</span> research background &nbsp;•&nbsp; <span>Brandeis</span> master's in chemical physics &nbsp;•&nbsp; <span>Tufts</span> dual master's in biotechnology and chemistry</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="container">
+    <span class="eyebrow">Before You Ask</span>
+    <h2>The honest answers</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <h4>Is this tutoring?</h4>
+        <p>No. Tutoring fixes a grade in a subject. This builds the thing underneath every subject, whether your child can reason, evaluate, persist, defend, and use tools without being replaced by them.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Is it really all virtual?</h4>
+        <p>Yes. Every part of this track runs on video. That is the point. It means the best read your child can get is not limited to who happens to live nearby, and it means the families who pay can fund seats anywhere.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What ages is this for?</h4>
+        <p>Students aged thirteen and up. The work assumes a student old enough to be handed real tools and old enough for it to matter whether they own their thinking before they reach for one.</p>
+      </div>
+      <div class="faq-item">
+        <h4>The scholarship seat, is that marketing?</h4>
+        <p>No. It is one to one and literal. Every paid seat funds a real seat for a student who could not otherwise afford the program. That is why the price is what it is.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Why does it start with a paid call instead of a free one?</h4>
+        <p>Because the call is the work, not a sales pitch. You are paying for a teacher to read your specific child and tell you the truth. You walk away with something real whether or not you ever enroll in anything else.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="start">
+  <div class="final-inner">
+    <h2>Start with <em>one conversation.</em></h2>
+    <p>Your child takes the free assessment. Then a teacher reads them by name and tells you the truth. That is the first step, and it is the only one you need to decide on today.</p>
+    <div class="hero-actions">
+      <a href="https://cognitive-gap-assessment.vercel.app/register" class="btn-primary">Take the Free Assessment</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=Private%20Track%20Inquiry" class="btn-secondary">Request a Profile Read</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">Thinking Labs by Temple Academy</div>
+      <p class="footer-tag">Building cognitive ownership before AI extension. Because the answer was never the point.</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://thinkinglabs.academy">Public Site</a>
+      <a href="https://cognitive-gap-assessment.vercel.app/register">Free Assessment</a>
+      <a href="https://smalaxos.substack.com">Substack</a>
+      <a href="https://www.linkedin.com/in/syd-malaxos-04464b3/">LinkedIn</a>
+      <a href="https://a.co/d/0adownwx">The Book</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com">Contact</a>
+    </div>
+    <div class="footer-bottom">
+      © 2026 Temple Academy. All rights reserved.
+      <div class="footer-quote">Love is law, let your lantern burn bright.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+const toggle = document.getElementById('mobileToggle');
+const links = document.querySelector('.nav-links');
+toggle.addEventListener('click', () => {
+  toggle.classList.toggle('open');
+  if (links.style.display === 'flex') {
+    links.style.display = '';
+  } else {
+    links.style.display = 'flex';
+    links.style.position = 'absolute';
+    links.style.top = '100%';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.flexDirection = 'column';
+    links.style.background = 'rgba(13,11,9,0.97)';
+    links.style.padding = '20px 24px';
+    links.style.gap = '18px';
+    links.style.borderBottom = '1px solid rgba(201,168,76,0.18)';
+  }
+});
+</script>
+</body>
+</html>
