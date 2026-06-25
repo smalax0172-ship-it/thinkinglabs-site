@@ -144,9 +144,36 @@ footer .brand span { display:block; font-family:'Source Sans 3'; font-size: 0.72
 footer .fine { font-size: 0.82rem; color: var(--text-light); margin-top: 12px; }
 
 .kbd { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-dim); }
+
+/* Canonical site header (shared across all pages). Static so the sticky lesson tab bar below is untouched. */
+#nav { position: relative; z-index: 100; background: rgba(245, 240, 232, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(212, 203, 191, 0.6); }
+#nav .nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--charcoal); letter-spacing: 0.02em; text-decoration: none; }
+.nav-brand span { font-weight: 400; color: var(--text-mid); font-size: 0.72rem; display: block; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 1px; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--text-mid); letter-spacing: 0.02em; position: relative; text-decoration: none; }
+.nav-links a:not(.nav-cta):hover { color: var(--charcoal); }
+.nav-links a:not(.nav-cta)::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: var(--gold); transition: width 0.3s; }
+.nav-links a:not(.nav-cta):hover::after { width: 100%; }
+.nav-cta { background: var(--charcoal); color: var(--cream) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.25s; }
+.nav-cta:hover { background: #2a2a2a; color: var(--cream) !important; transform: translateY(-1px); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--charcoal); margin: 5px 0; border-radius: 1px; transition: 0.3s; }
+.mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.mobile-toggle.open span:nth-child(2) { opacity: 0; }
+.mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+@media (max-width: 900px) { #nav .nav-links { display: none; } #nav .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); } #nav .mobile-toggle { display: block; } }
 </style>
 </head>
 <body>
+
+<nav id="nav"><div class="nav-inner">
+<a href="https://thinkinglabs.academy/" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="index.html#about">About</a><a href="research.html">Research</a><a href="schools.html">Schools</a><a href="ski-jumping.html">Try a Lesson</a><a href="private.html">Private Track</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
 
 <header class="site">
   <div class="eyebrow">An Interactive Physics Lesson</div>
@@ -777,6 +804,10 @@ syncLabels();
 resizeCanvas();
 recompute();
 els.delta.className='delta flat'; els.delta.textContent='move a slider to compare';
+</script>
+<script>
+/* Shared site-nav mobile toggle (matches every other page) */
+document.getElementById('mobileToggle').addEventListener('click', function() { this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open'); });
 </script>
 </body>
 </html>
