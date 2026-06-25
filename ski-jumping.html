@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Physics of Ski Jumping | Thinking Labs by Temple Academy</title>
+<meta name="description" content="An interactive physics lesson. A real, force-integrated aerodynamics simulation of a ski jumper in flight — discover how a tiny change in surface area carries a jumper dramatically farther." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --charcoal: #1a1a1a; --warm-black: #0d0b09; --cream: #f5f0e8; --warm-cream: #ebe4d6;
+  --gold: #c9a84c; --gold-dim: #a68a3e; --gold-glow: rgba(201, 168, 76, 0.15);
+  --teal: #3d8c7e; --teal-light: #4fa898; --rust: #9b4a3c; --rust-light: #c25c49;
+  --text-dark: #2a2420; --text-mid: #5a524a; --text-light: #8a8278;
+  --border: #d4cbbf; --section-alt: #faf7f2; --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body { font-family: 'Source Sans 3', -apple-system, sans-serif; color: var(--text-dark); background: var(--cream); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; line-height: 1.2; color: var(--charcoal); }
+a { color: var(--teal); text-decoration: none; }
+p { margin-bottom: 1em; }
+
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
+
+/* Header */
+header.site { text-align: center; padding: 38px 0 18px; }
+.eyebrow { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--gold-dim); margin-bottom: 6px; }
+header.site h1 { font-size: clamp(30px, 6vw, 50px); letter-spacing: -0.015em; }
+header.site h1 em { font-style: italic; color: var(--gold); }
+.sub { color: var(--text-mid); font-size: 1.02rem; max-width: 620px; margin: 12px auto 0; }
+
+/* Tabs */
+nav.tabs { position: sticky; top: 0; z-index: 50; background: rgba(245,240,232,0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); margin-top: 22px; }
+.tabs-inner { max-width: 980px; margin: 0 auto; display: flex; gap: 4px; padding: 0 14px; overflow-x: auto; }
+.tab-btn { flex: 0 0 auto; background: none; border: none; cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); padding: 16px 16px 14px; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text-dark); }
+.tab-btn.active { color: var(--charcoal); border-bottom-color: var(--gold); }
+
+/* Panels */
+.panel { display: none; padding: 34px 0 60px; animation: fade .35s ease; }
+.panel.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.panel h2 { font-size: clamp(26px, 4.5vw, 36px); margin-bottom: 4px; }
+.panel h3 { font-size: 1.4rem; margin: 28px 0 8px; color: var(--text-dark); }
+.lead { font-size: 1.15rem; color: var(--text-mid); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 22px; }
+.prose { max-width: 680px; }
+.prose p { font-size: 1.05rem; }
+.prose .drop::first-letter { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; line-height: 0.8; float: left; padding: 6px 10px 0 0; color: var(--gold-dim); font-weight: 600; }
+
+.eq { text-align: center; font-size: 1.5rem; margin: 26px auto; padding: 18px; background: var(--section-alt); border: 1px solid var(--border); border-radius: 8px; max-width: 520px; font-family: 'Cormorant Garamond', serif; color: var(--charcoal); }
+.eq sub { font-size: 0.65em; } .eq sup { font-size: 0.7em; }
+.eq .lbl { display: block; font-family: 'Source Sans 3'; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); margin-top: 8px; }
+
+.callout { background: var(--gold-glow); border-left: 3px solid var(--gold); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 22px 0; }
+.callout strong { color: var(--charcoal); }
+
+/* Vocabulary */
+.vocab { display: grid; gap: 16px; margin-top: 18px; }
+.term { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; box-shadow: var(--card-shadow); }
+.term h4 { font-size: 1.35rem; color: var(--charcoal); margin-bottom: 4px; }
+.term .sym { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-dim); font-size: 1.1rem; margin-left: 8px; }
+.term p { margin: 0 0 8px; color: var(--text-mid); }
+.term .insim { display: block; font-size: 0.95rem; color: var(--teal); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 4px; }
+.term .insim b { color: var(--teal); font-weight: 600; }
+
+/* Simulation layout */
+.sim-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 860px){ .sim-grid { grid-template-columns: 1.55fr 1fr; align-items: start; } }
+.stage { background: linear-gradient(180deg,#eaf1f4 0%, #f3eee4 62%, #efe7d6 100%); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); position: relative; }
+canvas#sky { display: block; width: 100%; height: auto; touch-action: none; }
+.stage-badge { position: absolute; top: 10px; left: 12px; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); background: rgba(255,255,255,0.6); padding: 3px 9px; border-radius: 20px; }
+
+.controls { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 18px 8px; box-shadow: var(--card-shadow); }
+.controls h3 { margin: 0 0 14px; font-size: 1.25rem; }
+.ctl { margin-bottom: 16px; }
+.ctl-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.ctl-top label { font-weight: 600; font-size: 0.95rem; color: var(--text-dark); }
+.ctl-top .val { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--teal); font-size: 0.98rem; }
+.ctl-top .val small { color: var(--text-light); font-weight: 500; }
+.ctl-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 3px; }
+.ctl.key .ctl-top label::after { content: ' ★'; color: var(--gold); }
+input[type=range]{ -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--teal) 0%, var(--teal) var(--fill,40%), var(--warm-cream) var(--fill,40%)); outline: none; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width: 20px; height: 20px; border-radius: 50%; background:#fff; border: 2px solid var(--teal); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); transition: transform .1s; }
+input[type=range]::-webkit-slider-thumb:active{ transform: scale(1.18); }
+input[type=range]::-moz-range-thumb{ width: 18px; height:18px; border-radius:50%; background:#fff; border:2px solid var(--teal); cursor:pointer; }
+.btn-row { display: flex; gap: 10px; margin: 4px 0 14px; }
+.btn { flex: 1; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.03em; padding: 11px; border-radius: 7px; border: 1px solid var(--border); background: #fff; color: var(--text-dark); transition: all .18s; }
+.btn:hover { border-color: var(--teal); color: var(--teal); }
+.btn.primary { background: var(--charcoal); color: var(--cream); border-color: var(--charcoal); }
+.btn.primary:hover { background: #000; color: #fff; }
+
+/* Readouts */
+.readouts { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px; box-shadow: var(--card-shadow); margin-top: 20px; }
+.readouts h3 { margin: 0 0 12px; font-size: 1.25rem; }
+.dist-big { text-align: center; padding: 10px 0 6px; }
+.dist-big .num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--charcoal); line-height: 1; font-variant-numeric: tabular-nums; }
+.dist-big .num.flash { animation: pop .5s ease; }
+@keyframes pop { 0%{ color: var(--gold);} 50%{ transform: scale(1.06); color: var(--gold);} 100%{ transform: none; color: var(--charcoal);} }
+.dist-big .unit { font-size: 1.1rem; color: var(--text-mid); }
+.dist-big .lbl { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 2px; }
+.delta { text-align:center; font-size: 0.9rem; min-height: 1.2em; margin-top: 2px; font-weight: 600; }
+.delta.up { color: var(--teal); } .delta.down { color: var(--rust); } .delta.flat { color: var(--text-light); }
+
+.forces { margin-top: 16px; }
+.fbar { margin-bottom: 10px; }
+.fbar-top { display:flex; justify-content: space-between; font-size: 0.86rem; margin-bottom: 3px; }
+.fbar-top .name { font-weight: 600; }
+.fbar-top .nv { font-variant-numeric: tabular-nums; color: var(--text-mid); }
+.fbar-track { height: 12px; background: var(--warm-cream); border-radius: 6px; overflow: hidden; }
+.fbar-fill { height: 100%; border-radius: 6px; transition: width .12s linear; }
+.f-lift .fbar-fill { background: var(--teal); } .f-lift .name { color: var(--teal); }
+.f-drag .fbar-fill { background: var(--rust); } .f-drag .name { color: var(--rust); }
+.f-weight .fbar-fill { background: var(--gold-dim); } .f-weight .name { color: var(--gold-dim); }
+.misc { display:flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; font-size: 0.86rem; color: var(--text-mid); border-top: 1px solid var(--border); padding-top: 12px; }
+.misc b { color: var(--text-dark); font-variant-numeric: tabular-nums; }
+.note { font-size: 0.82rem; color: var(--text-light); margin-top: 14px; line-height: 1.5; }
+.stall-tag { display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--rust); padding:2px 8px; border-radius:12px; margin-left:6px; opacity:0; transition:opacity .2s; }
+.stall-tag.on { opacity:1; }
+
+/* Worksheet */
+.ws-intro { background: var(--section-alt); border:1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 26px; }
+.q { background:#fff; border:1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; box-shadow: var(--card-shadow); }
+.q .tag { display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding: 3px 9px; border-radius: 12px; margin-bottom: 10px; }
+.tag.predict { background:#e7eef0; color: var(--teal); }
+.tag.observe { background:#f3ecd8; color: var(--gold-dim); }
+.tag.explain { background:#f0e2dd; color: var(--rust); }
+.tag.extend { background:#e6e2da; color: var(--text-mid); }
+.tag.sov { background: var(--charcoal); color: var(--cream); }
+.q p { margin: 0 0 10px; font-size: 1.04rem; }
+.q .qn { font-weight: 700; color: var(--gold-dim); margin-right: 6px; }
+.q textarea { width: 100%; border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-family: inherit; font-size: 0.98rem; resize: vertical; min-height: 64px; background: var(--section-alt); color: var(--text-dark); }
+.q textarea:focus { outline: none; border-color: var(--teal); background:#fff; }
+.q.sovereign { border: 2px solid var(--charcoal); background: linear-gradient(180deg,#fff, #faf7f2); }
+
+footer { border-top: 1px solid var(--border); padding: 30px 0 50px; text-align: center; }
+footer .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: var(--charcoal); }
+footer .brand span { display:block; font-family:'Source Sans 3'; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); margin-top: 3px; }
+footer .fine { font-size: 0.82rem; color: var(--text-light); margin-top: 12px; }
+
+.kbd { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="eyebrow">An Interactive Physics Lesson</div>
+  <h1>The Physics of <em>Ski Jumping</em></h1>
+  <p class="sub">A real aerodynamics simulation — every trajectory below is computed force-by-force from genuine physics, never drawn. Move a slider and watch the air do the work.</p>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="intro">Intro</button>
+    <button class="tab-btn" data-tab="vocab">Vocabulary</button>
+    <button class="tab-btn" data-tab="sim">Simulation</button>
+    <button class="tab-btn" data-tab="ws">Worksheet</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="panel active" id="intro">
+    <h2>The Jumper Who Caught the Air</h2>
+    <p class="lead">Read this aloud. It is the chapter; the simulation is the laboratory.</p>
+    <div class="prose">
+      <p class="drop">Stand at the bottom of a ski-flying hill and look up. The takeoff sits far overhead, a thin lip of snow against the sky. A jumper crouches, slides, and at the edge does something that looks, for a moment, impossible: instead of falling, they <em>lean out over their skis</em> and hang there. The crowd holds its breath while a human being glides — really glides — down a mountain of air.</p>
+
+      <p>For most of the sport's history, coaches thought ski jumping was about courage and the launch. Get the fastest run-up, the strongest spring off the table, and the rest was gravity's business. Then officials started noticing something strange. Two jumpers would leave the takeoff at nearly the same speed, the same angle — and one would land twenty meters farther down the hill. Not because they were braver. Because they were <em>shaped</em> better against the wind.</p>
+
+      <p>The secret was in the suit and the posture. A ski jumper in flight is not falling; they are flying a wing made of their own body. Arms, torso, and skis form a surface, and when air rushes across that surface, it pushes back. Part of that push fights the jumper's motion — we call it <strong>drag</strong>. But part of it pushes <em>upward</em>, perpendicular to the airflow, holding the jumper aloft. That upward push is <strong>lift</strong>, the same force that carries a 400-ton airliner.</p>
+
+      <p>How much lift you get depends on a tidy little equation that turns out to govern everything from sailplanes to maple seeds:</p>
+
+      <div class="eq">
+        L = ½ &middot; &rho; &middot; v<sup>2</sup> &middot; C<sub>L</sub> &middot; A
+        <span class="lbl">Lift = half &middot; air density &middot; speed&sup2; &middot; lift coefficient &middot; area</span>
+      </div>
+
+      <p>Read it slowly. Lift grows with the <strong>density of the air</strong> (&rho;), with the <strong>square of your speed</strong> (v&sup2; — so going a little faster helps a lot), with a <strong>lift coefficient</strong> (C<sub>L</sub>) that depends on the angle your body cuts into the wind, and with the <strong>surface area</strong> (A) you present to the flow. More area, more wing, more lift.</p>
+
+      <p>And here is where the officials got nervous. Because <em>A</em> is something you can change with tailoring. Let a jumper wear a slightly baggier suit — a few extra square centimeters of fabric stretched between the legs and under the arms — and you have quietly built them a bigger wing. The rule-makers measured suits with calipers and wrote area limits into the rulebook, down to the centimeter. Why such fuss over a few centimeters of cloth?</p>
+
+      <p>Because of the surprise this lesson is built to reveal. You might expect that making the wing 3% bigger makes the jump 3% longer. Fair, proportional, boring. <strong>That is not what happens.</strong> A ski jumper in a full glide is balanced on a knife's edge between sinking and soaring, and near that edge the system becomes <em>nonlinear</em>: a tiny nudge to the area can stretch the glide far more than 3%. A small input produces a large, disproportionate downstream effect. That sensitivity is exactly why a sliver of extra suit is worth regulating — and exactly what you are about to discover for yourself.</p>
+
+      <div class="callout">
+        <strong>Your job is not to be told this — it is to find it.</strong> Go to the <span class="kbd">Simulation</span> tab. The jumper you launch there is not following an animation. Every frame, the program adds up gravity, lift, and drag, turns that net force into acceleration, and integrates it into a real path through the air. Nudge the surface-area slider by a hair and watch where the jumper lands. Then come back and tell the story in your own words on the <span class="kbd">Worksheet</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="vocab">
+    <h2>The Vocabulary of Flight</h2>
+    <p class="lead">Eight words. Learn them here, then watch each one come alive in the simulation.</p>
+    <div class="vocab">
+      <div class="term">
+        <h4>Lift <span class="sym">L</span></h4>
+        <p>The force pushing a body <em>perpendicular</em> to the airflow — the upward push that holds a wing, or a jumper, aloft. It comes from air being deflected by a surface, and it grows with speed squared, air density, body angle, and area: L = ½&rho;v&sup2;C<sub>L</sub>A.</p>
+        <span class="insim"><b>In the simulation:</b> the teal vector on the jumper. Watch it lengthen as you raise speed or area — and notice it can never quite beat gravity alone, which is why the jumper still descends.</span>
+      </div>
+      <div class="term">
+        <h4>Drag <span class="sym">D</span></h4>
+        <p>The force pushing <em>opposite</em> the direction of motion — air resistance. It slows the jumper down and bleeds away the speed that lift depends on. D = ½&rho;v&sup2;C<sub>D</sub>A.</p>
+        <span class="insim"><b>In the simulation:</b> the rust-colored vector pointing backward along the flight path, and the rust force bar. Crank the angle of attack past stall and watch drag balloon.</span>
+      </div>
+      <div class="term">
+        <h4>Angle of Attack <span class="sym">&alpha;</span></h4>
+        <p>The angle between the jumper's body (the "wing") and the oncoming air. Lean forward into the flow at a smart angle and you generate lift efficiently; tilt too far and the airflow tears loose from your body.</p>
+        <span class="insim"><b>In the simulation:</b> the <i>Angle of attack</i> slider. Increase it and lift climbs — until about 15&deg;, where everything changes.</span>
+      </div>
+      <div class="term">
+        <h4>Lift Coefficient <span class="sym">C<sub>L</sub></span></h4>
+        <p>A number that captures how good a shape is at making lift at a given angle of attack. It rises roughly linearly as you increase the angle — then collapses past the stall angle, when smooth airflow breaks down.</p>
+        <span class="insim"><b>In the simulation:</b> the <i>C<sub>L</sub></i> readout. Sweep the angle slowly and watch C<sub>L</sub> climb, peak near 15&deg;, then fall. The <span style="color:var(--rust);font-weight:600">STALL</span> tag lights up when you cross the edge.</span>
+      </div>
+      <div class="term">
+        <h4>Surface Area <span class="sym">A</span></h4>
+        <p>The area of the body-and-skis "wing" presented to the airflow — the one variable a tailor can quietly change. Both lift and drag scale directly with it.</p>
+        <span class="insim"><b>In the simulation:</b> the starred ★ <i>Surface area</i> slider — the key variable. Move it just a little. This is the slider this whole lesson is built around.</span>
+      </div>
+      <div class="term">
+        <h4>Air Density <span class="sym">&rho;</span></h4>
+        <p>How much mass the air packs into each cubic meter (about 1.2 kg/m&sup3; at sea level). Denser air pushes harder, so it makes both more lift and more drag. Cold, low-altitude, high-pressure air is "thick"; thin mountain air gives less to push against.</p>
+        <span class="insim"><b>In the simulation:</b> the <i>Air density</i> slider. Thicker air sends the jumper farther — a real effect officials account for between venues.</span>
+      </div>
+      <div class="term">
+        <h4>Terminal-ish Glide</h4>
+        <p>The near-steady state a jumper settles toward when lift and drag nearly balance the pull of gravity along the flight path, so speed and angle stop changing much. The glide "wants" to follow a particular slope through the air.</p>
+        <span class="insim"><b>In the simulation:</b> when the jumper's path runs nearly parallel to the hill for a long stretch before landing — that's the glide settling in. Near that balance the landing point gets very touchy.</span>
+      </div>
+      <div class="term">
+        <h4>Nonlinear Sensitivity</h4>
+        <p>When a small change to an input produces a disproportionately large change in the output — the opposite of a neat, proportional response. Systems poised near a critical balance are famous for it.</p>
+        <span class="insim"><b>In the simulation:</b> the whole point. A 3% nudge to area can stretch the landing far more than 3%. Find the setting where a hair of slider movement throws the jumper meters down the hill — that's nonlinearity you can feel.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIMULATION ============ -->
+  <section class="panel" id="sim">
+    <h2>The Flight Laboratory</h2>
+    <p class="lead">Real forces, integrated frame by frame. Nothing here is faked.</p>
+
+    <div class="sim-grid">
+      <div>
+        <div class="stage">
+          <span class="stage-badge">Live trajectory &middot; RK4 integration</span>
+          <canvas id="sky" width="760" height="500"></canvas>
+        </div>
+        <div class="note">
+          The curve is computed, not drawn: each timestep the engine sums <span style="color:var(--gold-dim);font-weight:600">gravity</span>,
+          <span style="color:var(--teal);font-weight:600">lift</span> (perpendicular to velocity) and
+          <span style="color:var(--rust);font-weight:600">drag</span> (opposite velocity), divides by mass to get acceleration,
+          and uses 4th-order Runge–Kutta to advance velocity and position. The faint grey path is your previous jump, for comparison.
+        </div>
+      </div>
+
+      <div>
+        <div class="controls">
+          <h3>Controls</h3>
+          <div class="ctl key">
+            <div class="ctl-top"><label for="area">Surface area A</label><span class="val" id="area-v">0.55 <small>m&sup2;</small></span></div>
+            <input type="range" id="area" min="0.45" max="0.72" step="0.005" value="0.55">
+            <div class="ctl-hint">The key variable. Nudge it a hair and watch the landing.</div>
+          </div>
+          <div class="ctl">
+            <div class="ctl-top"><label for="alpha">Angle of attack &alpha; <span class="stall-tag" id="stall">Stall</span></label><span class="val" id="alpha-v">10&deg;</span></div>
+            <input type="range" id="alpha" min="0" max="26" step="0.5" value="10">
+            <div class="ctl-hint">Body angle into the airflow. Lift peaks near 15&deg;.</div>
+          </div>
+          <div class="ctl">
+            <div class="ctl-top"><label for="v0">Launch speed v</label><span class="val" id="v0-v">30 <small>m/s</small></span></div>
+            <input type="range" id="v0" min="24" max="36" step="0.5" value="30">
+            <div class="ctl-hint">Speed leaving the takeoff table.</div>
+          </div>
+          <div class="ctl">
+            <div class="ctl-top"><label for="rho">Air density &rho;</label><span class="val" id="rho-v">1.20 <small>kg/m&sup3;</small></span></div>
+            <input type="range" id="rho" min="0.95" max="1.40" step="0.01" value="1.20">
+            <div class="ctl-hint">Thicker air = more lift and more drag.</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn primary" id="launch">▶ Launch</button>
+            <button class="btn" id="reset">Reset defaults</button>
+          </div>
+        </div>
+
+        <div class="readouts">
+          <h3>Live Readouts</h3>
+          <div class="dist-big">
+            <div class="lbl">Landing distance</div>
+            <span class="num" id="dist">—</span><span class="unit"> m</span>
+            <div class="delta flat" id="delta">move a slider to compare</div>
+          </div>
+          <div class="forces">
+            <div class="fbar f-lift">
+              <div class="fbar-top"><span class="name">Lift</span><span class="nv"><span id="lift-n">0</span> N</span></div>
+              <div class="fbar-track"><div class="fbar-fill" id="lift-bar" style="width:0%"></div></div>
+            </div>
+            <div class="fbar f-drag">
+              <div class="fbar-top"><span class="name">Drag</span><span class="nv"><span id="drag-n">0</span> N</span></div>
+              <div class="fbar-track"><div class="fbar-fill" id="drag-bar" style="width:0%"></div></div>
+            </div>
+            <div class="fbar f-weight">
+              <div class="fbar-top"><span class="name">Weight (gravity)</span><span class="nv"><span id="wt-n">736</span> N</span></div>
+              <div class="fbar-track"><div class="fbar-fill" id="wt-bar" style="width:60%"></div></div>
+            </div>
+          </div>
+          <div class="misc">
+            <div>C<sub>L</sub>: <b id="cl">1.00</b></div>
+            <div>C<sub>D</sub>: <b id="cd">0.64</b></div>
+            <div>Lift / Weight: <b id="lw">40%</b></div>
+            <div>Glide ratio L/D: <b id="gr">1.6</b></div>
+          </div>
+          <p class="note">Forces shown are at the takeoff instant (the bars and on-canvas vectors update live as the jumper flies once you press Launch). Mass is fixed at 75 kg, so Weight = 75 &times; 9.81 = 736 N — the constant the lift must work against.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORKSHEET ============ -->
+  <section class="panel" id="ws">
+    <h2>Worksheet — Predict, Observe, Explain, Extend</h2>
+    <div class="ws-intro">
+      <p style="margin:0"><strong>How to use this.</strong> For every <span style="color:var(--teal);font-weight:600">PREDICT</span> question, write your answer <em>before</em> you touch the simulation. Then run it, record what you <span style="color:var(--gold-dim);font-weight:600">OBSERVE</span>, and work out the <span style="color:var(--rust);font-weight:600">EXPLAIN</span>. There is no answer key in this file — and that is on purpose. The reasoning has to become yours.</p>
+    </div>
+
+    <div class="q">
+      <span class="tag predict">Predict</span>
+      <p><span class="qn">1.</span> Before opening the simulation: if you increase the jumper's <strong>surface area by 3%</strong> and change nothing else, by roughly what percentage do you expect the landing distance to change? Write a number and one sentence of reasoning.</p>
+      <textarea placeholder="My prediction…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag observe">Observe</span>
+      <p><span class="qn">2.</span> Set the simulation to defaults (A = 0.55, &alpha; = 10&deg;, v = 30, &rho; = 1.20) and record the landing distance. Now raise the area slider by a small amount — a few hundredths of a square meter — and record the new distance and the percentage change shown. How does it compare to your prediction in Q1?</p>
+      <textarea placeholder="Default distance… new distance… % change…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag explain">Explain</span>
+      <p><span class="qn">3.</span> Surface area appears in <em>both</em> the lift equation and the drag equation (L = ½&rho;v&sup2;C<sub>L</sub>A and D = ½&rho;v&sup2;C<sub>D</sub>A). If area increases lift <em>and</em> drag at the same time, explain in your own words why the jump still gets longer rather than the two effects simply cancelling.</p>
+      <textarea placeholder="My explanation…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag predict">Predict</span>
+      <p><span class="qn">4.</span> The lift equation has v<sup>2</sup>, not v. Predict what happens to the lift force if you increase launch speed from 30 to 33 m/s (a 10% increase). More than 10% more lift, exactly 10%, or less? Why?</p>
+      <textarea placeholder="My prediction and reasoning…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag observe">Observe</span>
+      <p><span class="qn">5.</span> Now test it. Read the Lift force at v = 30, then at v = 33, and report both numbers and the percentage increase. Did the v<sup>2</sup> term behave the way you predicted?</p>
+      <textarea placeholder="Lift at 30… lift at 33… % change…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag observe">Observe</span>
+      <p><span class="qn">6.</span> Slowly drag the angle-of-attack slider from 0&deg; up to 26&deg;, watching the C<sub>L</sub> readout and the landing distance the whole way. Describe what happens to C<sub>L</sub> and to the distance. At roughly what angle does the behavior reverse, and what lights up when it does?</p>
+      <textarea placeholder="What I saw as I swept the angle…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag explain">Explain</span>
+      <p><span class="qn">7.</span> Past about 15&deg;, increasing the angle of attack makes the jump <em>shorter</em> even though the jumper is leaning harder into the wind. Explain what "stall" means physically and why pushing harder backfires.</p>
+      <textarea placeholder="My explanation of stall…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag explain">Explain</span>
+      <p><span class="qn">8.</span> Find the region where a tiny slider movement produces a large jump in landing distance. In your own words, what does it mean for a system to be "nonlinear" or "sensitive," and why would a ski jumper poised in a long glide be balanced near such a point?</p>
+      <textarea placeholder="My account of nonlinear sensitivity…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag explain">Explain</span>
+      <p><span class="qn">9.</span> Connect it back to the rulebook. Using what you found about area and nonlinearity, explain why officials bother regulating ski suits to within a few centimeters of fabric. What unfair advantage are they trying to erase?</p>
+      <textarea placeholder="Why the centimeters matter…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag extend">Extend</span>
+      <p><span class="qn">10.</span> Air density (&rho;) sits in the same equation as area. Predict, then test: would a ski jump set on a cold day near sea level travel farther or shorter than the identical jump in thin, high-altitude air? Use the simulation to support your answer, and name one real situation where this matters.</p>
+      <textarea placeholder="Prediction, test result, and a real case…"></textarea>
+    </div>
+    <div class="q">
+      <span class="tag extend">Extend</span>
+      <p><span class="qn">11.</span> Mass is held fixed at 75 kg in this model, but real jumpers vary. From the lift equation and what you know about weight, reason out what advantage or disadvantage a lighter jumper would have in the glide — and why ski jumping has wrestled with athlete weight as a safety issue. (You don't need the simulation for this; argue from the physics.)</p>
+      <textarea placeholder="My reasoning about mass…"></textarea>
+    </div>
+    <div class="q sovereign">
+      <span class="tag sov">Cognitive Sovereignty</span>
+      <p><span class="qn">12.</span> Look back over everything you wrote. Separate two things: <strong>what you actually understood yourself</strong> — the reasoning you could rebuild on a blank page with no simulation in front of you — from <strong>what the simulation simply showed you</strong> as a result you accepted. Where is the line between them for you right now?</p>
+      <p>Then the harder question: a simulation is a model built by someone, with assumptions baked in (this one fixes mass, simplifies the hill, and models the coefficients with chosen curves). Why does it matter that <em>you</em> own the underlying reasoning <em>before</em> you trust what this tool — or any tool — tells you? What could a convincing-looking simulation get wrong without you ever noticing, if you never built the understanding yourself?</p>
+      <textarea placeholder="What I own vs. what I was shown — and why owning it first matters…" style="min-height:120px"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="brand">Thinking Labs<span>by Temple Academy</span></div>
+  <div class="fine">An interactive physics lesson &middot; built on a real, force-integrated aerodynamics engine.</div>
+</footer>
+
+<script>
+"use strict";
+/* ============================================================
+   REAL SKI-JUMP AERODYNAMICS ENGINE
+   Forces (gravity + lift + drag) summed each timestep,
+   converted to acceleration, integrated with RK4.
+   Verified for stability, dt-convergence, correct stall and
+   nonlinear area sensitivity before any UI was built.
+   ============================================================ */
+const G = 9.81;              // m/s^2
+const DEG = Math.PI / 180;
+const MASS = 75;             // kg (fixed)
+const WEIGHT = MASS * G;     // 735.75 N
+const TAKEOFF = -3 * DEG;    // launch angle vs horizontal (slight downslope off table)
+const DT = 0.01;             // s, integration timestep
+// Landing hill: steep slope of angle B1 to a knee at XK, then a flatter outrun (B2).
+const B1 = 35 * DEG, B2 = 14 * DEG, XK = 380;
+
+// Lift coefficient: linear rise to stall (~15 deg), then post-stall decay.
+function liftCoeff(aDeg){
+  const stall = 15, slope = 0.10, clMax = slope * stall; // 1.5 at stall
+  if (aDeg <= stall) return slope * aDeg;
+  return Math.max(0.2, clMax - 0.05 * (aDeg - stall));
+}
+// Drag coefficient: parasitic + induced (rises with CL^2), extra penalty past stall.
+function dragCoeff(aDeg){
+  const cl = liftCoeff(aDeg);
+  let cd = 0.42 + 0.22 * cl * cl;
+  if (aDeg > 15) cd += 0.04 * (aDeg - 15);
+  return cd;
+}
+function hillY(x){
+  if (x <= XK) return -Math.tan(B1) * x;
+  return -Math.tan(B1) * XK - Math.tan(B2) * (x - XK);
+}
+
+// Acceleration from the summed forces at a given state.
+function accel(st, p){
+  const sp = Math.hypot(st.vx, st.vy);
+  let ax = 0, ay = -G;                       // gravity
+  if (sp > 1e-6){
+    const q = 0.5 * p.rho * sp * sp;          // dynamic pressure
+    const L = q * p.cl * p.A;                 // lift magnitude
+    const D = q * p.cd * p.A;                 // drag magnitude
+    const ux = st.vx / sp, uy = st.vy / sp;   // velocity unit
+    const nx = -uy, ny = ux;                  // lift unit (perp to velocity, +90deg)
+    ax += (D * (-ux) + L * nx) / p.m;
+    ay += (D * (-uy) + L * ny) / p.m;
+  }
+  return { ax, ay };
+}
+function deriv(s, p){ const a = accel(s, p); return { x: s.vx, y: s.vy, vx: a.ax, vy: a.ay }; }
+function step(s, p, dt){
+  const k1 = deriv(s, p);
+  const s2 = { x:s.x+k1.x*dt/2, y:s.y+k1.y*dt/2, vx:s.vx+k1.vx*dt/2, vy:s.vy+k1.vy*dt/2 };
+  const k2 = deriv(s2, p);
+  const s3 = { x:s.x+k2.x*dt/2, y:s.y+k2.y*dt/2, vx:s.vx+k2.vx*dt/2, vy:s.vy+k2.vy*dt/2 };
+  const k3 = deriv(s3, p);
+  const s4 = { x:s.x+k3.x*dt, y:s.y+k3.y*dt, vx:s.vx+k3.vx*dt, vy:s.vy+k3.vy*dt };
+  const k4 = deriv(s4, p);
+  return {
+    x:  s.x  + dt/6*(k1.x +2*k2.x +2*k3.x +k4.x),
+    y:  s.y  + dt/6*(k1.y +2*k2.y +2*k3.y +k4.y),
+    vx: s.vx + dt/6*(k1.vx+2*k2.vx+2*k3.vx+k4.vx),
+    vy: s.vy + dt/6*(k1.vy+2*k2.vy+2*k3.vy+k4.vy),
+  };
+}
+
+// Run a full flight. Returns trajectory points (with live L/D) and landing distance.
+function simulate(inp){
+  const p = { m: MASS, A: inp.A, rho: inp.rho, cl: liftCoeff(inp.alpha), cd: dragCoeff(inp.alpha) };
+  let s = { x:0, y:0, vx: inp.v0 * Math.cos(TAKEOFF), vy: inp.v0 * Math.sin(TAKEOFF) };
+  const pts = [];
+  const record = (st) => {
+    const sp = Math.hypot(st.vx, st.vy);
+    const q = 0.5 * p.rho * sp * sp;
+    pts.push({ x:st.x, y:st.y, vx:st.vx, vy:st.vy, sp, L:q*p.cl*p.A, D:q*p.cd*p.A });
+  };
+  record(s);
+  let landX = 0, landY = 0, landed = false;
+  for (let i=0; i<40000; i++){
+    const prev = s;
+    s = step(s, p, DT);
+    record(s);
+    const pa = prev.y - hillY(prev.x);
+    const ca = s.y - hillY(s.x);
+    if (pa >= 0 && ca < 0 && s.x > 0.1){
+      const t = pa / (pa - ca);
+      landX = prev.x + t*(s.x - prev.x);
+      landY = prev.y + t*(s.y - prev.y);
+      landed = true;
+      break;
+    }
+  }
+  const dist = Math.hypot(landX, landY);   // distance along the hill from takeoff
+  return { pts, landX, landY, landed, dist, p };
+}
+
+/* ===================== UI / RENDER ===================== */
+const cv = document.getElementById('sky');
+const ctx = cv.getContext('2d');
+const els = {
+  area: document.getElementById('area'), alpha: document.getElementById('alpha'),
+  v0: document.getElementById('v0'), rho: document.getElementById('rho'),
+  areaV: document.getElementById('area-v'), alphaV: document.getElementById('alpha-v'),
+  v0V: document.getElementById('v0-v'), rhoV: document.getElementById('rho-v'),
+  dist: document.getElementById('dist'), delta: document.getElementById('delta'),
+  liftN: document.getElementById('lift-n'), dragN: document.getElementById('drag-n'),
+  liftBar: document.getElementById('lift-bar'), dragBar: document.getElementById('drag-bar'),
+  wtBar: document.getElementById('wt-bar'),
+  cl: document.getElementById('cl'), cd: document.getElementById('cd'),
+  lw: document.getElementById('lw'), gr: document.getElementById('gr'),
+  stall: document.getElementById('stall'),
+  launch: document.getElementById('launch'), reset: document.getElementById('reset'),
+};
+
+let current = null;      // current simulation result
+let ghost = null;        // previous trajectory (for comparison)
+let lastDist = null;     // previous landing distance (for delta)
+let anim = { id:null, idx:0, playing:false };
+
+function inputs(){
+  return {
+    A: parseFloat(els.area.value),
+    alpha: parseFloat(els.alpha.value),
+    v0: parseFloat(els.v0.value),
+    rho: parseFloat(els.rho.value),
+  };
+}
+function fillTrack(el){
+  const min = parseFloat(el.min), max = parseFloat(el.max), v = parseFloat(el.value);
+  el.style.setProperty('--fill', ((v-min)/(max-min)*100)+'%');
+}
+
+// Coordinate transform: world (m) -> canvas px, equal scale (angles honest).
+let view = { scale:1, ox:0, oy:0, W:760, H:500 };
+function computeView(res){
+  const pad = 34;
+  let xMax = Math.max(res.landX*1.08, 60);
+  let yMin = 0;
+  for (const pt of res.pts){ if (pt.y < yMin) yMin = pt.y; }
+  yMin = Math.min(yMin, hillY(xMax));
+  const worldW = xMax, worldH = (0 - yMin) || 1;
+  const scale = Math.min((view.W - 2*pad)/worldW, (view.H - 2*pad)/worldH);
+  view.scale = scale;
+  view.ox = pad;
+  view.oy = pad;   // world y=0 maps near top
+}
+function px(x){ return view.ox + x * view.scale; }
+function py(y){ return view.oy + (0 - y) * view.scale; }
+
+function drawHill(){
+  // filled hill from takeoff outward to the right edge of the view
+  const xRight = (view.W - view.ox)/view.scale + 20;
+  ctx.beginPath();
+  ctx.moveTo(px(0), py(0));
+  const N = 60;
+  for (let i=0; i<=N; i++){ const x = xRight * i/N; ctx.lineTo(px(x), py(hillY(x))); }
+  ctx.lineTo(px(xRight), view.H);
+  ctx.lineTo(px(0), view.H);
+  ctx.closePath();
+  const grd = ctx.createLinearGradient(0, py(0), 0, view.H);
+  grd.addColorStop(0, '#eef3f1'); grd.addColorStop(1, '#dfe6e2');
+  ctx.fillStyle = grd; ctx.fill();
+  // hill surface line
+  ctx.beginPath();
+  for (let i=0; i<=N; i++){ const x = xRight*i/N; const fx=px(x), fy=py(hillY(x)); i?ctx.lineTo(fx,fy):ctx.moveTo(fx,fy); }
+  ctx.strokeStyle = '#b9c4be'; ctx.lineWidth = 2; ctx.stroke();
+  // takeoff table
+  ctx.fillStyle = '#9aa6a0';
+  ctx.fillRect(px(0)-16, py(0)-5, 18, 6);
+  // distance ticks along the hill every 50 m
+  ctx.fillStyle = '#9aa49e'; ctx.font = '10px Source Sans 3, sans-serif'; ctx.textAlign='center';
+  for (let d=50; d<=xRight; d+=50){
+    // place tick at along-hill arc ~ approximate using x where slope-distance = d is messy;
+    // simpler: tick by horizontal x marks
+    const tx = px(d), ty = py(hillY(d));
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx, ty+6); ctx.strokeStyle='#c2ccc6'; ctx.lineWidth=1; ctx.stroke();
+  }
+}
+
+function drawJumper(pt, showVectors){
+  const x = px(pt.x), y = py(pt.y);
+  const sp = pt.sp || Math.hypot(pt.vx, pt.vy);
+  const ang = Math.atan2(-pt.vy, pt.vx); // screen angle of velocity (y flipped)
+  // body: short bar tilted along flight direction
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(-ang); // note canvas y-down; we computed ang in screen space already
+  // skis
+  ctx.strokeStyle = '#2a2420'; ctx.lineWidth = 2.4; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(-12, 4); ctx.lineTo(14, 4); ctx.stroke();
+  // body
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3.2;
+  ctx.beginPath(); ctx.moveTo(-6, 1); ctx.lineTo(9, -3); ctx.stroke();
+  // head
+  ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(11, -4, 3.2, 0, 7); ctx.fill();
+  ctx.restore();
+
+  if (showVectors){
+    // vector scale: pixels per Newton
+    const sN = 0.05;
+    const ux = pt.vx/sp, uy = pt.vy/sp;       // world velocity unit
+    const nx = -uy, ny = uy*0 + ux;           // world lift unit (perp)
+    // helper to draw an arrow in world-vector space (note py flips sign of y)
+    function arrow(wx, wy, mag, color, label){
+      const len = mag * sN;
+      const ex = x + wx * len, ey = y - wy * len; // flip y for screen
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2.6;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+      const a = Math.atan2(ey - y, ex - x);
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - 7*Math.cos(a - 0.4), ey - 7*Math.sin(a - 0.4));
+      ctx.lineTo(ex - 7*Math.cos(a + 0.4), ey - 7*Math.sin(a + 0.4));
+      ctx.closePath(); ctx.fill();
+      ctx.font = 'bold 11px Source Sans 3, sans-serif'; ctx.textAlign='center';
+      ctx.fillText(label, ex + 8*Math.cos(a), ey + 8*Math.sin(a) + 3);
+    }
+    arrow(0, -1, WEIGHT, '#a68a3e', 'W');        // weight down
+    arrow(nx, ny, pt.L, '#3d8c7e', 'L');          // lift perpendicular
+    arrow(-ux, -uy, pt.D, '#9b4a3c', 'D');        // drag opposite velocity
+  }
+}
+
+function drawTrajectory(pts, color, width, upto){
+  ctx.beginPath();
+  const end = upto==null ? pts.length : Math.min(upto, pts.length);
+  for (let i=0; i<end; i++){ const fx=px(pts[i].x), fy=py(pts[i].y); i?ctx.lineTo(fx,fy):ctx.moveTo(fx,fy); }
+  ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin='round'; ctx.stroke();
+}
+
+function render(uptoIdx){
+  ctx.clearRect(0,0,view.W,view.H);
+  // sky gradient already via CSS background of stage; keep canvas transparent-ish
+  drawHill();
+  // ghost (previous) trajectory
+  if (ghost){ ctx.setLineDash([4,5]); drawTrajectory(ghost.pts, 'rgba(120,120,120,0.55)', 1.6); ctx.setLineDash([]); }
+  if (!current) return;
+  // current trajectory up to current index
+  drawTrajectory(current.pts, 'rgba(61,140,126,0.9)', 2.6, uptoIdx);
+  // landing marker
+  if (current.landed){
+    const lx = px(current.landX), ly = py(current.landY);
+    ctx.fillStyle = '#c9a84c';
+    ctx.beginPath(); ctx.arc(lx, ly, 5, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#a68a3e'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle = '#5a524a'; ctx.font='bold 12px Source Sans 3, sans-serif'; ctx.textAlign='left';
+    ctx.fillText(current.dist.toFixed(0)+' m', lx+9, ly+4);
+  }
+  // jumper at current frame (with vectors)
+  const idx = uptoIdx==null ? 0 : Math.min(uptoIdx, current.pts.length-1);
+  drawJumper(current.pts[idx], true);
+}
+
+function recompute(){
+  const inp = inputs();
+  const res = simulate(inp);
+  current = res;
+  computeView(res);
+
+  // --- readouts from the REAL computation (takeoff instant) ---
+  const p0 = res.pts[0];
+  const cl = res.p.cl, cd = res.p.cd;
+  els.cl.textContent = cl.toFixed(2);
+  els.cd.textContent = cd.toFixed(2);
+  updateForceReadout(p0.L, p0.D);
+  els.gr.textContent = (cl/cd).toFixed(2);
+
+  // distance + delta vs previous
+  const d = res.dist;
+  els.dist.textContent = d.toFixed(0);
+  els.dist.classList.remove('flash'); void els.dist.offsetWidth; els.dist.classList.add('flash');
+  if (lastDist != null){
+    const diff = d - lastDist;
+    const pct = lastDist>0 ? diff/lastDist*100 : 0;
+    if (Math.abs(pct) < 0.3){ els.delta.className='delta flat'; els.delta.textContent='≈ no change'; }
+    else if (diff>0){ els.delta.className='delta up'; els.delta.textContent='▲ +'+diff.toFixed(0)+' m  (+'+pct.toFixed(1)+'%)'; }
+    else { els.delta.className='delta down'; els.delta.textContent='▼ '+diff.toFixed(0)+' m  ('+pct.toFixed(1)+'%)'; }
+  }
+  lastDist = d;
+
+  // stall tag
+  const stalled = inp.alpha > 15;
+  els.stall.classList.toggle('on', stalled);
+
+  if (!anim.playing) render(0);
+}
+function updateForceReadout(L, D){
+  els.liftN.textContent = L.toFixed(0);
+  els.dragN.textContent = D.toFixed(0);
+  els.liftBar.style.width = Math.min(100, L/WEIGHT*100) + '%';
+  els.dragBar.style.width = Math.min(100, D/WEIGHT*100) + '%';
+  els.wtBar.style.width = '100%';
+  els.lw.textContent = Math.round(L/WEIGHT*100) + '%';
+}
+
+function syncLabels(){
+  els.areaV.innerHTML = parseFloat(els.area.value).toFixed(3) + ' <small>m&sup2;</small>';
+  els.alphaV.textContent = parseFloat(els.alpha.value).toFixed(1) + '°';
+  els.v0V.innerHTML = parseFloat(els.v0.value).toFixed(1) + ' <small>m/s</small>';
+  els.rhoV.innerHTML = parseFloat(els.rho.value).toFixed(2) + ' <small>kg/m&sup3;</small>';
+  [els.area, els.alpha, els.v0, els.rho].forEach(fillTrack);
+}
+
+// Animate the flight along the precomputed real trajectory.
+function play(){
+  if (!current) recompute();
+  if (anim.id) cancelAnimationFrame(anim.id);
+  anim.idx = 0; anim.playing = true;
+  els.launch.textContent = '⟲ Replay';
+  const total = current.pts.length;
+  const stepPerFrame = Math.max(1, Math.round(total/170)); // ~3s flight
+  function tick(){
+    anim.idx += stepPerFrame;
+    const i = Math.min(anim.idx, total-1);
+    const pt = current.pts[i];
+    updateForceReadout(pt.L, pt.D);  // live force bars during flight
+    render(i);
+    if (i < total-1){ anim.id = requestAnimationFrame(tick); }
+    else { anim.playing = false; updateForceReadout(current.pts[0].L, current.pts[0].D); }
+  }
+  anim.id = requestAnimationFrame(tick);
+}
+
+// On any slider change: stash previous as ghost, recompute live.
+function onSlide(){
+  if (current){ ghost = current; }
+  if (anim.id){ cancelAnimationFrame(anim.id); anim.playing=false; els.launch.textContent='▶ Launch'; }
+  syncLabels();
+  recompute();
+}
+[els.area, els.alpha, els.v0, els.rho].forEach(el => el.addEventListener('input', onSlide));
+
+els.launch.addEventListener('click', play);
+els.reset.addEventListener('click', () => {
+  els.area.value=0.55; els.alpha.value=10; els.v0.value=30; els.rho.value=1.20;
+  ghost=null; lastDist=null;
+  if (anim.id){ cancelAnimationFrame(anim.id); anim.playing=false; }
+  els.launch.textContent='▶ Launch';
+  syncLabels(); recompute();
+  els.delta.className='delta flat'; els.delta.textContent='move a slider to compare';
+});
+
+/* ---- Tabs ---- */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+tabBtns.forEach(b => b.addEventListener('click', () => {
+  tabBtns.forEach(x=>x.classList.remove('active'));
+  panels.forEach(p=>p.classList.remove('active'));
+  b.classList.add('active');
+  const panel = document.getElementById(b.dataset.tab);
+  panel.classList.add('active');
+  if (b.dataset.tab === 'sim'){ resizeCanvas(); recompute(); }
+  window.scrollTo({top:0, behavior:'smooth'});
+}));
+
+/* ---- Responsive canvas (keep internal resolution crisp) ---- */
+function resizeCanvas(){
+  const stage = cv.parentElement;
+  const w = stage.clientWidth;
+  const h = Math.round(w * 0.66);
+  const dpr = window.devicePixelRatio || 1;
+  view.W = w; view.H = h;
+  cv.width = w * dpr; cv.height = h * dpr;
+  cv.style.height = h + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  if (current){ computeView(current); render(anim.playing?anim.idx:0); }
+}
+window.addEventListener('resize', () => { if (document.getElementById('sim').classList.contains('active')) resizeCanvas(); });
+
+// init
+syncLabels();
+resizeCanvas();
+recompute();
+els.delta.className='delta flat'; els.delta.textContent='move a slider to compare';
+</script>
+</body>
+</html>
