@@ -563,43 +563,51 @@ class JumpScene extends Phaser.Scene{
   startBob(m){ if(m._bob) return; m._bob=this.tweens.add({ targets:m, scaleY:0.9, duration:150, yoyo:true, repeat:-1, ease:'Sine.inOut' }); }
   stopBob(m){ if(m&&m._bob){ m._bob.stop(); m._bob=null; m.scaleY=1; } }
 
+  // y of the hill surface at a given world-pixel x (so actors ride the slope, not midair)
+  onSlope(px){ return WY(P.hillY((px-OX)/PPM)); }
+  stickToSlope(obj,off){ obj.y = this.onSlope(obj.x) + (off||0); }
+
   beginStretcher(){
     this.stretcherStarted=true;
-    const Jpx=this.skier.x, Jpy=WY(P.hillY((Jpx-OX)/PPM));
-    this.skier.setTexture('skierDown').setOrigin(0.5,0.8).setRotation(0).setPosition(Jpx,Jpy-6);
-    const ambX=Jpx+150, ambY=WY(P.hillY((ambX-OX)/PPM));
-    // BEAT 1 — ARRIVE (siren)
-    this.amb.setVisible(true).setPosition(ambX+660, ambY);
+    const Jpx=this.skier.x;
+    this.skier.setTexture('skierDown').setOrigin(0.5,0.8).setRotation(0).setPosition(Jpx,this.onSlope(Jpx)-6);
+    const ambX=Jpx+150;
+    // BEAT 1 — ARRIVE (siren). x animates; y tracks the slope every frame.
+    this.amb.setVisible(true).setPosition(ambX+660, this.onSlope(ambX+660));
     SFX.siren(9);
     this.tweens.add({ targets:this.amb, x:ambX, duration:1500, ease:'Cubic.out',
-      onComplete:()=>this.medicsLoad(Jpx,Jpy,ambX,ambY) });
+      onUpdate:()=>this.stickToSlope(this.amb,0),
+      onComplete:()=>this.medicsLoad(Jpx,ambX) });
   }
-  medicsLoad(Jpx,Jpy,ambX,ambY){
+  medicsLoad(Jpx,ambX){
     // BEAT 2 — LOAD (paramedic movement sounds)
     const m0=this.medics[0], m1=this.medics[1];
-    m0.setVisible(true).setPosition(ambX-8,ambY-2); this.startBob(m0);
-    m1.setVisible(true).setPosition(ambX+6,ambY-2); this.startBob(m1);
+    m0.setVisible(true).setPosition(ambX-8, this.onSlope(ambX-8)-2); this.startBob(m0);
+    m1.setVisible(true).setPosition(ambX+6, this.onSlope(ambX+6)-2); this.startBob(m1);
     SFX.step();
-    this.tweens.add({ targets:m0, x:Jpx+20, y:Jpy-2, duration:850, ease:'Sine.inOut' });
-    this.tweens.add({ targets:m1, x:Jpx-20, y:Jpy-2, duration:850, delay:100, ease:'Sine.inOut', onComplete:()=>{
+    this.tweens.add({ targets:m0, x:Jpx+20, duration:850, ease:'Sine.inOut', onUpdate:()=>this.stickToSlope(m0,-2) });
+    this.tweens.add({ targets:m1, x:Jpx-20, duration:850, delay:100, ease:'Sine.inOut', onUpdate:()=>this.stickToSlope(m1,-2), onComplete:()=>{
       SFX.step();
-      this.stretcher.setTexture('stretcher').setVisible(true).setScale(0.6).setPosition(Jpx,Jpy-2);
+      this.stretcher.setTexture('stretcher').setVisible(true).setScale(0.6).setPosition(Jpx,this.onSlope(Jpx)-2);
       this.tweens.add({ targets:this.stretcher, scale:1, duration:220 });
       // load the jumper onto the stretcher, then hide him (now under the blanket)
-      this.tweens.add({ targets:this.skier, y:Jpy-14, duration:340, delay:220, ease:'Sine.in', onComplete:()=>{
+      this.tweens.add({ targets:this.skier, y:this.onSlope(Jpx)-14, duration:340, delay:220, ease:'Sine.in', onComplete:()=>{
         this.skier.setVisible(false); this.stretcher.setTexture('stretcherLoaded'); SFX.step();
-        // push stretcher + crew back to the ambulance, then drive off
-        this.tweens.add({ targets:[this.stretcher,m0,m1], x:ambX, y:ambY-2, duration:950, delay:160, ease:'Sine.inOut', onComplete:()=>{
-          this.stretcher.setVisible(false); this.stopBob(m0); this.stopBob(m1); m0.setVisible(false); m1.setVisible(false);
-          this.driveAway(ambX,ambY);
-        }});
+        // push stretcher + crew back to the ambulance (riding the slope), then drive off
+        this.tweens.add({ targets:[this.stretcher,m0,m1], x:ambX, duration:950, delay:160, ease:'Sine.inOut',
+          onUpdate:()=>{ this.stickToSlope(this.stretcher,-2); this.stickToSlope(m0,-2); this.stickToSlope(m1,-2); },
+          onComplete:()=>{
+            this.stretcher.setVisible(false); this.stopBob(m0); this.stopBob(m1); m0.setVisible(false); m1.setVisible(false);
+            this.driveAway(ambX);
+          }});
       }});
     }});
   }
-  driveAway(ambX,ambY){
-    // BEAT 3 — DRIVE OFF (short siren)
+  driveAway(ambX){
+    // BEAT 3 — DRIVE OFF (short siren). y keeps tracking the slope as it descends away.
     SFX.siren(5);
     this.tweens.add({ targets:this.amb, x:ambX+980, duration:1700, ease:'Cubic.in',
+      onUpdate:()=>this.stickToSlope(this.amb,0),
       onComplete:()=>this.amb.setVisible(false) });
   }
 }
