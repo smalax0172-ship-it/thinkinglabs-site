@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>/* embed mode: when shown inside an iframe (the lesson's Simulation tab), drop the page chrome */
+if (window.self !== window.top) document.documentElement.classList.add('embed');</script>
 <title>Ski Jump: The Game | Thinking Labs by Temple Academy</title>
 <meta name="description" content="Play a real ski-jump game powered by a genuine RK4 aerodynamics engine. Match your landing to the slope or summon the ambulance." />
 
@@ -44,6 +46,10 @@ a{ color:var(--teal); text-decoration:none; }
 .mobile-toggle.open span:nth-child(3){ transform:rotate(-45deg) translate(4px,-5px); }
 @media (max-width:900px){ #nav .nav-links{ display:none; } #nav .nav-links.open{ display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0; background:var(--cream); padding:20px 24px; border-bottom:1px solid var(--border); gap:16px; box-shadow:0 12px 24px rgba(0,0,0,0.08); } #nav .mobile-toggle{ display:block; } }
 
+/* embed mode (inside the lesson's Simulation tab): hide site chrome, show only the game */
+html.embed #nav, html.embed header.site, html.embed footer{ display:none !important; }
+html.embed, html.embed body{ background:transparent; }
+html.embed main{ padding:8px 0 14px; }
 header.site{ text-align:center; padding:30px 0 10px; }
 .eyebrow{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:var(--gold-dim); margin-bottom:4px; }
 header.site h1{ font-size:clamp(30px,6vw,48px); letter-spacing:-0.015em; }
@@ -641,6 +647,11 @@ el('reset').addEventListener('click', ()=>{
   if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.resetActors(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-18)); }
 });
 syncLabels();
+
+/* when embedded, report content height to the parent so the iframe fits with no inner scrollbar */
+function postEmbedHeight(){ if(window.self!==window.top){ try{ parent.postMessage({skiGameHeight: Math.ceil(document.documentElement.scrollHeight)}, '*'); }catch(e){} } }
+window.addEventListener('load', ()=>{ postEmbedHeight(); [200,600,1200].forEach(d=>setTimeout(postEmbedHeight,d)); });
+window.addEventListener('resize', postEmbedHeight);
 </script>
 </body>
 </html>
