@@ -289,18 +289,19 @@ el('sound').addEventListener('click', function(){
 const VW=960, VH=540;          // base resolution
 const PPM=3.0;                 // pixels per metre (presentation only)
 const OX=120, OY=120;          // takeoff position in world px
-const CREST_X=-75;             // summit (top of the hill), metres left of the takeoff
-const LEFT_X=-175;             // where the hill meets the ground on the back (left) side
-const IN_H=48;                 // summit height above the takeoff (m)
-const START_X=-54;             // where the jumper starts: on the ramp just below the crest
-// One continuous profile shaped like a real hill: a gentle rounded back rising to a smooth summit,
-// a steepening launch ramp that flattens to the takeoff lip (x=0), then the engine's real landing
-// slope for x>0. The front uses a smoothstep so the crest is a rounded dome (slope 0 at the top)
-// and the lip is flat, with the steepest part in the middle of the ramp.
+const BROW_X=-55;              // brow of the hill: flat top to the left, launch ramp to the right
+const H_TOP=44;               // height of the flat top above the takeoff (m)
+const LEFT_FLAT=-160;         // the flat top extends left to here, then rounds down
+const LEFT_X=-220;            // hill meets the ground on the far (left) side
+const START_X=-66;            // jumper stands on the flat top, just behind the brow
+// Real-hill profile: a FLAT top (plateau) behind the jumper, a launch ramp from the brow (x=BROW_X)
+// curving down to the flat takeoff lip (x=0), then the engine's landing slope for x>0. The far-left
+// of the plateau rounds smoothly down to the ground, so there is no hump behind the skier and no tower.
 function terrainYm(x){
-  if(x>0) return P.hillY(x);                                                                // landing slope (engine)
-  if(x>=CREST_X){ const t=(x-CREST_X)/(0-CREST_X); return IN_H*(1-3*t*t+2*t*t*t); }          // front: crest -> ramp -> flat lip
-  if(x>LEFT_X){ const t=(x-LEFT_X)/(CREST_X-LEFT_X); return IN_H*0.5*(1-Math.cos(Math.PI*t)); } // back: rounded shoulder to ground
+  if(x>0) return P.hillY(x);                                                                      // landing slope (engine)
+  if(x>=BROW_X){ const t=(x-BROW_X)/(0-BROW_X); return H_TOP*(1-3*t*t+2*t*t*t); }                  // ramp: brow -> flat lip
+  if(x>=LEFT_FLAT) return H_TOP;                                                                   // flat top (plateau)
+  if(x>LEFT_X){ const t=(x-LEFT_X)/(LEFT_FLAT-LEFT_X); return H_TOP*0.5*(1-Math.cos(Math.PI*t)); } // far-left rounds to ground
   return 0;
 }
 const WX = x => OX + x*PPM;            // engine x (m) -> world px
@@ -361,7 +362,7 @@ class JumpScene extends Phaser.Scene{
     this.state='idle';
     this.res=null; this.playMs=0; this.playDur=0;
     this.out={};
-    cam.centerOn(WX(-40), WY(-30));   // frame the jumper at the top of the in-run + the slope ahead
+    cam.centerOn(WX(-40), WY(-18));   // frame the jumper at the top of the in-run + the slope ahead
 
     gameScene=this; window.gameScene=this;
     syncLabels();
@@ -633,11 +634,11 @@ const game=new Phaser.Game(config);
 /* ---------- wire DOM controls to the scene ---------- */
 function onControl(){ syncLabels(); neutralVerdict(); if(gameScene&&gameScene.state==='idle') gameScene.refreshPreview(); }
 Object.values(ctrls).forEach(s=>s.addEventListener('input', onControl));
-el('launch').addEventListener('click', ()=>{ if(gameScene){ if(gameScene.state==='outcome'){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-30)); } gameScene.launchJump(); } });
+el('launch').addEventListener('click', ()=>{ if(gameScene){ if(gameScene.state==='outcome'){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-18)); } gameScene.launchJump(); } });
 el('reset').addEventListener('click', ()=>{
   ctrls.area.value=0.45; ctrls.alpha.value=0; ctrls.v0.value=24; ctrls.rho.value=1.00;
   syncLabels(); neutralVerdict();
-  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.resetActors(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-30)); }
+  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.resetActors(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-18)); }
 });
 syncLabels();
 </script>
