@@ -125,23 +125,23 @@ footer .fine{ font-size:0.8rem; color:var(--text-light); margin-top:10px; }
   <div class="hud">
     <div class="panel">
       <h3>Your Run</h3>
-      <p class="hint">Tune the jumper, then hit Launch. The dotted line previews the computed flight.</p>
+      <p class="hint">You're rigged to crash — hit Launch to see it, then tune the sliders until you land clean. The dotted line previews the flight.</p>
 
       <div class="ctl">
-        <div class="ctl-top"><label for="area">Wing area A <span class="star">★</span></label><span class="val" id="area-v">0.55 <small>m²</small></span></div>
-        <input type="range" id="area" min="0.45" max="0.72" step="0.005" value="0.55">
+        <div class="ctl-top"><label for="area">Wing area A <span class="star">★</span></label><span class="val" id="area-v">0.45 <small>m²</small></span></div>
+        <input type="range" id="area" min="0.45" max="0.72" step="0.005" value="0.45">
       </div>
       <div class="ctl">
-        <div class="ctl-top"><label for="alpha">Angle of attack α</label><span class="val" id="alpha-v">10°</span></div>
-        <input type="range" id="alpha" min="0" max="26" step="0.5" value="10">
+        <div class="ctl-top"><label for="alpha">Angle of attack α</label><span class="val" id="alpha-v">0°</span></div>
+        <input type="range" id="alpha" min="0" max="26" step="0.5" value="0">
       </div>
       <div class="ctl">
-        <div class="ctl-top"><label for="v0">Launch speed v</label><span class="val" id="v0-v">30 <small>m/s</small></span></div>
-        <input type="range" id="v0" min="24" max="36" step="0.5" value="30">
+        <div class="ctl-top"><label for="v0">Launch speed v</label><span class="val" id="v0-v">24 <small>m/s</small></span></div>
+        <input type="range" id="v0" min="24" max="36" step="0.5" value="24">
       </div>
       <div class="ctl">
-        <div class="ctl-top"><label for="rho">Air density ρ</label><span class="val" id="rho-v">1.20 <small>kg/m³</small></span></div>
-        <input type="range" id="rho" min="0.95" max="1.40" step="0.01" value="1.20">
+        <div class="ctl-top"><label for="rho">Air density ρ</label><span class="val" id="rho-v">1.00 <small>kg/m³</small></span></div>
+        <input type="range" id="rho" min="0.95" max="1.40" step="0.01" value="1.00">
       </div>
 
       <div class="btn-row">
@@ -227,7 +227,7 @@ function neutralVerdict(){
    Browsers create the AudioContext "suspended" and only a real user gesture can
    move it to "running". So: resume() on the first gesture anywhere AND whenever
    sound is toggled on, and never play a tone unless the context is confirmed running. */
-const SFX = (()=>{ let ac=null, on=false, started=0;
+const SFX = (()=>{ let ac=null, on=false, started=0, musicTimer=null, nextNote=0, mstep=0;
   function ensure(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ ac=null; } } return ac; }
   function unlock(){ const a=ensure(); if(!a) return Promise.resolve(false);
     if(a.state==='running') return Promise.resolve(true);
@@ -240,16 +240,34 @@ const SFX = (()=>{ let ac=null, on=false, started=0;
   function noise(t,dur,gain){ const a=ac; const n=Math.max(1,a.sampleRate*dur), b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0);
     for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2); const s=a.createBufferSource(); s.buffer=b;
     const g=a.createGain(); g.gain.value=gain||0.25; s.connect(g).connect(a.destination); s.start(t); started++; }
+  // two-tone ambulance wail; reps = number of half-cycles (~0.34s each)
+  function siren(reps){ if(!canPlay()) return; const t0=ac.currentTime; const n=reps||9;
+    for(let i=0;i<n;i++){ tone(i%2?760:980, t0+i*0.34, 0.33, 'sawtooth', 0.08); } }
+  // small paramedic shuffle/step sound
+  function step(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.05,0.05); tone(170,t,0.05,'square',0.04); }
+  // light upbeat looping music (tiny synth, C-major pentatonic with a bouncing bass)
+  const MEL=[523,659,784,659, 587,784,880,784, 659,784,1047,880, 784,659,587,659];
+  const BASS=[262,0,196,0, 220,0,196,0, 262,0,196,0, 247,0,196,0];
+  function mschedule(){ if(!ac||ac.state!=='running'||!on){ return; } const ahead=0.18;
+    while(nextNote < ac.currentTime+ahead){
+      const m=MEL[mstep%MEL.length], bs=BASS[mstep%BASS.length];
+      if(m)  tone(m,  nextNote, 0.15, 'triangle', 0.045);
+      if(bs) tone(bs, nextNote, 0.24, 'sine',     0.05);
+      nextNote += 0.19; mstep++;
+    } }
+  function startMusic(){ if(musicTimer||!ac) return; nextNote=ac.currentTime+0.06; mstep=0; musicTimer=setInterval(mschedule,30); }
+  function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer=null; } }
   return {
     unlock,
-    setOn(v){ on=v; return v ? unlock() : Promise.resolve(false); },
+    setOn(v){ on=v; if(v){ return unlock().then(r=>{ if(r) startMusic(); return r; }); } stopMusic(); return Promise.resolve(false); },
     isOn(){ return on; },
     blip(){ if(!canPlay()) return; const t=ac.currentTime; tone(880,t,0.12,'triangle',0.12); },  // toggle-on confirmation
     cheer(){ if(!canPlay()) return; const t=ac.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*0.06,0.5,'triangle',0.14)); noise(t,0.25,0.06); },
     crash(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.4,0.35); tone(90,t,0.45,'sawtooth',0.25); tone(60,t+0.05,0.5,'sine',0.2); },
     thud(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.2,0.18); tone(120,t,0.25,'sine',0.18); },
     whoosh(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.5,0.08); },
-    debug(){ return { on, state: ac?ac.state:'none', started }; }
+    siren, step,
+    debug(){ return { on, state: ac?ac.state:'none', started, music: !!musicTimer }; }
   };
 })();
 window.SFX = SFX;  // exposed for verification
@@ -307,6 +325,12 @@ class JumpScene extends Phaser.Scene{
     this.beacon=this.add.rectangle(0,-46,12,6,0xc0392b).setOrigin(0.5,1);
     this.amb.add(this.beacon); this.amb.setDepth(6).setVisible(false);
 
+    // stretcher crew (hidden until a crash): two paramedics + a stretcher
+    this.medics=[ this.add.image(0,0,'medic').setOrigin(0.5,1).setDepth(7).setVisible(false),
+                  this.add.image(0,0,'medic').setOrigin(0.5,1).setDepth(7).setVisible(false) ];
+    this.stretcher=this.add.image(0,0,'stretcher').setOrigin(0.5,1).setDepth(6).setVisible(false);
+    this.stretcherStarted=false;
+
     // particles: snow spray off the skis, confetti for clean, ambient snowfall
     this.spray=this.add.particles(0,0,'snow',{ speed:{min:30,max:120}, angle:{min:150,max:215},
       lifespan:520, scale:{start:0.9,end:0}, alpha:{start:0.85,end:0}, frequency:-1, quantity:5, tint:0xffffff }).setDepth(4);
@@ -359,6 +383,27 @@ class JumpScene extends Phaser.Scene{
       g.fillStyle(0x1a1a1a,1); g.fillCircle(24,45,8); g.fillCircle(70,45,8);                     // wheels
       g.fillStyle(0xbfc8c4,1); g.fillCircle(24,45,3.5); g.fillCircle(70,45,3.5);
     });
+    // paramedic (orange rescue jacket, white cross)
+    mk('medic',22,36,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRect(5,30,5,6); g.fillRect(12,30,5,6);                       // legs
+      g.fillStyle(0xe07a3c,1); g.fillRoundedRect(4,12,14,20,4);                                   // jacket
+      g.fillStyle(0xffffff,1); g.fillRect(10,16,2,8); g.fillRect(7,19,8,2);                       // white cross
+      g.fillStyle(0xf0c9a0,1); g.fillCircle(11,8,6);                                              // head
+      g.fillStyle(0xe07a3c,1); g.fillRoundedRect(5,2,12,5,2);                                     // cap
+    });
+    // empty stretcher
+    mk('stretcher',56,18,g=>{
+      g.fillStyle(0xcdd6d2,1); g.fillRect(3,11,50,2);                                             // frame
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(3,3,50,8,3);                                     // teal bed
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(11,16,2.6); g.fillCircle(45,16,2.6);                  // wheels
+    });
+    // loaded stretcher (patient under a blanket)
+    mk('stretcherLoaded',56,22,g=>{
+      g.fillStyle(0xcdd6d2,1); g.fillRect(3,15,50,2);                                             // frame
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(11,20,2.6); g.fillCircle(45,20,2.6);                  // wheels
+      g.fillStyle(0x9fb0c0,1); g.fillRoundedRect(5,6,46,10,4);                                    // blanket
+      g.fillStyle(0xf0c9a0,1); g.fillCircle(47,9,4);                                              // head poking out
+    });
     // snow particle
     mk('snow',10,10,g=>{ g.fillStyle(0xffffff,1); g.fillCircle(5,5,4); });
     // confetti particle
@@ -407,16 +452,16 @@ class JumpScene extends Phaser.Scene{
     // landing marker
     this.preview.fillStyle(0xc9a84c,0.9); this.preview.fillCircle(WX(res.landX),WY(res.landY),4);
     // skier ready at takeoff, tilted to launch direction
-    const v0=pts[0]; this.skier.setTexture('skier'); this.skier.setPosition(WX(0),WY(0)-8);
+    this.resetActors();
+    const v0=pts[0]; this.skier.setPosition(WX(0),WY(0)-8).setOrigin(0.5,0.7);
     this.skier.setRotation(Math.atan2(-v0.vy,v0.vx));
-    this.amb.setVisible(false);
     updateScore(res);
   }
 
   launchJump(){
     if(this.state==='runin'||this.state==='flight') return;
     const res=P.simulate(readInputs());
-    this.res=res; this.preview.clear(); this.amb.setVisible(false);
+    this.res=res; this.preview.clear(); this.resetActors();
     neutralVerdict(); updateScore(res);
     SFX.whoosh();
     // cosmetic run-in, then hand off to the real trajectory
@@ -481,10 +526,15 @@ class JumpScene extends Phaser.Scene{
       return;
     }
 
+    // ambulance beacon flashes whenever it's on screen (drive-in, loading, drive-off)
+    if(this.amb.visible) this.beacon.fillColor = (Math.floor(time/120)%2===0)?0xc0392b:0x2b6fc0;
+
     if(this.state==='outcome'){
+      // once a crash hands off to the stretcher sequence, tweens own the actors
+      if(this.res.tier==='crash' && this.stretcherStarted) return;
       this.out.ms+=delta; const op=Math.min(1,this.out.ms/this.out.dur);
       const res=this.res, t=res.tier;
-      const e=easeOut(t==='crash'?Math.min(op/0.7,1):op);
+      const e=easeOut(t==='crash'?Math.min(op/0.55,1):op);
       const sxw=res.landX + this.out.slideM*e;
       const px=WX(sxw), py=WY(P.hillY(sxw))-8;
       let rot=this.out.baseRot, down=false;
@@ -495,16 +545,62 @@ class JumpScene extends Phaser.Scene{
       this.skier.setTexture(down?'skierDown':'skier');
       this.skier.setOrigin(0.5, down?0.8:0.7);
       this.skier.setPosition(px,py+hop); this.skier.setRotation(rot);
-      if(t==='crash'){
-        const ap=Phaser.Math.Clamp((op-0.30)/0.7,0,1);
-        const restX=WX(res.landX+this.out.slideM)+90, startX=restX+520;
-        const ax=startX+(restX-startX)*easeOut(ap);
-        const ay=WY(P.hillY((ax-OX)/PPM));
-        this.amb.setVisible(true).setPosition(ax,ay);
-        this.beacon.fillColor = (Math.floor(time/120)%2===0)?0xc0392b:0x2b6fc0;
-      }
+      if(t==='crash' && down && !this.stretcherStarted) this.beginStretcher();
       return;
     }
+  }
+
+  /* ----- crash → stretcher sequence: arrive, load, drive off (tween-driven) ----- */
+  resetActors(){
+    this.stretcherStarted=false;
+    this.tweens.killTweensOf([this.amb,this.skier,this.stretcher,this.medics[0],this.medics[1]]);
+    this.stopBob(this.medics[0]); this.stopBob(this.medics[1]);
+    this.medics[0].setVisible(false); this.medics[1].setVisible(false);
+    this.stretcher.setVisible(false).setTexture('stretcher');
+    this.amb.setVisible(false);
+    this.skier.setVisible(true).setScale(1).setTexture('skier');
+  }
+  startBob(m){ if(m._bob) return; m._bob=this.tweens.add({ targets:m, scaleY:0.9, duration:150, yoyo:true, repeat:-1, ease:'Sine.inOut' }); }
+  stopBob(m){ if(m&&m._bob){ m._bob.stop(); m._bob=null; m.scaleY=1; } }
+
+  beginStretcher(){
+    this.stretcherStarted=true;
+    const Jpx=this.skier.x, Jpy=WY(P.hillY((Jpx-OX)/PPM));
+    this.skier.setTexture('skierDown').setOrigin(0.5,0.8).setRotation(0).setPosition(Jpx,Jpy-6);
+    const ambX=Jpx+150, ambY=WY(P.hillY((ambX-OX)/PPM));
+    // BEAT 1 — ARRIVE (siren)
+    this.amb.setVisible(true).setPosition(ambX+660, ambY);
+    SFX.siren(9);
+    this.tweens.add({ targets:this.amb, x:ambX, duration:1500, ease:'Cubic.out',
+      onComplete:()=>this.medicsLoad(Jpx,Jpy,ambX,ambY) });
+  }
+  medicsLoad(Jpx,Jpy,ambX,ambY){
+    // BEAT 2 — LOAD (paramedic movement sounds)
+    const m0=this.medics[0], m1=this.medics[1];
+    m0.setVisible(true).setPosition(ambX-8,ambY-2); this.startBob(m0);
+    m1.setVisible(true).setPosition(ambX+6,ambY-2); this.startBob(m1);
+    SFX.step();
+    this.tweens.add({ targets:m0, x:Jpx+20, y:Jpy-2, duration:850, ease:'Sine.inOut' });
+    this.tweens.add({ targets:m1, x:Jpx-20, y:Jpy-2, duration:850, delay:100, ease:'Sine.inOut', onComplete:()=>{
+      SFX.step();
+      this.stretcher.setTexture('stretcher').setVisible(true).setScale(0.6).setPosition(Jpx,Jpy-2);
+      this.tweens.add({ targets:this.stretcher, scale:1, duration:220 });
+      // load the jumper onto the stretcher, then hide him (now under the blanket)
+      this.tweens.add({ targets:this.skier, y:Jpy-14, duration:340, delay:220, ease:'Sine.in', onComplete:()=>{
+        this.skier.setVisible(false); this.stretcher.setTexture('stretcherLoaded'); SFX.step();
+        // push stretcher + crew back to the ambulance, then drive off
+        this.tweens.add({ targets:[this.stretcher,m0,m1], x:ambX, y:ambY-2, duration:950, delay:160, ease:'Sine.inOut', onComplete:()=>{
+          this.stretcher.setVisible(false); this.stopBob(m0); this.stopBob(m1); m0.setVisible(false); m1.setVisible(false);
+          this.driveAway(ambX,ambY);
+        }});
+      }});
+    }});
+  }
+  driveAway(ambX,ambY){
+    // BEAT 3 — DRIVE OFF (short siren)
+    SFX.siren(5);
+    this.tweens.add({ targets:this.amb, x:ambX+980, duration:1700, ease:'Cubic.in',
+      onComplete:()=>this.amb.setVisible(false) });
   }
 }
 
@@ -523,9 +619,9 @@ function onControl(){ syncLabels(); neutralVerdict(); if(gameScene&&gameScene.st
 Object.values(ctrls).forEach(s=>s.addEventListener('input', onControl));
 el('launch').addEventListener('click', ()=>{ if(gameScene){ if(gameScene.state==='outcome'){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(60),WY(-40)); } gameScene.launchJump(); } });
 el('reset').addEventListener('click', ()=>{
-  ctrls.area.value=0.55; ctrls.alpha.value=10; ctrls.v0.value=30; ctrls.rho.value=1.20;
+  ctrls.area.value=0.45; ctrls.alpha.value=0; ctrls.v0.value=24; ctrls.rho.value=1.00;
   syncLabels(); neutralVerdict();
-  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.amb.setVisible(false); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(60),WY(-40)); }
+  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.resetActors(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(60),WY(-40)); }
 });
 syncLabels();
 </script>
