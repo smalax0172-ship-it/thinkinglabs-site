@@ -289,6 +289,7 @@ el('sound').addEventListener('click', function(){
 const VW=960, VH=540;          // base resolution
 const PPM=3.0;                 // pixels per metre (presentation only)
 const OX=120, OY=120;          // takeoff position in world px
+const START_IN=16;             // metres down the in-run where the jumper starts (seated on the ramp)
 const WX = x => OX + x*PPM;            // engine x (m) -> world px
 const WY = yEng => OY + (-yEng)*PPM;   // engine y (m, neg downhill) -> world px
 const flipsFor = sev => 3 + Math.min(4, Math.max(0, Math.floor((sev-19)/2)));
@@ -451,10 +452,10 @@ class JumpScene extends Phaser.Scene{
     const pts=res.pts; for(let i=0;i<pts.length;i+=6){ this.preview.fillCircle(WX(pts[i].x),WY(pts[i].y),1.6); }
     // landing marker
     this.preview.fillStyle(0xc9a84c,0.9); this.preview.fillCircle(WX(res.landX),WY(res.landY),4);
-    // skier starts flat on top of the hill (top of the in-run), aligned to the ramp
+    // skier starts flat on the hill, seated ON the in-run ramp (not perched on the edge)
     this.resetActors();
-    const a=this.inrun, rampRot=Math.atan2((WY(0)-WY(a.ry0)),(WX(2)-WX(a.rx0)));
-    this.skier.setOrigin(0.5,0.7).setPosition(WX(a.rx0),WY(a.ry0)-6).setRotation(rampRot);
+    const a=this.inrun, sx=a.rx0+START_IN, rampRot=Math.atan2((WY(0)-WY(a.ry0)),(WX(2)-WX(a.rx0)));
+    this.skier.setOrigin(0.5,0.7).setPosition(WX(sx),WY(this.rampY(sx))-8).setRotation(rampRot);
     updateScore(res);
   }
 
@@ -505,9 +506,9 @@ class JumpScene extends Phaser.Scene{
 
     if(this.state==='runin'){
       this.runinMs+=delta; const k=Math.min(1,this.runinMs/this.runinDur); const e=k*k;
-      const rx=this.inrun.rx0+(2-this.inrun.rx0)*e, ry=this.inrun.ry0+(0-this.inrun.ry0)*e;
-      this.skier.setPosition(WX(rx),WY(ry)-8);
-      this.skier.setRotation(Math.atan2( (WY(0)-WY(this.inrun.ry0)), (WX(2)-WX(this.inrun.rx0)) ));
+      const a=this.inrun, sx0=a.rx0+START_IN, rx=sx0+(2-sx0)*e, ry=this.rampY(rx);
+      this.skier.setOrigin(0.5,0.7).setPosition(WX(rx),WY(ry)-8);
+      this.skier.setRotation(Math.atan2((WY(0)-WY(a.ry0)),(WX(2)-WX(a.rx0))));
       this.spray.emitParticleAt(this.skier.x,this.skier.y+6,2);
       if(k>=1) this.startFlight();
       return;
@@ -563,6 +564,8 @@ class JumpScene extends Phaser.Scene{
   startBob(m){ if(m._bob) return; m._bob=this.tweens.add({ targets:m, scaleY:0.9, duration:150, yoyo:true, repeat:-1, ease:'Sine.inOut' }); }
   stopBob(m){ if(m&&m._bob){ m._bob.stop(); m._bob=null; m.scaleY=1; } }
 
+  // y (engine metres) of the in-run ramp surface at a given x (metres), for seating the jumper
+  rampY(x){ const a=this.inrun; return a.ry0 + (0-a.ry0)*(x-a.rx0)/(2-a.rx0); }
   // y of the hill surface at a given world-pixel x (so actors ride the slope, not midair)
   onSlope(px){ return WY(P.hillY((px-OX)/PPM)); }
   // screen rotation that aligns an object's base with the slope at px (so wheels sit flush)
