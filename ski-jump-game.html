@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ski Jump: The Game | Thinking Labs by Temple Academy</title>
+<meta name="description" content="Play a real ski-jump game powered by a genuine RK4 aerodynamics engine. Match your landing to the slope or summon the ambulance." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --charcoal:#1a1a1a; --cream:#f5f0e8; --warm-cream:#ebe4d6;
+  --gold:#c9a84c; --gold-dim:#a68a3e; --gold-glow:rgba(201,168,76,0.15);
+  --teal:#3d8c7e; --teal-light:#4fa898; --rust:#9b4a3c;
+  --text-dark:#2a2420; --text-mid:#5a524a; --text-light:#8a8278;
+  --border:#d4cbbf; --section-alt:#faf7f2; --card-shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+html{ font-size:16px; -webkit-text-size-adjust:100%; }
+body{ font-family:'Source Sans 3',-apple-system,sans-serif; color:var(--text-dark); background:var(--cream); line-height:1.6; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; line-height:1.2; color:var(--charcoal); }
+a{ color:var(--teal); text-decoration:none; }
+.wrap{ max-width:1040px; margin:0 auto; padding:0 20px; }
+
+/* Canonical site nav (shared, static) */
+#nav{ position:relative; z-index:100; background:rgba(245,240,232,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid rgba(212,203,191,0.6); }
+#nav .nav-inner{ max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.nav-brand{ font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; color:var(--charcoal); letter-spacing:0.02em; text-decoration:none; }
+.nav-brand span{ font-weight:400; color:var(--text-mid); font-size:0.72rem; display:block; letter-spacing:0.14em; text-transform:uppercase; margin-top:1px; }
+.nav-links{ display:flex; gap:28px; align-items:center; }
+.nav-links a{ font-size:0.88rem; font-weight:500; color:var(--text-mid); letter-spacing:0.02em; position:relative; text-decoration:none; }
+.nav-links a:not(.nav-cta):hover{ color:var(--charcoal); }
+.nav-links a:not(.nav-cta)::after{ content:''; position:absolute; bottom:-4px; left:0; width:0; height:1.5px; background:var(--gold); transition:width .3s; }
+.nav-links a:not(.nav-cta):hover::after{ width:100%; }
+.nav-cta{ background:var(--charcoal); color:var(--cream)!important; padding:9px 22px; border-radius:4px; font-weight:600; font-size:0.85rem; letter-spacing:0.03em; transition:all .25s; }
+.nav-cta:hover{ background:#2a2a2a; transform:translateY(-1px); }
+.mobile-toggle{ display:none; background:none; border:none; cursor:pointer; padding:8px; }
+.mobile-toggle span{ display:block; width:22px; height:2px; background:var(--charcoal); margin:5px 0; border-radius:1px; transition:.3s; }
+.mobile-toggle.open span:nth-child(1){ transform:rotate(45deg) translate(4px,5px); }
+.mobile-toggle.open span:nth-child(2){ opacity:0; }
+.mobile-toggle.open span:nth-child(3){ transform:rotate(-45deg) translate(4px,-5px); }
+@media (max-width:900px){ #nav .nav-links{ display:none; } #nav .nav-links.open{ display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0; background:var(--cream); padding:20px 24px; border-bottom:1px solid var(--border); gap:16px; box-shadow:0 12px 24px rgba(0,0,0,0.08); } #nav .mobile-toggle{ display:block; } }
+
+header.site{ text-align:center; padding:30px 0 10px; }
+.eyebrow{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:var(--gold-dim); margin-bottom:4px; }
+header.site h1{ font-size:clamp(30px,6vw,48px); letter-spacing:-0.015em; }
+header.site h1 em{ font-style:italic; color:var(--gold); }
+.sub{ color:var(--text-mid); font-size:1rem; max-width:600px; margin:8px auto 0; }
+
+main{ padding:18px 0 60px; }
+.stage-card{ background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:var(--card-shadow); overflow:hidden; }
+#game{ width:100%; aspect-ratio:16/9; background:#cfe6f2; display:block; }
+#game canvas{ display:block; width:100%!important; height:100%!important; }
+
+.hud{ display:grid; grid-template-columns:1fr; gap:18px; margin-top:18px; }
+@media(min-width:820px){ .hud{ grid-template-columns:1.3fr 1fr; align-items:start; } }
+
+.panel{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:18px 18px 10px; box-shadow:var(--card-shadow); }
+.panel h3{ font-size:1.2rem; margin:0 0 4px; }
+.panel .hint{ font-size:0.82rem; color:var(--text-light); margin-bottom:14px; }
+
+.ctl{ margin-bottom:15px; }
+.ctl-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+.ctl-top label{ font-weight:600; font-size:0.92rem; }
+.ctl-top label .star{ color:var(--gold); }
+.ctl-top .val{ font-variant-numeric:tabular-nums; font-weight:700; color:var(--teal); font-size:0.95rem; }
+.ctl-top .val small{ color:var(--text-light); font-weight:500; }
+input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:7px; border-radius:7px; background:linear-gradient(90deg,var(--teal) 0%,var(--teal) var(--fill,40%),var(--warm-cream) var(--fill,40%)); outline:none; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid var(--teal); cursor:pointer; box-shadow:0 1px 5px rgba(0,0,0,0.25); transition:transform .1s; }
+input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.15); }
+input[type=range]::-moz-range-thumb{ width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid var(--teal); cursor:pointer; }
+
+.btn-row{ display:flex; gap:10px; margin:6px 0 8px; align-items:center; }
+.btn{ flex:1; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.95rem; letter-spacing:0.02em; padding:13px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--text-dark); transition:all .15s; }
+.btn:hover{ border-color:var(--teal); color:var(--teal); }
+.btn.primary{ background:var(--charcoal); color:var(--cream); border-color:var(--charcoal); box-shadow:0 3px 0 #000; }
+.btn.primary:hover{ background:#000; color:#fff; transform:translateY(-1px); }
+.btn.primary:active{ transform:translateY(1px); box-shadow:0 1px 0 #000; }
+.sound-toggle{ flex:0 0 auto; width:46px; height:46px; border-radius:9px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:1.1rem; line-height:1; color:var(--text-mid); transition:all .15s; }
+.sound-toggle.on{ background:var(--teal); color:#fff; border-color:var(--teal); }
+
+/* Verdict / scorecard */
+.verdict-card{ border-radius:12px; padding:16px 18px; background:var(--section-alt); border:1px solid var(--border); border-left:4px solid var(--border); transition:all .25s; }
+.verdict-card .title{ font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:700; color:var(--text-mid); display:flex; align-items:center; gap:8px; }
+.verdict-card .line{ font-size:0.95rem; color:var(--text-mid); margin-top:4px; min-height:1.3em; }
+.verdict-card.clean{ border-left-color:var(--teal); background:rgba(61,140,126,0.07); } .verdict-card.clean .title{ color:var(--teal); }
+.verdict-card.wobble{ border-left-color:var(--gold-dim); background:var(--gold-glow); } .verdict-card.wobble .title{ color:var(--gold-dim); }
+.verdict-card.tumble{ border-left-color:var(--rust); background:rgba(155,74,60,0.07); } .verdict-card.tumble .title{ color:var(--rust); }
+.verdict-card.crash{ border-left-color:#7a1f15; background:rgba(155,74,60,0.12); } .verdict-card.crash .title{ color:#7a1f15; }
+.scorerow{ display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; font-size:0.86rem; color:var(--text-mid); border-top:1px solid var(--border); padding-top:12px; }
+.scorerow b{ color:var(--text-dark); font-variant-numeric:tabular-nums; }
+.scorerow .big{ font-size:1.05rem; }
+.note{ font-size:0.8rem; color:var(--text-light); margin-top:12px; line-height:1.5; }
+
+footer{ border-top:1px solid var(--border); padding:26px 0 44px; text-align:center; }
+footer .brand{ font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal); }
+footer .brand span{ display:block; font-family:'Source Sans 3'; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-light); margin-top:3px; }
+footer .fine{ font-size:0.8rem; color:var(--text-light); margin-top:10px; }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+<a href="https://thinkinglabs.academy/" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="index.html#about">About</a><a href="research.html">Research</a><a href="schools.html">Schools</a><a href="ski-jumping.html">Try a Lesson</a><a href="private.html">Private Track</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
+
+<header class="site">
+  <div class="eyebrow">Powered by a real RK4 aerodynamics engine</div>
+  <h1>Ski Jump: <em>The Game</em></h1>
+  <p class="sub">Set your run, launch, and try to land matching the slope. Every flight is computed by genuine physics — miss the angle and the ambulance comes.</p>
+</header>
+
+<main class="wrap">
+  <div class="stage-card">
+    <div id="game"></div>
+  </div>
+
+  <div class="hud">
+    <div class="panel">
+      <h3>Your Run</h3>
+      <p class="hint">Tune the jumper, then hit Launch. The dotted line previews the computed flight.</p>
+
+      <div class="ctl">
+        <div class="ctl-top"><label for="area">Wing area A <span class="star">★</span></label><span class="val" id="area-v">0.55 <small>m²</small></span></div>
+        <input type="range" id="area" min="0.45" max="0.72" step="0.005" value="0.55">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="alpha">Angle of attack α</label><span class="val" id="alpha-v">10°</span></div>
+        <input type="range" id="alpha" min="0" max="26" step="0.5" value="10">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="v0">Launch speed v</label><span class="val" id="v0-v">30 <small>m/s</small></span></div>
+        <input type="range" id="v0" min="24" max="36" step="0.5" value="30">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="rho">Air density ρ</label><span class="val" id="rho-v">1.20 <small>kg/m³</small></span></div>
+        <input type="range" id="rho" min="0.95" max="1.40" step="0.01" value="1.20">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="launch">▶ Launch</button>
+        <button class="btn" id="reset">Reset</button>
+        <button class="sound-toggle" id="sound" title="Sound on/off" aria-label="Toggle sound">🔇</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Scorecard</h3>
+      <p class="hint">A clean landing means your trajectory angle matches the hill.</p>
+      <div class="verdict-card" id="verdict">
+        <div class="title" id="v-title">Ready to ride</div>
+        <div class="line" id="v-line">Press Launch to fly. Match your landing angle to the slope for a clean landing.</div>
+      </div>
+      <div class="scorerow">
+        <div>Distance: <b class="big" id="s-dist">—</b> m</div>
+        <div>Trajectory ∠: <b id="s-traj">—</b></div>
+        <div>Hill ∠: <b id="s-hill">—</b></div>
+        <div>Mismatch: <b id="s-mis">—</b></div>
+      </div>
+      <p class="note">The mismatch (how far your landing angle misses the slope) is the score that decides the outcome: ≤6° clean, ≤12° wobble, ≤19° tumble, more than 19° crash. Same physics engine as the lesson — this just draws a game on top.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="brand">Thinking Labs<span>by Temple Academy</span></div>
+  <div class="fine">A game layer over a verified flight engine &middot; the physics is never faked.</div>
+</footer>
+
+<script src="phaser.min.js"></script>
+<script src="ski-physics.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   GAME LAYER. The physics is owned entirely by window.SkiPhysics
+   (the verified engine). This file only DRAWS the truth it produces:
+   on Launch we call SkiPhysics.simulate(inp) once, then play back the
+   per-frame pts array. No forces are re-derived here.
+   ===================================================================== */
+const P = window.SkiPhysics;
+
+/* ---------- nav mobile toggle ---------- */
+document.getElementById('mobileToggle').addEventListener('click', function(){
+  this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open');
+});
+
+/* ---------- DOM controls ---------- */
+const el = id => document.getElementById(id);
+const ctrls = { area:el('area'), alpha:el('alpha'), v0:el('v0'), rho:el('rho') };
+function readInputs(){ return { A:+ctrls.area.value, alpha:+ctrls.alpha.value, v0:+ctrls.v0.value, rho:+ctrls.rho.value }; }
+function fillTrack(s){ const mn=+s.min,mx=+s.max,v=+s.value; s.style.setProperty('--fill',((v-mn)/(mx-mn)*100)+'%'); }
+function syncLabels(){
+  el('area-v').innerHTML = (+ctrls.area.value).toFixed(3)+' <small>m²</small>';
+  el('alpha-v').textContent = (+ctrls.alpha.value).toFixed(1)+'°';
+  el('v0-v').innerHTML = (+ctrls.v0.value).toFixed(1)+' <small>m/s</small>';
+  el('rho-v').innerHTML = (+ctrls.rho.value).toFixed(2)+' <small>kg/m³</small>';
+  Object.values(ctrls).forEach(fillTrack);
+}
+
+/* ---------- scorecard / verdict (game UI) ---------- */
+function updateScore(res){
+  el('s-dist').textContent = res.dist.toFixed(0);
+  el('s-traj').textContent = res.landAngle.toFixed(0)+'°';
+  el('s-hill').textContent = res.hillAngle.toFixed(0)+'°';
+  el('s-mis').textContent  = res.severity.toFixed(0)+'°';
+}
+function showVerdict(res){
+  const v = P.verdictFor(res.inp, res);
+  el('verdict').className = 'verdict-card '+res.tier;
+  el('v-title').textContent = v.title;
+  el('v-line').textContent = v.line;
+}
+function neutralVerdict(){
+  el('verdict').className = 'verdict-card';
+  el('v-title').textContent = 'Ready to ride';
+  el('v-line').textContent = 'Press Launch to fly. Match your landing angle to the slope for a clean landing.';
+}
+
+/* ---------- tiny optional WebAudio SFX (off by default) ---------- */
+const SFX = (()=>{ let ac=null, on=false;
+  function ctx(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ ac=null; } } return ac; }
+  function tone(f,t,dur,type,gain){ const a=ctx(); if(!a) return; const o=a.createOscillator(),g=a.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t); g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(gain||0.18,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+0.02); }
+  function noise(t,dur,gain){ const a=ctx(); if(!a) return; const n=a.sampleRate*dur, b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2); const s=a.createBufferSource(); s.buffer=b;
+    const g=a.createGain(); g.gain.value=gain||0.25; s.connect(g).connect(a.destination); s.start(t); }
+  return {
+    setOn(v){ on=v; if(v) ctx() && ac.resume && ac.resume(); },
+    isOn(){ return on; },
+    cheer(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*0.06,0.5,'triangle',0.14)); noise(t,0.25,0.06); },
+    crash(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.4,0.35); tone(90,t,0.45,'sawtooth',0.25); tone(60,t+0.05,0.5,'sine',0.2); },
+    thud(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.2,0.18); tone(120,t,0.25,'sine',0.18); },
+    whoosh(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.5,0.08); }
+  };
+})();
+el('sound').addEventListener('click', function(){
+  const on=!SFX.isOn(); SFX.setOn(on); this.classList.toggle('on',on); this.textContent=on?'🔊':'🔇';
+});
+
+/* =====================================================================
+   PHASER SCENE
+   ===================================================================== */
+const VW=960, VH=540;          // base resolution
+const PPM=3.0;                 // pixels per metre (presentation only)
+const OX=120, OY=120;          // takeoff position in world px
+const WX = x => OX + x*PPM;            // engine x (m) -> world px
+const WY = yEng => OY + (-yEng)*PPM;   // engine y (m, neg downhill) -> world px
+const flipsFor = sev => 3 + Math.min(4, Math.max(0, Math.floor((sev-19)/2)));
+const easeOut = t => 1 - Math.pow(1-t,3);
+
+let gameScene=null;
+
+class JumpScene extends Phaser.Scene{
+  constructor(){ super('jump'); }
+
+  create(){
+    this.makeTextures();
+    const cam=this.cameras.main; cam.setBackgroundColor('#bfe0f5'); cam.roundPixels=true;
+
+    // sky gradient (fixed to camera)
+    const sky=this.add.graphics().setScrollFactor(0).setDepth(-100);
+    sky.fillGradientStyle(0xbfe0f5,0xbfe0f5,0xe9f4fb,0xe9f4fb,1); sky.fillRect(0,0,VW,VH);
+
+    // parallax mountains
+    this.farMtn=this.add.tileSprite(0,VH*0.30,VW,200,'mtnFar').setOrigin(0,0).setScrollFactor(0).setDepth(-90);
+    this.nearMtn=this.add.tileSprite(0,VH*0.42,VW,200,'mtnNear').setOrigin(0,0).setScrollFactor(0).setDepth(-80);
+
+    // hill + in-run (static world geometry, drawn from engine's hillY)
+    this.drawTerrain();
+
+    // preview path
+    this.preview=this.add.graphics().setDepth(-5);
+
+    // skier
+    this.skier=this.add.image(WX(0),WY(0)-8,'skier').setOrigin(0.5,0.7).setDepth(5);
+
+    // ambulance (container: body + flashing beacon), hidden until a crash
+    this.amb=this.add.container(0,0,[ this.add.image(0,0,'ambulance').setOrigin(0.5,1) ]);
+    this.beacon=this.add.rectangle(0,-46,12,6,0xc0392b).setOrigin(0.5,1);
+    this.amb.add(this.beacon); this.amb.setDepth(6).setVisible(false);
+
+    // particles: snow spray off the skis, confetti for clean, ambient snowfall
+    this.spray=this.add.particles(0,0,'snow',{ speed:{min:30,max:120}, angle:{min:150,max:215},
+      lifespan:520, scale:{start:0.9,end:0}, alpha:{start:0.85,end:0}, frequency:-1, quantity:5, tint:0xffffff }).setDepth(4);
+    this.confetti=this.add.particles(0,0,'confetti',{ speed:{min:120,max:300}, angle:{min:200,max:340},
+      lifespan:1400, gravityY:380, scale:{start:1,end:0.4}, rotate:{min:0,max:360},
+      alpha:{start:1,end:0}, frequency:-1, quantity:34, tint:[0xc9a84c,0x3d8c7e,0x9b4a3c,0x4fa898,0xa68a3e] }).setDepth(8);
+    this.ambient=this.add.particles(0,0,'snow',{ x:{min:0,max:VW}, y:-8, lifespan:5000,
+      speedY:{min:25,max:60}, speedX:{min:-20,max:20}, scale:{min:0.25,max:0.8},
+      alpha:{min:0.25,max:0.7}, frequency:140, quantity:1, tint:0xffffff }).setScrollFactor(0).setDepth(50);
+
+    // crowd hint near the landing zone (little dots that bob on a clean landing)
+    this.crowd=this.add.container(0,0).setDepth(3);
+
+    this.state='idle';
+    this.res=null; this.playMs=0; this.playDur=0;
+    this.out={};
+    cam.centerOn(WX(60), WY(-40));
+
+    gameScene=this; window.gameScene=this;
+    syncLabels();
+    this.refreshPreview();
+  }
+
+  makeTextures(){
+    const mk=(key,w,h,fn)=>{ const g=this.make.graphics({x:0,y:0,add:false}); fn(g); g.generateTexture(key,w,h); g.destroy(); };
+
+    // skier in flight (faces right, head/helmet to the right, tucked)
+    mk('skier',50,38,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRoundedRect(2,28,44,4,2); g.fillRoundedRect(4,33,44,4,2); // two skis
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(10,14,26,13,6);                                 // torso (suit)
+      g.fillStyle(0x35796d,1); g.fillRoundedRect(6,18,14,6,3);                                   // trailing arm
+      g.fillStyle(0xc9a84c,1); g.fillCircle(38,13,7);                                            // helmet
+      g.fillStyle(0x1a1a1a,1); g.fillRoundedRect(38,10,7,5,2);                                   // visor
+    });
+    // crashed/fallen skier
+    mk('skierDown',52,34,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRoundedRect(0,22,32,4,2); g.fillRoundedRect(10,27,34,4,2); // skis askew
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(6,16,28,9,4);                                   // body flat
+      g.fillStyle(0xc9a84c,1); g.fillCircle(8,16,7);                                             // head down-left
+      g.fillStyle(0x1a1a1a,1); g.fillRoundedRect(4,14,6,4,2);
+    });
+    // ambulance
+    mk('ambulance',92,54,g=>{
+      g.fillStyle(0x000000,0.12); g.fillEllipse(46,51,82,10);                                    // ground shadow
+      g.fillStyle(0xffffff,1); g.fillRoundedRect(2,6,88,38,7);                                   // body (white, high contrast)
+      g.lineStyle(3,0x1a1a1a,1); g.strokeRoundedRect(2,6,88,38,7);
+      g.fillStyle(0x9b4a3c,1); g.fillRect(2,30,88,7);                                            // red stripe
+      g.fillStyle(0x9fc3d8,1); g.fillRoundedRect(66,11,20,14,3);                                 // cab window
+      g.fillStyle(0xc0392b,1); g.fillRect(22,12,7,18); g.fillRect(15,18,21,6);                   // red cross
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(24,45,8); g.fillCircle(70,45,8);                     // wheels
+      g.fillStyle(0xbfc8c4,1); g.fillCircle(24,45,3.5); g.fillCircle(70,45,3.5);
+    });
+    // snow particle
+    mk('snow',10,10,g=>{ g.fillStyle(0xffffff,1); g.fillCircle(5,5,4); });
+    // confetti particle
+    mk('confetti',8,8,g=>{ g.fillStyle(0xffffff,1); g.fillRect(0,0,8,6); });
+    // mountains (deterministic jagged silhouettes for parallax)
+    const mtn=(key,color,seed,base)=>mk(key,512,200,g=>{
+      g.fillStyle(color,1); g.beginPath(); g.moveTo(0,200);
+      for(let i=0;i<=16;i++){ const x=i*32; const y=base-(((i*seed)%9)*12+30); g.lineTo(x,y); }
+      g.lineTo(512,200); g.closePath(); g.fillPath();
+    });
+    mtn('mtnFar',0xd7e6ef,7,150); mtn('mtnNear',0xb9d2e0,5,180);
+  }
+
+  drawTerrain(){
+    const hill=this.add.graphics().setDepth(-10);
+    const x0=-80, x1=820, step=4;
+    // snow fill
+    hill.fillStyle(0xffffff,1); hill.beginPath(); hill.moveTo(WX(x0),WY(P.hillY(x0)));
+    for(let x=x0;x<=x1;x+=step) hill.lineTo(WX(x),WY(P.hillY(x)));
+    hill.lineTo(WX(x1),WY(P.hillY(x1))+3000); hill.lineTo(WX(x0),WY(P.hillY(x0))+3000); hill.closePath(); hill.fillPath();
+    // surface line
+    hill.lineStyle(3,0xcfdde4,1); hill.beginPath(); hill.moveTo(WX(x0),WY(P.hillY(x0)));
+    for(let x=x0;x<=x1;x+=step) hill.lineTo(WX(x),WY(P.hillY(x))); hill.strokePath();
+    // distance markers every 50 m along the steep face/outrun
+    const lab=this.add.graphics().setDepth(-9);
+    lab.lineStyle(2,0xdfe7eb,1);
+    for(let d=50; d<=700; d+=50){ lab.beginPath(); lab.moveTo(WX(d),WY(P.hillY(d))); lab.lineTo(WX(d),WY(P.hillY(d))+10); lab.strokePath(); }
+    // in-run ramp (cosmetic): from up-left down to the takeoff lip
+    const ramp=this.add.graphics().setDepth(-9);
+    const rx0=-80, ry0=26;   // start: 80 m back, 26 m up
+    ramp.fillStyle(0xeef4f7,1); ramp.beginPath();
+    ramp.moveTo(WX(rx0),WY(ry0)); ramp.lineTo(WX(2),WY(0)); ramp.lineTo(WX(2),WY(0)+3000); ramp.lineTo(WX(rx0),WY(ry0)+3000); ramp.closePath(); ramp.fillPath();
+    ramp.lineStyle(3,0xcfdde4,1); ramp.beginPath(); ramp.moveTo(WX(rx0),WY(ry0)); ramp.lineTo(WX(2),WY(0)); ramp.strokePath();
+    // takeoff lip block
+    const lip=this.add.graphics().setDepth(-8); lip.fillStyle(0x9aa6a0,1); lip.fillRect(WX(0)-6,WY(0)-2,10,7);
+    this.inrun={ rx0, ry0 };
+  }
+
+  // draw the predicted flight as a faint dotted line + place skier at takeoff
+  refreshPreview(){
+    const res=P.simulate(readInputs());
+    this.res=res;
+    this.preview.clear();
+    this.preview.fillStyle(0x3d8c7e,0.5);
+    const pts=res.pts; for(let i=0;i<pts.length;i+=6){ this.preview.fillCircle(WX(pts[i].x),WY(pts[i].y),1.6); }
+    // landing marker
+    this.preview.fillStyle(0xc9a84c,0.9); this.preview.fillCircle(WX(res.landX),WY(res.landY),4);
+    // skier ready at takeoff, tilted to launch direction
+    const v0=pts[0]; this.skier.setTexture('skier'); this.skier.setPosition(WX(0),WY(0)-8);
+    this.skier.setRotation(Math.atan2(-v0.vy,v0.vx));
+    this.amb.setVisible(false);
+    updateScore(res);
+  }
+
+  launchJump(){
+    if(this.state==='runin'||this.state==='flight') return;
+    const res=P.simulate(readInputs());
+    this.res=res; this.preview.clear(); this.amb.setVisible(false);
+    neutralVerdict(); updateScore(res);
+    SFX.whoosh();
+    // cosmetic run-in, then hand off to the real trajectory
+    this.state='runin'; this.runinMs=0; this.runinDur=520;
+    this.cameras.main.startFollow(this.skier,true,0.10,0.10,-120,-30);
+    this.spray.startFollow(this.skier,0,6); this.spray.start();
+  }
+
+  startFlight(){
+    const N=this.res.pts.length;
+    this.state='flight'; this.playMs=0;
+    this.playDur=Math.max(2200, Math.min(3600, N*8));   // ~constant screen time regardless of flight length
+  }
+
+  startOutcome(){
+    const res=this.res; this.state='outcome'; this.out={ ms:0 };
+    const t=res.tier;
+    this.out.dur = t==='crash'?2600 : t==='tumble'?1500 : t==='clean'?1600 : 1400;
+    this.out.slideM = ({clean:55,wobble:40,tumble:26,crash:30})[t];
+    this.out.flips = flipsFor(res.severity);
+    this.out.baseRot = Math.atan2(-res.landVy,res.landVx);
+    this.spray.stop();
+    showVerdict(res);
+    if(t==='clean'){ this.confetti.explode(36, WX(res.landX), WY(res.landY)-12); this.spawnCrowd(res); SFX.cheer(); }
+    else if(t==='crash'){ this.cameras.main.shake(260,0.012); SFX.crash(); }
+    else if(t==='tumble'){ this.cameras.main.shake(140,0.006); SFX.thud(); }
+    else { SFX.thud(); }
+  }
+
+  spawnCrowd(res){
+    this.crowd.removeAll(true);
+    const bx=WX(res.landX)+40, by=WY(res.landY)-26;
+    for(let i=0;i<7;i++){ const c=this.add.circle(bx+i*12, by, 4, [0x9b4a3c,0x3d8c7e,0xc9a84c,0x2a2420][i%4]); this.crowd.add(c);
+      this.tweens.add({ targets:c, y:by-8, duration:240, yoyo:true, repeat:5, delay:i*40, ease:'Sine.inOut' }); }
+  }
+
+  update(time,delta){
+    // parallax
+    const sx=this.cameras.main.scrollX;
+    this.farMtn.tilePositionX=sx*0.12; this.nearMtn.tilePositionX=sx*0.32;
+
+    if(this.state==='runin'){
+      this.runinMs+=delta; const k=Math.min(1,this.runinMs/this.runinDur); const e=k*k;
+      const rx=this.inrun.rx0+(2-this.inrun.rx0)*e, ry=this.inrun.ry0+(0-this.inrun.ry0)*e;
+      this.skier.setPosition(WX(rx),WY(ry)-8);
+      this.skier.setRotation(Math.atan2( (WY(0)-WY(this.inrun.ry0)), (WX(2)-WX(this.inrun.rx0)) ));
+      this.spray.emitParticleAt(this.skier.x,this.skier.y+6,2);
+      if(k>=1) this.startFlight();
+      return;
+    }
+
+    if(this.state==='flight'){
+      this.playMs+=delta; const N=this.res.pts.length;
+      const k=Math.min(1,this.playMs/this.playDur);
+      const idx=Math.min(N-1, Math.floor(k*(N-1)));
+      const p=this.res.pts[idx];
+      this.skier.setPosition(WX(p.x),WY(p.y)-8);
+      this.skier.setRotation(Math.atan2(-p.vy,p.vx));
+      // spray scales with speed
+      if(idx%2===0) this.spray.emitParticleAt(this.skier.x,this.skier.y+6,1);
+      if(k>=1) this.startOutcome();
+      return;
+    }
+
+    if(this.state==='outcome'){
+      this.out.ms+=delta; const op=Math.min(1,this.out.ms/this.out.dur);
+      const res=this.res, t=res.tier;
+      const e=easeOut(t==='crash'?Math.min(op/0.7,1):op);
+      const sxw=res.landX + this.out.slideM*e;
+      const px=WX(sxw), py=WY(P.hillY(sxw))-8;
+      let rot=this.out.baseRot, down=false;
+      if(t==='wobble') rot=this.out.baseRot + 0.30*Math.sin(op*Math.PI*5)*(1-op);
+      else if(t==='tumble') rot=this.out.baseRot + Phaser.Math.PI2*easeOut(op);
+      else if(t==='crash'){ if(op<0.55) rot=this.out.baseRot + this.out.flips*Phaser.Math.PI2*(op/0.55); else { rot=0; down=true; } }
+      let hop=0; if((t==='tumble'||t==='crash')&&!down) hop=-9*Math.abs(Math.sin(op*Math.PI*(t==='crash'?this.out.flips:1)));
+      this.skier.setTexture(down?'skierDown':'skier');
+      this.skier.setOrigin(0.5, down?0.8:0.7);
+      this.skier.setPosition(px,py+hop); this.skier.setRotation(rot);
+      if(t==='crash'){
+        const ap=Phaser.Math.Clamp((op-0.30)/0.7,0,1);
+        const restX=WX(res.landX+this.out.slideM)+90, startX=restX+520;
+        const ax=startX+(restX-startX)*easeOut(ap);
+        const ay=WY(P.hillY((ax-OX)/PPM));
+        this.amb.setVisible(true).setPosition(ax,ay);
+        this.beacon.fillColor = (Math.floor(time/120)%2===0)?0xc0392b:0x2b6fc0;
+      }
+      return;
+    }
+  }
+}
+
+/* ---------- boot Phaser ---------- */
+const config={
+  type:Phaser.AUTO, parent:'game', width:VW, height:VH,
+  backgroundColor:'#bfe0f5', roundPixels:true,
+  scale:{ mode:Phaser.Scale.FIT, autoCenter:Phaser.Scale.CENTER_HORIZONTALLY },
+  fps:{ target:60 }, scene:JumpScene,
+  render:{ antialias:true, powerPreference:'low-power' }
+};
+const game=new Phaser.Game(config);
+
+/* ---------- wire DOM controls to the scene ---------- */
+function onControl(){ syncLabels(); neutralVerdict(); if(gameScene&&gameScene.state==='idle') gameScene.refreshPreview(); }
+Object.values(ctrls).forEach(s=>s.addEventListener('input', onControl));
+el('launch').addEventListener('click', ()=>{ if(gameScene){ if(gameScene.state==='outcome'){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(60),WY(-40)); } gameScene.launchJump(); } });
+el('reset').addEventListener('click', ()=>{
+  ctrls.area.value=0.55; ctrls.alpha.value=10; ctrls.v0.value=30; ctrls.rho.value=1.20;
+  syncLabels(); neutralVerdict();
+  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.amb.setVisible(false); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(60),WY(-40)); }
+});
+syncLabels();
+</script>
+</body>
+</html>
