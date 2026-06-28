@@ -292,9 +292,9 @@ const OX=120, OY=120;          // takeoff position in world px
 const IN_START=-120;           // in-run start x (m): curves down to the jump lip at x=0
 const IN_H=42;                 // in-run start height above the takeoff (m)
 const START_IN=18;             // metres in from the top where the jumper starts (seated on the curve)
-// One continuous snow profile: a curved in-run that is FLAT at the top and steepens down to the
-// jump lip (x=0), then the engine's real landing slope for x>0. No separate ramp.
-function terrainYm(x){ if(x>0) return P.hillY(x); const u=(x-IN_START)/(-IN_START); return IN_H*(1-u*u); }
+// One continuous snow profile: a sloped launch ramp (in-run) that descends from the top and curves
+// to flatten at the jump lip (x=0), then the engine's real landing slope for x>0. No separate ramp.
+function terrainYm(x){ if(x>0) return P.hillY(x); const u=x/IN_START; return IN_H*Math.pow(u,1.5); }
 const WX = x => OX + x*PPM;            // engine x (m) -> world px
 const WY = yEng => OY + (-yEng)*PPM;   // engine y (m, neg downhill) -> world px
 const flipsFor = sev => 3 + Math.min(4, Math.max(0, Math.floor((sev-19)/2)));
