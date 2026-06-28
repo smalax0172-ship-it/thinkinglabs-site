@@ -223,27 +223,46 @@ function neutralVerdict(){
   el('v-line').textContent = 'Press Launch to fly. Match your landing angle to the slope for a clean landing.';
 }
 
-/* ---------- tiny optional WebAudio SFX (off by default) ---------- */
-const SFX = (()=>{ let ac=null, on=false;
-  function ctx(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ ac=null; } } return ac; }
-  function tone(f,t,dur,type,gain){ const a=ctx(); if(!a) return; const o=a.createOscillator(),g=a.createGain();
+/* ---------- tiny optional WebAudio SFX (off by default; gesture-unlocked) ----------
+   Browsers create the AudioContext "suspended" and only a real user gesture can
+   move it to "running". So: resume() on the first gesture anywhere AND whenever
+   sound is toggled on, and never play a tone unless the context is confirmed running. */
+const SFX = (()=>{ let ac=null, on=false, started=0;
+  function ensure(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ ac=null; } } return ac; }
+  function unlock(){ const a=ensure(); if(!a) return Promise.resolve(false);
+    if(a.state==='running') return Promise.resolve(true);
+    return a.resume().then(()=>a.state==='running').catch(()=>false); }
+  function canPlay(){ return on && ac && ac.state==='running'; }   // confirmed running before any sound
+  function tone(f,t,dur,type,gain){ const a=ac; const o=a.createOscillator(),g=a.createGain();
     o.type=type||'sine'; o.frequency.setValueAtTime(f,t); g.gain.setValueAtTime(0,t);
     g.gain.linearRampToValueAtTime(gain||0.18,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+0.02); }
-  function noise(t,dur,gain){ const a=ctx(); if(!a) return; const n=a.sampleRate*dur, b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+0.02); started++; }
+  function noise(t,dur,gain){ const a=ac; const n=Math.max(1,a.sampleRate*dur), b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0);
     for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2); const s=a.createBufferSource(); s.buffer=b;
-    const g=a.createGain(); g.gain.value=gain||0.25; s.connect(g).connect(a.destination); s.start(t); }
+    const g=a.createGain(); g.gain.value=gain||0.25; s.connect(g).connect(a.destination); s.start(t); started++; }
   return {
-    setOn(v){ on=v; if(v) ctx() && ac.resume && ac.resume(); },
+    unlock,
+    setOn(v){ on=v; return v ? unlock() : Promise.resolve(false); },
     isOn(){ return on; },
-    cheer(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*0.06,0.5,'triangle',0.14)); noise(t,0.25,0.06); },
-    crash(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.4,0.35); tone(90,t,0.45,'sawtooth',0.25); tone(60,t+0.05,0.5,'sine',0.2); },
-    thud(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.2,0.18); tone(120,t,0.25,'sine',0.18); },
-    whoosh(){ if(!on) return; const a=ctx(); if(!a) return; const t=a.currentTime; noise(t,0.5,0.08); }
+    blip(){ if(!canPlay()) return; const t=ac.currentTime; tone(880,t,0.12,'triangle',0.12); },  // toggle-on confirmation
+    cheer(){ if(!canPlay()) return; const t=ac.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*0.06,0.5,'triangle',0.14)); noise(t,0.25,0.06); },
+    crash(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.4,0.35); tone(90,t,0.45,'sawtooth',0.25); tone(60,t+0.05,0.5,'sine',0.2); },
+    thud(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.2,0.18); tone(120,t,0.25,'sine',0.18); },
+    whoosh(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.5,0.08); },
+    debug(){ return { on, state: ac?ac.state:'none', started }; }
   };
 })();
+window.SFX = SFX;  // exposed for verification
+
+// First user gesture anywhere primes/resumes the audio context (autoplay policy).
+['pointerdown','touchstart','keydown','click'].forEach(ev =>
+  window.addEventListener(ev, ()=>SFX.unlock(), { passive:true }));
+
 el('sound').addEventListener('click', function(){
-  const on=!SFX.isOn(); SFX.setOn(on); this.classList.toggle('on',on); this.textContent=on?'🔊':'🔇';
+  const turnOn = !SFX.isOn();
+  this.classList.toggle('on', turnOn); this.textContent = turnOn ? '🔊' : '🔇';
+  // resume + confirm "running" inside this gesture, then a tiny blip so you immediately hear it works
+  SFX.setOn(turnOn).then(running => { if(turnOn && running) SFX.blip(); });
 });
 
 /* =====================================================================
