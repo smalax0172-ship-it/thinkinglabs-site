@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>/* embed mode: when shown inside an iframe (the lesson's Simulation tab), drop the page chrome */
+if (window.self !== window.top) document.documentElement.classList.add('embed');</script>
+<title>Ski Jump: The Game | Thinking Labs by Temple Academy</title>
+<meta name="description" content="Play a real ski-jump game powered by a genuine RK4 aerodynamics engine. Match your landing to the slope or summon the ambulance." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --charcoal:#1a1a1a; --cream:#f5f0e8; --warm-cream:#ebe4d6;
+  --gold:#c9a84c; --gold-dim:#a68a3e; --gold-glow:rgba(201,168,76,0.15);
+  --teal:#3d8c7e; --teal-light:#4fa898; --rust:#9b4a3c;
+  --text-dark:#2a2420; --text-mid:#5a524a; --text-light:#8a8278;
+  --border:#d4cbbf; --section-alt:#faf7f2; --card-shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+html{ font-size:16px; -webkit-text-size-adjust:100%; }
+body{ font-family:'Source Sans 3',-apple-system,sans-serif; color:var(--text-dark); background:var(--cream); line-height:1.6; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; line-height:1.2; color:var(--charcoal); }
+a{ color:var(--teal); text-decoration:none; }
+.wrap{ max-width:1040px; margin:0 auto; padding:0 20px; }
+
+/* Canonical site nav (shared, static) */
+#nav{ position:relative; z-index:100; background:rgba(245,240,232,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid rgba(212,203,191,0.6); }
+#nav .nav-inner{ max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.nav-brand{ font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; color:var(--charcoal); letter-spacing:0.02em; text-decoration:none; }
+.nav-brand span{ font-weight:400; color:var(--text-mid); font-size:0.72rem; display:block; letter-spacing:0.14em; text-transform:uppercase; margin-top:1px; }
+.nav-links{ display:flex; gap:28px; align-items:center; }
+.nav-links a{ font-size:0.88rem; font-weight:500; color:var(--text-mid); letter-spacing:0.02em; position:relative; text-decoration:none; }
+.nav-links a:not(.nav-cta):hover{ color:var(--charcoal); }
+.nav-links a:not(.nav-cta)::after{ content:''; position:absolute; bottom:-4px; left:0; width:0; height:1.5px; background:var(--gold); transition:width .3s; }
+.nav-links a:not(.nav-cta):hover::after{ width:100%; }
+.nav-cta{ background:var(--charcoal); color:var(--cream)!important; padding:9px 22px; border-radius:4px; font-weight:600; font-size:0.85rem; letter-spacing:0.03em; transition:all .25s; }
+.nav-cta:hover{ background:#2a2a2a; transform:translateY(-1px); }
+.mobile-toggle{ display:none; background:none; border:none; cursor:pointer; padding:8px; }
+.mobile-toggle span{ display:block; width:22px; height:2px; background:var(--charcoal); margin:5px 0; border-radius:1px; transition:.3s; }
+.mobile-toggle.open span:nth-child(1){ transform:rotate(45deg) translate(4px,5px); }
+.mobile-toggle.open span:nth-child(2){ opacity:0; }
+.mobile-toggle.open span:nth-child(3){ transform:rotate(-45deg) translate(4px,-5px); }
+@media (max-width:900px){ #nav .nav-links{ display:none; } #nav .nav-links.open{ display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0; background:var(--cream); padding:20px 24px; border-bottom:1px solid var(--border); gap:16px; box-shadow:0 12px 24px rgba(0,0,0,0.08); } #nav .mobile-toggle{ display:block; } }
+
+/* embed mode (inside the lesson's Simulation tab): hide site chrome, show only the game */
+html.embed #nav, html.embed header.site, html.embed footer{ display:none !important; }
+html.embed, html.embed body{ background:transparent; }
+html.embed main{ padding:8px 0 14px; }
+header.site{ text-align:center; padding:30px 0 10px; }
+.eyebrow{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:var(--gold-dim); margin-bottom:4px; }
+header.site h1{ font-size:clamp(30px,6vw,48px); letter-spacing:-0.015em; }
+header.site h1 em{ font-style:italic; color:var(--gold); }
+.sub{ color:var(--text-mid); font-size:1rem; max-width:600px; margin:8px auto 0; }
+
+main{ padding:18px 0 60px; }
+.stage-card{ background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:var(--card-shadow); overflow:hidden; }
+#game{ width:100%; aspect-ratio:16/9; background:#cfe6f2; display:block; }
+#game canvas{ display:block; width:100%!important; height:100%!important; }
+
+.hud{ display:grid; grid-template-columns:1fr; gap:18px; margin-top:18px; }
+@media(min-width:820px){ .hud{ grid-template-columns:1.3fr 1fr; align-items:start; } }
+
+.panel{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:18px 18px 10px; box-shadow:var(--card-shadow); }
+.panel h3{ font-size:1.2rem; margin:0 0 4px; }
+.panel .hint{ font-size:0.82rem; color:var(--text-light); margin-bottom:14px; }
+
+.ctl{ margin-bottom:15px; }
+.ctl-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+.ctl-top label{ font-weight:600; font-size:0.92rem; }
+.ctl-top label .star{ color:var(--gold); }
+.ctl-top .val{ font-variant-numeric:tabular-nums; font-weight:700; color:var(--teal); font-size:0.95rem; }
+.ctl-top .val small{ color:var(--text-light); font-weight:500; }
+input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:7px; border-radius:7px; background:linear-gradient(90deg,var(--teal) 0%,var(--teal) var(--fill,40%),var(--warm-cream) var(--fill,40%)); outline:none; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid var(--teal); cursor:pointer; box-shadow:0 1px 5px rgba(0,0,0,0.25); transition:transform .1s; }
+input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.15); }
+input[type=range]::-moz-range-thumb{ width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid var(--teal); cursor:pointer; }
+
+.btn-row{ display:flex; gap:10px; margin:6px 0 8px; align-items:center; }
+.btn{ flex:1; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.95rem; letter-spacing:0.02em; padding:13px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--text-dark); transition:all .15s; }
+.btn:hover{ border-color:var(--teal); color:var(--teal); }
+.btn.primary{ background:var(--charcoal); color:var(--cream); border-color:var(--charcoal); box-shadow:0 3px 0 #000; }
+.btn.primary:hover{ background:#000; color:#fff; transform:translateY(-1px); }
+.btn.primary:active{ transform:translateY(1px); box-shadow:0 1px 0 #000; }
+.sound-toggle{ flex:0 0 auto; width:46px; height:46px; border-radius:9px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:1.1rem; line-height:1; color:var(--text-mid); transition:all .15s; }
+.sound-toggle.on{ background:var(--teal); color:#fff; border-color:var(--teal); }
+
+/* Verdict / scorecard */
+.verdict-card{ border-radius:12px; padding:16px 18px; background:var(--section-alt); border:1px solid var(--border); border-left:4px solid var(--border); transition:all .25s; }
+.verdict-card .title{ font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:700; color:var(--text-mid); display:flex; align-items:center; gap:8px; }
+.verdict-card .line{ font-size:0.95rem; color:var(--text-mid); margin-top:4px; min-height:1.3em; }
+.verdict-card.clean{ border-left-color:var(--teal); background:rgba(61,140,126,0.07); } .verdict-card.clean .title{ color:var(--teal); }
+.verdict-card.wobble{ border-left-color:var(--gold-dim); background:var(--gold-glow); } .verdict-card.wobble .title{ color:var(--gold-dim); }
+.verdict-card.tumble{ border-left-color:var(--rust); background:rgba(155,74,60,0.07); } .verdict-card.tumble .title{ color:var(--rust); }
+.verdict-card.crash{ border-left-color:#7a1f15; background:rgba(155,74,60,0.12); } .verdict-card.crash .title{ color:#7a1f15; }
+.scorerow{ display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; font-size:0.86rem; color:var(--text-mid); border-top:1px solid var(--border); padding-top:12px; }
+.scorerow b{ color:var(--text-dark); font-variant-numeric:tabular-nums; }
+.scorerow .big{ font-size:1.05rem; }
+.note{ font-size:0.8rem; color:var(--text-light); margin-top:12px; line-height:1.5; }
+
+footer{ border-top:1px solid var(--border); padding:26px 0 44px; text-align:center; }
+footer .brand{ font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal); }
+footer .brand span{ display:block; font-family:'Source Sans 3'; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-light); margin-top:3px; }
+footer .fine{ font-size:0.8rem; color:var(--text-light); margin-top:10px; }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+<a href="https://thinkinglabs.academy/" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
+<button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="nav-links" id="navLinks">
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="index.html#about">About</a><a href="research.html">Research</a><a href="schools.html">Schools</a><a href="ski-jumping.html">Try a Lesson</a><a href="ski-jump-game.html">Play</a><a href="private.html">Private Track</a>
+<a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
+</div></div></nav>
+
+<header class="site">
+  <div class="eyebrow">Powered by a real RK4 aerodynamics engine</div>
+  <h1>Ski Jump: <em>The Game</em></h1>
+  <p class="sub">Set your run, launch, and try to land matching the slope. Every flight is computed by genuine physics — miss the angle and the ambulance comes.</p>
+</header>
+
+<main class="wrap">
+  <div class="stage-card">
+    <div id="game"></div>
+  </div>
+
+  <div class="hud">
+    <div class="panel">
+      <h3>Your Run</h3>
+      <p class="hint">You're rigged to crash — hit Launch to see it, then tune the sliders until you land clean. The dotted line previews the flight.</p>
+
+      <div class="ctl">
+        <div class="ctl-top"><label for="area">Wing area A <span class="star">★</span></label><span class="val" id="area-v">0.45 <small>m²</small></span></div>
+        <input type="range" id="area" min="0.45" max="0.72" step="0.005" value="0.45">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="alpha">Angle of attack α</label><span class="val" id="alpha-v">0°</span></div>
+        <input type="range" id="alpha" min="0" max="26" step="0.5" value="0">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="v0">Launch speed v</label><span class="val" id="v0-v">24 <small>m/s</small></span></div>
+        <input type="range" id="v0" min="24" max="36" step="0.5" value="24">
+      </div>
+      <div class="ctl">
+        <div class="ctl-top"><label for="rho">Air density ρ</label><span class="val" id="rho-v">1.00 <small>kg/m³</small></span></div>
+        <input type="range" id="rho" min="0.95" max="1.40" step="0.01" value="1.00">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="launch">▶ Launch</button>
+        <button class="btn" id="reset">Reset</button>
+        <button class="sound-toggle" id="sound" title="Sound on/off" aria-label="Toggle sound">🔇</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Scorecard</h3>
+      <p class="hint">A clean landing means your trajectory angle matches the hill.</p>
+      <div class="verdict-card" id="verdict">
+        <div class="title" id="v-title">Ready to ride</div>
+        <div class="line" id="v-line">Press Launch to fly. Match your landing angle to the slope for a clean landing.</div>
+      </div>
+      <div class="scorerow">
+        <div>Distance: <b class="big" id="s-dist">—</b> m</div>
+        <div>Trajectory ∠: <b id="s-traj">—</b></div>
+        <div>Hill ∠: <b id="s-hill">—</b></div>
+        <div>Mismatch: <b id="s-mis">—</b></div>
+      </div>
+      <p class="note">The mismatch (how far your landing angle misses the slope) is the score that decides the outcome: ≤6° clean, ≤12° wobble, ≤19° tumble, more than 19° crash. Same physics engine as the lesson — this just draws a game on top.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="brand">Thinking Labs<span>by Temple Academy</span></div>
+  <div class="fine">A game layer over a verified flight engine &middot; the physics is never faked.</div>
+</footer>
+
+<script src="phaser.min.js"></script>
+<script src="ski-physics.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   GAME LAYER. The physics is owned entirely by window.SkiPhysics
+   (the verified engine). This file only DRAWS the truth it produces:
+   on Launch we call SkiPhysics.simulate(inp) once, then play back the
+   per-frame pts array. No forces are re-derived here.
+   ===================================================================== */
+const P = window.SkiPhysics;
+
+/* ---------- nav mobile toggle ---------- */
+document.getElementById('mobileToggle').addEventListener('click', function(){
+  this.classList.toggle('open'); document.getElementById('navLinks').classList.toggle('open');
+});
+
+/* ---------- DOM controls ---------- */
+const el = id => document.getElementById(id);
+const ctrls = { area:el('area'), alpha:el('alpha'), v0:el('v0'), rho:el('rho') };
+function readInputs(){ return { A:+ctrls.area.value, alpha:+ctrls.alpha.value, v0:+ctrls.v0.value, rho:+ctrls.rho.value }; }
+function fillTrack(s){ const mn=+s.min,mx=+s.max,v=+s.value; s.style.setProperty('--fill',((v-mn)/(mx-mn)*100)+'%'); }
+function syncLabels(){
+  el('area-v').innerHTML = (+ctrls.area.value).toFixed(3)+' <small>m²</small>';
+  el('alpha-v').textContent = (+ctrls.alpha.value).toFixed(1)+'°';
+  el('v0-v').innerHTML = (+ctrls.v0.value).toFixed(1)+' <small>m/s</small>';
+  el('rho-v').innerHTML = (+ctrls.rho.value).toFixed(2)+' <small>kg/m³</small>';
+  Object.values(ctrls).forEach(fillTrack);
+}
+
+/* ---------- scorecard / verdict (game UI) ---------- */
+function updateScore(res){
+  el('s-dist').textContent = res.dist.toFixed(0);
+  el('s-traj').textContent = res.landAngle.toFixed(0)+'°';
+  el('s-hill').textContent = res.hillAngle.toFixed(0)+'°';
+  el('s-mis').textContent  = res.severity.toFixed(0)+'°';
+}
+function showVerdict(res){
+  const v = P.verdictFor(res.inp, res);
+  el('verdict').className = 'verdict-card '+res.tier;
+  el('v-title').textContent = v.title;
+  el('v-line').textContent = v.line;
+}
+function neutralVerdict(){
+  el('verdict').className = 'verdict-card';
+  el('v-title').textContent = 'Ready to ride';
+  el('v-line').textContent = 'Press Launch to fly. Match your landing angle to the slope for a clean landing.';
+}
+
+/* ---------- tiny optional WebAudio SFX (off by default; gesture-unlocked) ----------
+   Browsers create the AudioContext "suspended" and only a real user gesture can
+   move it to "running". So: resume() on the first gesture anywhere AND whenever
+   sound is toggled on, and never play a tone unless the context is confirmed running. */
+const SFX = (()=>{ let ac=null, on=false, started=0, musicTimer=null, nextNote=0, mstep=0;
+  function ensure(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ ac=null; } } return ac; }
+  function unlock(){ const a=ensure(); if(!a) return Promise.resolve(false);
+    if(a.state==='running') return Promise.resolve(true);
+    return a.resume().then(()=>a.state==='running').catch(()=>false); }
+  function canPlay(){ return on && ac && ac.state==='running'; }   // confirmed running before any sound
+  function tone(f,t,dur,type,gain){ const a=ac; const o=a.createOscillator(),g=a.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t); g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(gain||0.18,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+0.02); started++; }
+  function noise(t,dur,gain){ const a=ac; const n=Math.max(1,a.sampleRate*dur), b=a.createBuffer(1,n,a.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2); const s=a.createBufferSource(); s.buffer=b;
+    const g=a.createGain(); g.gain.value=gain||0.25; s.connect(g).connect(a.destination); s.start(t); started++; }
+  // two-tone ambulance wail; reps = number of half-cycles (~0.34s each)
+  function siren(reps){ if(!canPlay()) return; const t0=ac.currentTime; const n=reps||9;
+    for(let i=0;i<n;i++){ tone(i%2?760:980, t0+i*0.34, 0.33, 'sawtooth', 0.08); } }
+  // small paramedic shuffle/step sound
+  function step(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.05,0.05); tone(170,t,0.05,'square',0.04); }
+  // light upbeat looping music (tiny synth, C-major pentatonic with a bouncing bass)
+  const MEL=[523,659,784,659, 587,784,880,784, 659,784,1047,880, 784,659,587,659];
+  const BASS=[262,0,196,0, 220,0,196,0, 262,0,196,0, 247,0,196,0];
+  function mschedule(){ if(!ac||ac.state!=='running'||!on){ return; } const ahead=0.18;
+    while(nextNote < ac.currentTime+ahead){
+      const m=MEL[mstep%MEL.length], bs=BASS[mstep%BASS.length];
+      if(m)  tone(m,  nextNote, 0.15, 'triangle', 0.045);
+      if(bs) tone(bs, nextNote, 0.24, 'sine',     0.05);
+      nextNote += 0.19; mstep++;
+    } }
+  function startMusic(){ if(musicTimer||!ac) return; nextNote=ac.currentTime+0.06; mstep=0; musicTimer=setInterval(mschedule,30); }
+  function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer=null; } }
+  return {
+    unlock,
+    setOn(v){ on=v; if(v){ return unlock().then(r=>{ if(r) startMusic(); return r; }); } stopMusic(); return Promise.resolve(false); },
+    isOn(){ return on; },
+    blip(){ if(!canPlay()) return; const t=ac.currentTime; tone(880,t,0.12,'triangle',0.12); },  // toggle-on confirmation
+    cheer(){ if(!canPlay()) return; const t=ac.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*0.06,0.5,'triangle',0.14)); noise(t,0.25,0.06); },
+    crash(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.4,0.35); tone(90,t,0.45,'sawtooth',0.25); tone(60,t+0.05,0.5,'sine',0.2); },
+    thud(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.2,0.18); tone(120,t,0.25,'sine',0.18); },
+    whoosh(){ if(!canPlay()) return; const t=ac.currentTime; noise(t,0.5,0.08); },
+    siren, step,
+    debug(){ return { on, state: ac?ac.state:'none', started, music: !!musicTimer }; }
+  };
+})();
+window.SFX = SFX;  // exposed for verification
+
+// First user gesture anywhere primes/resumes the audio context (autoplay policy).
+['pointerdown','touchstart','keydown','click'].forEach(ev =>
+  window.addEventListener(ev, ()=>SFX.unlock(), { passive:true }));
+
+el('sound').addEventListener('click', function(){
+  const turnOn = !SFX.isOn();
+  this.classList.toggle('on', turnOn); this.textContent = turnOn ? '🔊' : '🔇';
+  // resume + confirm "running" inside this gesture, then a tiny blip so you immediately hear it works
+  SFX.setOn(turnOn).then(running => { if(turnOn && running) SFX.blip(); });
+});
+
+/* =====================================================================
+   PHASER SCENE
+   ===================================================================== */
+const VW=960, VH=540;          // base resolution
+const PPM=3.0;                 // pixels per metre (presentation only)
+const OX=120, OY=120;          // takeoff position in world px
+const BROW_X=-55;              // brow of the hill: flat top to the left, launch ramp to the right
+const H_TOP=44;               // height of the flat top above the takeoff (m)
+const LEFT_FLAT=-160;         // the flat top extends left to here, then rounds down
+const LEFT_X=-220;            // hill meets the ground on the far (left) side
+const START_X=-66;            // jumper stands on the flat top, just behind the brow
+// Real-hill profile: a FLAT top (plateau) behind the jumper, a launch ramp from the brow (x=BROW_X)
+// curving down to the flat takeoff lip (x=0), then the engine's landing slope for x>0. The far-left
+// of the plateau rounds smoothly down to the ground, so there is no hump behind the skier and no tower.
+function terrainYm(x){
+  if(x>0) return P.hillY(x);                                                                      // landing slope (engine)
+  if(x>=BROW_X){ const t=(x-BROW_X)/(0-BROW_X); return H_TOP*(1-3*t*t+2*t*t*t); }                  // ramp: brow -> flat lip
+  if(x>=LEFT_FLAT) return H_TOP;                                                                   // flat top (plateau)
+  if(x>LEFT_X){ const t=(x-LEFT_X)/(LEFT_FLAT-LEFT_X); return H_TOP*0.5*(1-Math.cos(Math.PI*t)); } // far-left rounds to ground
+  return 0;
+}
+const WX = x => OX + x*PPM;            // engine x (m) -> world px
+const WY = yEng => OY + (-yEng)*PPM;   // engine y (m, neg downhill) -> world px
+const flipsFor = sev => 3 + Math.min(4, Math.max(0, Math.floor((sev-19)/2)));
+const easeOut = t => 1 - Math.pow(1-t,3);
+
+let gameScene=null;
+
+class JumpScene extends Phaser.Scene{
+  constructor(){ super('jump'); }
+
+  create(){
+    this.makeTextures();
+    const cam=this.cameras.main; cam.setBackgroundColor('#bfe0f5'); cam.roundPixels=true;
+
+    // sky gradient (fixed to camera)
+    const sky=this.add.graphics().setScrollFactor(0).setDepth(-100);
+    sky.fillGradientStyle(0xbfe0f5,0xbfe0f5,0xe9f4fb,0xe9f4fb,1); sky.fillRect(0,0,VW,VH);
+
+    // parallax mountains
+    this.farMtn=this.add.tileSprite(0,VH*0.30,VW,200,'mtnFar').setOrigin(0,0).setScrollFactor(0).setDepth(-90);
+    this.nearMtn=this.add.tileSprite(0,VH*0.42,VW,200,'mtnNear').setOrigin(0,0).setScrollFactor(0).setDepth(-80);
+
+    // hill + in-run (static world geometry, drawn from engine's hillY)
+    this.drawTerrain();
+
+    // preview path
+    this.preview=this.add.graphics().setDepth(-5);
+
+    // skier
+    this.skier=this.add.image(WX(0),WY(0)-8,'skier').setOrigin(0.5,0.7).setDepth(5);
+
+    // ambulance (container: body + flashing beacon), hidden until a crash
+    this.amb=this.add.container(0,0,[ this.add.image(0,0,'ambulance').setOrigin(0.5,1) ]);
+    this.beacon=this.add.rectangle(0,-46,12,6,0xc0392b).setOrigin(0.5,1);
+    this.amb.add(this.beacon); this.amb.setDepth(6).setVisible(false);
+
+    // stretcher crew (hidden until a crash): two paramedics + a stretcher
+    this.medics=[ this.add.image(0,0,'medic').setOrigin(0.5,1).setDepth(7).setVisible(false),
+                  this.add.image(0,0,'medic').setOrigin(0.5,1).setDepth(7).setVisible(false) ];
+    this.stretcher=this.add.image(0,0,'stretcher').setOrigin(0.5,1).setDepth(6).setVisible(false);
+    this.stretcherStarted=false;
+
+    // particles: snow spray off the skis, confetti for clean, ambient snowfall
+    this.spray=this.add.particles(0,0,'snow',{ speed:{min:30,max:120}, angle:{min:150,max:215},
+      lifespan:520, scale:{start:0.9,end:0}, alpha:{start:0.85,end:0}, frequency:-1, quantity:5, tint:0xffffff }).setDepth(4);
+    this.confetti=this.add.particles(0,0,'confetti',{ speed:{min:120,max:300}, angle:{min:200,max:340},
+      lifespan:1400, gravityY:380, scale:{start:1,end:0.4}, rotate:{min:0,max:360},
+      alpha:{start:1,end:0}, frequency:-1, quantity:34, tint:[0xc9a84c,0x3d8c7e,0x9b4a3c,0x4fa898,0xa68a3e] }).setDepth(8);
+    this.ambient=this.add.particles(0,0,'snow',{ x:{min:0,max:VW}, y:-8, lifespan:5000,
+      speedY:{min:25,max:60}, speedX:{min:-20,max:20}, scale:{min:0.25,max:0.8},
+      alpha:{min:0.25,max:0.7}, frequency:140, quantity:1, tint:0xffffff }).setScrollFactor(0).setDepth(50);
+
+    // crowd hint near the landing zone (little dots that bob on a clean landing)
+    this.crowd=this.add.container(0,0).setDepth(3);
+
+    this.state='idle';
+    this.res=null; this.playMs=0; this.playDur=0;
+    this.out={};
+    cam.centerOn(WX(-40), WY(-18));   // frame the jumper at the top of the in-run + the slope ahead
+
+    gameScene=this; window.gameScene=this;
+    syncLabels();
+    this.refreshPreview();
+  }
+
+  makeTextures(){
+    const mk=(key,w,h,fn)=>{ const g=this.make.graphics({x:0,y:0,add:false}); fn(g); g.generateTexture(key,w,h); g.destroy(); };
+
+    // skier in flight (faces right, head/helmet to the right, tucked)
+    mk('skier',50,38,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRoundedRect(2,28,44,4,2); g.fillRoundedRect(4,33,44,4,2); // two skis
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(10,14,26,13,6);                                 // torso (suit)
+      g.fillStyle(0x35796d,1); g.fillRoundedRect(6,18,14,6,3);                                   // trailing arm
+      g.fillStyle(0xc9a84c,1); g.fillCircle(38,13,7);                                            // helmet
+      g.fillStyle(0x1a1a1a,1); g.fillRoundedRect(38,10,7,5,2);                                   // visor
+    });
+    // crashed/fallen skier
+    mk('skierDown',52,34,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRoundedRect(0,22,32,4,2); g.fillRoundedRect(10,27,34,4,2); // skis askew
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(6,16,28,9,4);                                   // body flat
+      g.fillStyle(0xc9a84c,1); g.fillCircle(8,16,7);                                             // head down-left
+      g.fillStyle(0x1a1a1a,1); g.fillRoundedRect(4,14,6,4,2);
+    });
+    // ambulance
+    mk('ambulance',92,54,g=>{
+      g.fillStyle(0x000000,0.12); g.fillEllipse(46,51,82,10);                                    // ground shadow
+      g.fillStyle(0xffffff,1); g.fillRoundedRect(2,6,88,38,7);                                   // body (white, high contrast)
+      g.lineStyle(3,0x1a1a1a,1); g.strokeRoundedRect(2,6,88,38,7);
+      g.fillStyle(0x9b4a3c,1); g.fillRect(2,30,88,7);                                            // red stripe
+      g.fillStyle(0x9fc3d8,1); g.fillRoundedRect(66,11,20,14,3);                                 // cab window
+      g.fillStyle(0xc0392b,1); g.fillRect(22,12,7,18); g.fillRect(15,18,21,6);                   // red cross
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(24,45,8); g.fillCircle(70,45,8);                     // wheels
+      g.fillStyle(0xbfc8c4,1); g.fillCircle(24,45,3.5); g.fillCircle(70,45,3.5);
+    });
+    // paramedic (orange rescue jacket, white cross)
+    mk('medic',22,36,g=>{
+      g.fillStyle(0x2a2420,1); g.fillRect(5,30,5,6); g.fillRect(12,30,5,6);                       // legs
+      g.fillStyle(0xe07a3c,1); g.fillRoundedRect(4,12,14,20,4);                                   // jacket
+      g.fillStyle(0xffffff,1); g.fillRect(10,16,2,8); g.fillRect(7,19,8,2);                       // white cross
+      g.fillStyle(0xf0c9a0,1); g.fillCircle(11,8,6);                                              // head
+      g.fillStyle(0xe07a3c,1); g.fillRoundedRect(5,2,12,5,2);                                     // cap
+    });
+    // empty stretcher
+    mk('stretcher',56,18,g=>{
+      g.fillStyle(0xcdd6d2,1); g.fillRect(3,11,50,2);                                             // frame
+      g.fillStyle(0x3d8c7e,1); g.fillRoundedRect(3,3,50,8,3);                                     // teal bed
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(11,16,2.6); g.fillCircle(45,16,2.6);                  // wheels
+    });
+    // loaded stretcher (patient under a blanket)
+    mk('stretcherLoaded',56,22,g=>{
+      g.fillStyle(0xcdd6d2,1); g.fillRect(3,15,50,2);                                             // frame
+      g.fillStyle(0x1a1a1a,1); g.fillCircle(11,20,2.6); g.fillCircle(45,20,2.6);                  // wheels
+      g.fillStyle(0x9fb0c0,1); g.fillRoundedRect(5,6,46,10,4);                                    // blanket
+      g.fillStyle(0xf0c9a0,1); g.fillCircle(47,9,4);                                              // head poking out
+    });
+    // snow particle
+    mk('snow',10,10,g=>{ g.fillStyle(0xffffff,1); g.fillCircle(5,5,4); });
+    // confetti particle
+    mk('confetti',8,8,g=>{ g.fillStyle(0xffffff,1); g.fillRect(0,0,8,6); });
+    // mountains (deterministic jagged silhouettes for parallax)
+    const mtn=(key,color,seed,base)=>mk(key,512,200,g=>{
+      g.fillStyle(color,1); g.beginPath(); g.moveTo(0,200);
+      for(let i=0;i<=16;i++){ const x=i*32; const y=base-(((i*seed)%9)*12+30); g.lineTo(x,y); }
+      g.lineTo(512,200); g.closePath(); g.fillPath();
+    });
+    mtn('mtnFar',0xd7e6ef,7,150); mtn('mtnNear',0xb9d2e0,5,180);
+  }
+
+  drawTerrain(){
+    const g=this.add.graphics().setDepth(-10);
+    const x0=LEFT_X, x1=820, step=3;
+    // one continuous snow fill: in-run curve -> jump -> landing slope -> outrun
+    g.fillStyle(0xffffff,1); g.beginPath(); g.moveTo(WX(x0),WY(terrainYm(x0)));
+    for(let x=x0;x<=x1;x+=step) g.lineTo(WX(x),WY(terrainYm(x)));
+    g.lineTo(WX(x1),WY(terrainYm(x1))+3000); g.lineTo(WX(x0),WY(terrainYm(x0))+3000); g.closePath(); g.fillPath();
+    // surface line
+    g.lineStyle(3,0xcfdde4,1); g.beginPath(); g.moveTo(WX(x0),WY(terrainYm(x0)));
+    for(let x=x0;x<=x1;x+=step) g.lineTo(WX(x),WY(terrainYm(x))); g.strokePath();
+    // the "Jump" (takeoff) — a short green kicker right at the lip
+    const jump=this.add.graphics().setDepth(-8); jump.lineStyle(5,0x2f7d34,1); jump.lineCap='round';
+    jump.beginPath(); jump.moveTo(WX(-7),WY(terrainYm(-7))); jump.lineTo(WX(1),WY(terrainYm(1))); jump.strokePath();
+    // distance markers every 50 m down the landing slope
+    const lab=this.add.graphics().setDepth(-9); lab.lineStyle(2,0xdfe7eb,1);
+    for(let d=50; d<=700; d+=50){ lab.beginPath(); lab.moveTo(WX(d),WY(P.hillY(d))); lab.lineTo(WX(d),WY(P.hillY(d))+10); lab.strokePath(); }
+  }
+
+  // draw the predicted flight as a faint dotted line + place skier at takeoff
+  refreshPreview(){
+    const res=P.simulate(readInputs());
+    this.res=res;
+    this.preview.clear();
+    this.preview.fillStyle(0x3d8c7e,0.5);
+    const pts=res.pts; for(let i=0;i<pts.length;i+=6){ this.preview.fillCircle(WX(pts[i].x),WY(pts[i].y),1.6); }
+    // landing marker
+    this.preview.fillStyle(0xc9a84c,0.9); this.preview.fillCircle(WX(res.landX),WY(res.landY),4);
+    // skier starts flat on top of the in-run, seated on the curve
+    this.resetActors();
+    const sxpx=WX(START_X);
+    this.skier.setOrigin(0.5,0.7).setPosition(sxpx, this.onSlope(sxpx)-8).setRotation(this.slopeRot(sxpx));
+    updateScore(res);
+  }
+
+  launchJump(){
+    if(this.state==='runin'||this.state==='flight') return;
+    const res=P.simulate(readInputs());
+    this.res=res; this.preview.clear(); this.resetActors();
+    neutralVerdict(); updateScore(res);
+    SFX.whoosh();
+    // cosmetic run-in, then hand off to the real trajectory
+    this.state='runin'; this.runinMs=0; this.runinDur=520;
+    this.cameras.main.startFollow(this.skier,true,0.10,0.10,-120,-30);
+    this.spray.startFollow(this.skier,0,6); this.spray.start();
+  }
+
+  startFlight(){
+    const N=this.res.pts.length;
+    this.state='flight'; this.playMs=0;
+    this.playDur=Math.max(2200, Math.min(3600, N*8));   // ~constant screen time regardless of flight length
+  }
+
+  startOutcome(){
+    const res=this.res; this.state='outcome'; this.out={ ms:0 };
+    const t=res.tier;
+    this.out.dur = t==='crash'?2600 : t==='tumble'?1500 : t==='clean'?1600 : 1400;
+    this.out.slideM = ({clean:55,wobble:40,tumble:26,crash:30})[t];
+    this.out.flips = flipsFor(res.severity);
+    this.out.baseRot = Math.atan2(-res.landVy,res.landVx);
+    this.spray.stop();
+    showVerdict(res);
+    if(t==='clean'){ this.confetti.explode(36, WX(res.landX), WY(res.landY)-12); this.spawnCrowd(res); SFX.cheer(); }
+    else if(t==='crash'){ this.cameras.main.shake(260,0.012); SFX.crash(); }
+    else if(t==='tumble'){ this.cameras.main.shake(140,0.006); SFX.thud(); }
+    else { SFX.thud(); }
+  }
+
+  spawnCrowd(res){
+    this.crowd.removeAll(true);
+    const bx=WX(res.landX)+40, by=WY(res.landY)-26;
+    for(let i=0;i<7;i++){ const c=this.add.circle(bx+i*12, by, 4, [0x9b4a3c,0x3d8c7e,0xc9a84c,0x2a2420][i%4]); this.crowd.add(c);
+      this.tweens.add({ targets:c, y:by-8, duration:240, yoyo:true, repeat:5, delay:i*40, ease:'Sine.inOut' }); }
+  }
+
+  update(time,delta){
+    // parallax
+    const sx=this.cameras.main.scrollX;
+    this.farMtn.tilePositionX=sx*0.12; this.nearMtn.tilePositionX=sx*0.32;
+
+    if(this.state==='runin'){
+      this.runinMs+=delta; const k=Math.min(1,this.runinMs/this.runinDur); const e=k*k;
+      const rxm=START_X*(1-e), rxpx=WX(rxm);   // slide down the in-run curve to the lip
+      this.skier.setOrigin(0.5,0.7).setPosition(rxpx, this.onSlope(rxpx)-8).setRotation(this.slopeRot(rxpx));
+      this.spray.emitParticleAt(this.skier.x,this.skier.y+6,2);
+      if(k>=1) this.startFlight();
+      return;
+    }
+
+    if(this.state==='flight'){
+      this.playMs+=delta; const N=this.res.pts.length;
+      const k=Math.min(1,this.playMs/this.playDur);
+      const idx=Math.min(N-1, Math.floor(k*(N-1)));
+      const p=this.res.pts[idx];
+      this.skier.setPosition(WX(p.x),WY(p.y)-8);
+      this.skier.setRotation(Math.atan2(-p.vy,p.vx));
+      // spray scales with speed
+      if(idx%2===0) this.spray.emitParticleAt(this.skier.x,this.skier.y+6,1);
+      if(k>=1) this.startOutcome();
+      return;
+    }
+
+    // ambulance beacon flashes whenever it's on screen (drive-in, loading, drive-off)
+    if(this.amb.visible) this.beacon.fillColor = (Math.floor(time/120)%2===0)?0xc0392b:0x2b6fc0;
+
+    if(this.state==='outcome'){
+      // once a crash hands off to the stretcher sequence, tweens own the actors
+      if(this.res.tier==='crash' && this.stretcherStarted) return;
+      this.out.ms+=delta; const op=Math.min(1,this.out.ms/this.out.dur);
+      const res=this.res, t=res.tier;
+      const e=easeOut(t==='crash'?Math.min(op/0.55,1):op);
+      const sxw=res.landX + this.out.slideM*e;
+      const px=WX(sxw), py=WY(P.hillY(sxw))-8;
+      let rot=this.out.baseRot, down=false;
+      if(t==='wobble') rot=this.out.baseRot + 0.30*Math.sin(op*Math.PI*5)*(1-op);
+      else if(t==='tumble') rot=this.out.baseRot + Phaser.Math.PI2*easeOut(op);
+      else if(t==='crash'){ if(op<0.55) rot=this.out.baseRot + this.out.flips*Phaser.Math.PI2*(op/0.55); else { rot=0; down=true; } }
+      let hop=0; if((t==='tumble'||t==='crash')&&!down) hop=-9*Math.abs(Math.sin(op*Math.PI*(t==='crash'?this.out.flips:1)));
+      this.skier.setTexture(down?'skierDown':'skier');
+      this.skier.setOrigin(0.5, down?0.8:0.7);
+      this.skier.setPosition(px,py+hop); this.skier.setRotation(rot);
+      if(t==='crash' && down && !this.stretcherStarted) this.beginStretcher();
+      return;
+    }
+  }
+
+  /* ----- crash → stretcher sequence: arrive, load, drive off (tween-driven) ----- */
+  resetActors(){
+    this.stretcherStarted=false;
+    this.tweens.killTweensOf([this.amb,this.skier,this.stretcher,this.medics[0],this.medics[1]]);
+    this.stopBob(this.medics[0]); this.stopBob(this.medics[1]);
+    this.medics[0].setVisible(false).setRotation(0); this.medics[1].setVisible(false).setRotation(0);
+    this.stretcher.setVisible(false).setTexture('stretcher').setRotation(0);
+    this.amb.setVisible(false).setRotation(0);
+    this.skier.setVisible(true).setScale(1).setTexture('skier');
+  }
+  startBob(m){ if(m._bob) return; m._bob=this.tweens.add({ targets:m, scaleY:0.9, duration:150, yoyo:true, repeat:-1, ease:'Sine.inOut' }); }
+  stopBob(m){ if(m&&m._bob){ m._bob.stop(); m._bob=null; m.scaleY=1; } }
+
+  // y of the terrain surface (in-run + landing) at a given world-pixel x, so things ride the snow
+  onSlope(px){ return WY(terrainYm((px-OX)/PPM)); }
+  // screen rotation that aligns an object's base with the slope at px (so wheels sit flush)
+  slopeRot(px){ const d=6; return Math.atan2(this.onSlope(px+d)-this.onSlope(px-d), 2*d); }
+  stickToSlope(obj,off,rot){ obj.y = this.onSlope(obj.x) + (off||0); if(rot) obj.rotation = this.slopeRot(obj.x); }
+
+  beginStretcher(){
+    this.stretcherStarted=true;
+    const Jpx=this.skier.x;
+    this.skier.setTexture('skierDown').setOrigin(0.5,0.8).setRotation(0).setPosition(Jpx,this.onSlope(Jpx)-6);
+    const ambX=Jpx+150;
+    // BEAT 1 — ARRIVE (siren). x animates; y + rotation track the slope so all wheels stay on the hill.
+    this.amb.setVisible(true).setPosition(ambX+660, this.onSlope(ambX+660)).setRotation(this.slopeRot(ambX+660));
+    SFX.siren(9);
+    this.tweens.add({ targets:this.amb, x:ambX, duration:1500, ease:'Cubic.out',
+      onUpdate:()=>this.stickToSlope(this.amb,0,true),
+      onComplete:()=>this.medicsLoad(Jpx,ambX) });
+  }
+  medicsLoad(Jpx,ambX){
+    // BEAT 2 — LOAD (paramedic movement sounds)
+    const m0=this.medics[0], m1=this.medics[1];
+    m0.setVisible(true).setPosition(ambX-8, this.onSlope(ambX-8)-2); this.startBob(m0);
+    m1.setVisible(true).setPosition(ambX+6, this.onSlope(ambX+6)-2); this.startBob(m1);
+    SFX.step();
+    this.tweens.add({ targets:m0, x:Jpx+20, duration:850, ease:'Sine.inOut', onUpdate:()=>this.stickToSlope(m0,-2) });
+    this.tweens.add({ targets:m1, x:Jpx-20, duration:850, delay:100, ease:'Sine.inOut', onUpdate:()=>this.stickToSlope(m1,-2), onComplete:()=>{
+      SFX.step();
+      this.stretcher.setTexture('stretcher').setVisible(true).setScale(0.6).setPosition(Jpx,this.onSlope(Jpx)-2).setRotation(this.slopeRot(Jpx));
+      this.tweens.add({ targets:this.stretcher, scale:1, duration:220 });
+      // load the jumper onto the stretcher, then hide him (now under the blanket)
+      this.tweens.add({ targets:this.skier, y:this.onSlope(Jpx)-14, duration:340, delay:220, ease:'Sine.in', onComplete:()=>{
+        this.skier.setVisible(false); this.stretcher.setTexture('stretcherLoaded'); SFX.step();
+        // push stretcher + crew back to the ambulance (riding the slope), then drive off
+        this.tweens.add({ targets:[this.stretcher,m0,m1], x:ambX, duration:950, delay:160, ease:'Sine.inOut',
+          onUpdate:()=>{ this.stickToSlope(this.stretcher,-2,true); this.stickToSlope(m0,-2); this.stickToSlope(m1,-2); },
+          onComplete:()=>{
+            this.stretcher.setVisible(false); this.stopBob(m0); this.stopBob(m1); m0.setVisible(false); m1.setVisible(false);
+            this.driveAway(ambX);
+          }});
+      }});
+    }});
+  }
+  driveAway(ambX){
+    // BEAT 3 — DRIVE OFF (short siren). y keeps tracking the slope as it descends away.
+    SFX.siren(5);
+    this.tweens.add({ targets:this.amb, x:ambX+980, duration:1700, ease:'Cubic.in',
+      onUpdate:()=>this.stickToSlope(this.amb,0,true),
+      onComplete:()=>this.amb.setVisible(false) });
+  }
+}
+
+/* ---------- boot Phaser ---------- */
+const config={
+  type:Phaser.AUTO, parent:'game', width:VW, height:VH,
+  backgroundColor:'#bfe0f5', roundPixels:true,
+  scale:{ mode:Phaser.Scale.FIT, autoCenter:Phaser.Scale.CENTER_HORIZONTALLY },
+  fps:{ target:60 }, scene:JumpScene,
+  render:{ antialias:true, powerPreference:'low-power' }
+};
+const game=new Phaser.Game(config);
+
+/* ---------- wire DOM controls to the scene ---------- */
+function onControl(){ syncLabels(); neutralVerdict(); if(gameScene&&gameScene.state==='idle') gameScene.refreshPreview(); }
+Object.values(ctrls).forEach(s=>s.addEventListener('input', onControl));
+el('launch').addEventListener('click', ()=>{ if(gameScene){ if(gameScene.state==='outcome'){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-18)); } gameScene.launchJump(); } });
+el('reset').addEventListener('click', ()=>{
+  ctrls.area.value=0.45; ctrls.alpha.value=0; ctrls.v0.value=24; ctrls.rho.value=1.00;
+  syncLabels(); neutralVerdict();
+  if(gameScene){ gameScene.state='idle'; gameScene.cameras.main.stopFollow(); gameScene.crowd.removeAll(true); gameScene.resetActors(); gameScene.refreshPreview(); gameScene.cameras.main.centerOn(WX(-40),WY(-18)); }
+});
+syncLabels();
+
+/* when embedded, report content height to the parent so the iframe fits with no inner scrollbar */
+function postEmbedHeight(){ if(window.self!==window.top){ try{ parent.postMessage({skiGameHeight: Math.ceil(document.documentElement.scrollHeight)}, '*'); }catch(e){} } }
+window.addEventListener('load', ()=>{ postEmbedHeight(); [200,600,1200].forEach(d=>setTimeout(postEmbedHeight,d)); });
+window.addEventListener('resize', postEmbedHeight);
+</script>
+</body>
+</html>
