@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thinking Labs by Temple Academy — Ownership Before Extension</title>
-<meta name="description" content="Your child can get any answer in seconds. Thinking Labs teaches them what to do when the answer isn't enough. A 6-week cognitive development program by Syd Malaxos.">
-<meta property="og:title" content="Thinking Labs by Temple Academy">
-<meta property="og:description" content="Your child can get any answer in seconds. We teach them what to do when the answer isn't enough.">
+<title>Thinking Buddy | Thinking Labs by Temple Academy</title>
+<meta name="description" content="Thinking Buddy is a working AI tutor built on one rule: the student thinks first. It asks questions, holds the bar, and never hands over the answer. Built by the founder of Thinking Labs for OpenAI Build Week 2026.">
+<meta property="og:title" content="Thinking Buddy">
+<meta property="og:description" content="A working AI tutor that refuses to give answers. The student thinks first.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://thinkinglabs.academy">
-<link rel="canonical" href="https://thinkinglabs.academy/" />
+<meta property="og:url" content="https://thinkinglabs.academy/thinking-buddy.html">
+<link rel="canonical" href="https://thinkinglabs.academy/thinking-buddy.html" />
 <meta property="og:image" content="https://thinkinglabs.academy/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thinking Labs by Temple Academy">
-<meta name="twitter:description" content="Your child can get any answer in seconds. We teach them what to do when the answer isn't enough.">
+<meta name="twitter:title" content="Thinking Buddy">
+<meta name="twitter:description" content="A working AI tutor that refuses to give answers. The student thinks first.">
 <meta name="twitter:image" content="https://thinkinglabs.academy/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,6 +214,20 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e71dd8b1364b49989406c98c657f37c9"}'></script>
 <!-- End Cloudflare Web Analytics -->
+<style>
+.tb-hero { padding: 150px 0 62px; background: var(--warm-black); text-align: center; position: relative; overflow: hidden; }
+.tb-hero::before { content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(ellipse, rgba(201,168,76,0.10) 0%, transparent 68%); pointer-events: none; }
+.tb-hero .container { position: relative; z-index: 2; }
+.tb-hero .section-label { margin-bottom: 16px; }
+.tb-hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--cream); font-weight: 500; max-width: 860px; margin: 0 auto; line-height: 1.14; }
+.tb-body { padding: 72px 0 96px; background: var(--cream); }
+.tb-article { max-width: 720px; margin: 0 auto; }
+.tb-article p { font-size: 1.12rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 22px; }
+.tb-links { display: flex; flex-wrap: wrap; gap: 16px; margin: 42px 0 46px; }
+.tb-btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--text-dark); padding: 15px 30px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.25s; background: #fff; }
+.tb-btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+.tb-close { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; color: var(--gold-dim); text-align: center; margin-top: 28px; }
+</style>
 </head>
 <body>
 <nav id="nav"><div class="nav-inner">
@@ -224,191 +238,24 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 <a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
 </div></div></nav>
 
-<section class="hero"><div class="hero-content">
-<div class="hero-badge">Cognitive Development &bull; Ages 13 and up</div>
-<h1>Your child can get any answer<br>in seconds. <em>Now what?</em></h1>
-<p class="hero-sub">Thinking Labs teaches students what to do when the answer isn't enough. Before AI extends their thinking, they need to own it.</p>
-<div class="hero-actions">
-<div class="hero-primary-wrap">
-<a href="https://cognitive-gap-assessment.vercel.app/register" class="btn-primary" target="_blank">Take the Free Assessment</a>
-<div class="cta-reassurance">Free &middot; about 10 minutes &middot; no signup</div>
+<section class="tb-hero"><div class="container">
+<div class="section-label" style="color: var(--gold);">Built in Public</div>
+<h1>The Tutor That Refuses to Give Answers.</h1>
+</div></section>
+
+<section class="tb-body"><div class="container">
+<article class="tb-article fade-in">
+<p>Thinking Buddy is a working AI tutor built on one rule: the student thinks first. It asks questions, holds the bar at three levels, and never hands over the answer. When a student tries to extract the solution in pieces, it catches the pattern. When they echo the tutor's own words back, it knows the difference between reading and understanding. The reasoning record shows a teacher exactly where real thinking happened and where it did not.</p>
+<p>It was built by the founder of Thinking Labs and submitted to OpenAI Build Week 2026, a global event with over 41,000 participants.</p>
+<p>This is the Thinking Labs philosophy running as software. The tool is earned, not given. The thinking stays with the student.</p>
+<div class="tb-links">
+<a href="https://youtu.be/U12FnRv1EVQ" class="btn-primary" target="_blank" rel="noopener">Watch the 2 minute demo</a>
+<a href="https://github.com/smalax0172-ship-it/thinking-buddy" class="tb-btn-outline" target="_blank" rel="noopener">See the code</a>
+<a href="https://smalaxos.substack.com/p/i-built-a-tutor-that-refuses-to-help" class="tb-btn-outline" target="_blank" rel="noopener">Read the story</a>
 </div>
-<a href="https://a.co/d/0adownwx" class="hero-secondary-link" target="_blank">Read the Book</a>
-</div></div><div class="hero-scroll"><span></span></div></section>
-
-<section class="featured-in"><div class="container"><div class="featured-inner">
-<div class="featured-label">Featured In</div>
-<div class="featured-logos">
-<a href="https://stemmagazine.com" class="featured-item" target="_blank"><span class="fi-dot"></span> STEM Magazine</a>
-<a href="https://a.co/d/0adownwx" class="featured-item" target="_blank"><span class="fi-dot"></span> Amazon Books</a>
-<a href="https://smalaxos.substack.com" class="featured-item" target="_blank"><span class="fi-dot"></span> Substack</a>
-</div></div></div></section>
-
-<section class="problem" id="problem"><div class="container"><div class="problem-grid">
-<div class="problem-text fade-in">
-<h2>AI didn't create this problem. It exposed it.</h2>
-<p>Students have always had gaps in how they reason, evaluate information, and defend what they know. AI just made those gaps impossible to ignore.</p>
-<p>When a student can generate a polished essay in twelve seconds, the question stops being <em>what do they know?</em> and becomes <em>what can they do without the tool?</em></p>
-<p>Most schools are racing to integrate AI. Almost none are asking whether students can think without it first.</p>
-</div>
-<div class="problem-stats fade-in fade-in-delay-1">
-<div class="stat-card"><div class="stat-number">63%</div><div class="stat-label">of students believe AI harms their critical thinking</div><div class="stat-source">RAND Corporation, 2024</div></div>
-<div class="stat-card"><div class="stat-number">86%</div><div class="stat-label">of teachers say students can't explain their own answers</div><div class="stat-source">National survey data</div></div>
-<div class="stat-card"><div class="stat-number">0</div><div class="stat-label">schools teaching cognitive ownership before AI access</div><div class="stat-source">The integration gap</div></div>
-<div class="stat-card"><div class="stat-number">6 wks</div><div class="stat-label">to build measurable independence across all five dimensions</div><div class="stat-source">Thinking Labs program</div></div>
-</div></div></div></section>
-
-<section class="framework" id="framework"><div class="container">
-<div class="section-header fade-in"><div class="section-label">The Five Dimensions of Cognitive Ownership</div><h2>We measure what schools don't</h2><p>Every student has a unique cognitive profile. Our assessment maps five dimensions &mdash; not what they know, but how they think.</p></div>
-<div class="dimensions fade-in fade-in-delay-1">
-<div class="dim-card"><div class="dim-number">01</div><h3>Independent Reasoning</h3><p>Does your child try before outsourcing? Can they start a problem without being told how?</p></div>
-<div class="dim-card"><div class="dim-number">02</div><h3>Information Evaluation</h3><p>Can your child walk through their reasoning and distinguish signal from noise?</p></div>
-<div class="dim-card"><div class="dim-number">03</div><h3>Cognitive Persistence</h3><p>Does your child catch mistakes and push through difficulty &mdash; or bail at the first sign of friction?</p></div>
-<div class="dim-card"><div class="dim-number">04</div><h3>Communication &amp; Defense</h3><p>Can your child explain and defend their thinking under direct questioning?</p></div>
-<div class="dim-card"><div class="dim-number">05</div><h3>AI &amp; Tool Relationship</h3><p>Does your child use AI to extend their thinking &mdash; or to replace it entirely?</p></div>
-</div></div></section>
-
-<section class="student-story"><div class="container"><div class="story-stack">
-<div class="story-card fade-in">
-<div class="section-label">From inside Cohort 1</div>
-<h2>From Inside Cohort 1</h2>
-<p>M came in like a lot of sharp kids: quick with answers, uncomfortable when she didn&rsquo;t have one.</p>
-<p>The change wasn&rsquo;t that she learned more facts. It was that she discovered something most students are never taught:</p>
-<p>It&rsquo;s okay not to know.</p>
-<p>It&rsquo;s okay to ask the question.</p>
-<p>Over time, she started catching her own patterns, regulating her frustration, and staying with problems instead of reaching for the fastest answer.</p>
-<p>In her own words:</p>
-<blockquote>&ldquo;It is great, but hard.&rdquo;</blockquote>
-<div class="story-close">That&rsquo;s the work.<span>Not easier thinking. Owned thinking.</span></div>
-</div>
-<div class="story-card fade-in fade-in-delay-1">
-<div class="section-label">We think we know more than we do</div>
-<h2>The Soap Experiment</h2>
-<p>In one study, people were asked a simple question:</p>
-<p>How does soap work?</p>
-<p>Most participants were confident they knew the answer.</p>
-<p>Then they were asked to explain it.</p>
-<p>Confidence dropped immediately.</p>
-<p>The lesson wasn&rsquo;t about soap. It was about thinking.</p>
-<p>Many of us mistake familiarity for understanding. We recognize an idea, a process, or a term and assume we truly understand it. But when we have to explain it clearly, gaps appear.</p>
-<p>That moment is not failure.</p>
-<div class="story-close"><span>It&rsquo;s the beginning of ownership.</span></div>
-</div>
-</div></div></section>
-
-<section class="principle"><div class="container"><div class="principle-content fade-in">
-<div class="section-label" style="color: var(--gold);">The Core Principle</div>
-<h2><em>Ownership before extension.</em></h2>
-<p>AI is the most powerful learning tool ever created. But a student who can't think independently doesn't get extended by AI &mdash; they get replaced by it.</p>
-<p>We build the foundation first. Then &mdash; and only then &mdash; the tools become powerful.</p>
-<div class="principle-divider"></div>
-</div></div></section>
-
-<section class="products" id="products"><div class="container">
-<div class="section-header fade-in"><div class="section-label">Programs &amp; Resources</div><h2>Start where you are</h2><p>The assessment shows you where your child stands. The book gives you the framework. The programs build from there.</p></div>
-<div class="product-ladder fade-in fade-in-delay-1">
-
-<div class="product-card featured">
-<div class="product-tag">Start here &mdash; it's free</div>
-<div class="product-price"><span class="free-label">FREE</span></div>
-<h3>Cognitive Ownership Assessment</h3>
-<p>50 questions across five dimensions. About 10 minutes. Find out exactly where your child owns their thinking and where they've outsourced it. Personalized results instantly.</p>
-<a href="https://cognitive-gap-assessment.vercel.app/register" class="product-link" target="_blank">Take the free assessment <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-price">$29</div>
-<h3>Assessment Interpretation Guide</h3>
-<p>Understand your child's score and know exactly what to do next.</p>
-<a href="https://smalax5.gumroad.com/l/nvoevj" class="product-link" target="_blank">Get the interpretation guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-tag">Understand the framework</div>
-<div class="product-price">$9.99</div>
-<h3>The Book</h3>
-<p><em>Cognitive Sovereignty</em> &mdash; the research, the framework, and why this matters now. Kindle $9.99, paperback $17.99. As featured in STEM Magazine.</p>
-<a href="https://a.co/d/0adownwx" class="product-link" target="_blank">Get the book <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-tag">Build the skills</div>
-<div class="product-price">$65 each</div>
-<h3>Mini Course Workbooks</h3>
-<p>Five dimension-specific workbooks. 5 weeks each. 12 exercises with parent coaching notes. Start with your child's weakest dimension from the assessment.</p>
-<a href="https://smalax5.gumroad.com" class="product-link" target="_blank">Browse workbooks <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-tag">Best value</div>
-<div class="product-price">$249</div>
-<h3>Complete Bundle</h3>
-<p>All five workbooks plus the Welcome Guide. Every dimension covered. The full at-home cognitive development curriculum at a significant savings.</p>
-<a href="https://smalax5.gumroad.com/l/sgkbnx" class="product-link" target="_blank">Get the bundle <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-tag">Live program</div>
-<h3>Thinking Labs Cohort</h3>
-<p>The live 6-week program. Small groups. Real-time challenges. Ends with a capstone oral defense &mdash; no AI, no notes, no slides.</p>
-<a href="/private.html" class="product-link" target="_blank">Learn More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-<div class="product-card">
-<div class="product-tag">For schools</div>
-<div class="product-price">Scoped to your school</div>
-<h3>School &amp; District Programs</h3>
-<p>Bring Thinking Labs to your school. Title I eligible. Curriculum, assessment infrastructure, and instructor training included.</p>
-<a href="https://mail.google.com/mail/?view=cm&fs=1&to=smalax0172@gmail.com&su=School+Partnership+Inquiry" class="product-link" target="_blank">Contact for schools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-
-</div></div></section>
-
-
-<section class="cohort-cta" id="cohort"><div class="container"><div class="cohort-content fade-in">
-<div class="section-label">Cohorts &mdash; Now Forming</div>
-<p>New cohorts open throughout the year. Small groups, six weeks, ending in a live oral defense where your child proves they own their thinking &mdash; no AI, no notes, no slides. Seats are limited by design. Ask about the next available cohort.</p>
-<a href="/private.html" class="btn-primary" target="_blank">Learn More</a>
-</div></div></section>
-
-<section class="about" id="about"><div class="container"><div class="about-grid fade-in">
-<div class="about-bio">
-<div class="section-label">About the Founder</div>
-<h2>Syd Malaxos</h2>
-<p>Chemistry and physics teacher. Over twenty years in the classroom. Master's in chemical physics from Brandeis. Research background at Harvard.</p>
-<p>Published in the <em>Journal of Physical Chemistry A</em>. Featured in <em>STEM Magazine</em>. Built the assessment, wrote the book, designed every workbook.</p>
-<p>This isn't theory from a conference stage. It's methodology from a teacher who watches students think &mdash; and stop thinking &mdash; every single day.</p>
-<div class="about-links">
-<a href="https://smalaxos.substack.com" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg> Substack</a>
-<a href="https://www.linkedin.com/in/syd-malaxos-04464b3/" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn</a>
-<a href="https://a.co/d/0adownwx" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7l1.5 9L12 22l7.5-6L21 7l-9-5zm0 2.18L18.12 7.5 12 11.82 5.88 7.5 12 4.18z"/></svg> Book</a>
-<a href="https://smalax5.gumroad.com" class="about-link-pill" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 12h8M8 17h4"/></svg> Store</a>
-</div>
-<div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="syd-malaxos-04464b3" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://www.linkedin.com/in/syd-malaxos-04464b3?trk=profile-badge">Syd Malaxos</a></div></div>
-<div class="cred-items">
-<div class="cred-item"><div class="cred-icon">P</div><div><h4>Peer-Reviewed Research</h4><p>Published in J. Phys. Chem. A (Tuttle, Malaxos, Coe, 2002) &mdash; cited 71 times. Built on rigorous scientific methodology.</p></div></div>
-<div class="cred-item"><div class="cred-icon">S</div><div><h4>STEM Magazine</h4><p>"The Integration Gap" &mdash; reaching 520,000+ readers. The case for ownership before extension, at national scale.</p></div></div>
-<div class="cred-item"><div class="cred-icon">B</div><div><h4>The Book</h4><p><em>Cognitive Sovereignty</em> &mdash; 11 chapters on why students must own their reasoning before AI tools become meaningful.</p></div></div>
-<div class="cred-item"><div class="cred-icon">20</div><div><h4>Two Decades Teaching</h4><p>Public school. Real students. Every framework in this program was built in a classroom and refined by watching what actually works.</p></div></div>
-</div></div></div></section>
-
-<section class="resources"><div class="container"><div class="resource-row fade-in">
-<div class="resource-card"><h3>Read the Substack</h3><p>The ongoing series on cognitive sovereignty, AI in education, and what it means to think independently in an age of instant answers.</p><a href="https://smalaxos.substack.com" class="product-link" target="_blank">smalaxos.substack.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
-<div class="resource-card"><h3>Browse the Store</h3><p>Workbooks, the complete bundle, and cohort enrollment. Everything your family needs to build cognitive ownership &mdash; all in one place.</p><a href="https://smalax5.gumroad.com" class="product-link" target="_blank">smalax5.gumroad.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
-</div></div></section>
-
-<section class="resources" style="padding-top:0;"><div class="container"><div class="resource-row fade-in" style="grid-template-columns:1fr;">
-<div class="resource-card">
-<h3>Built in Public</h3>
-<p>We built an AI tutor that refuses to give answers, and entered it in OpenAI Build Week.</p>
-<a href="thinking-buddy.html" class="product-link">See Thinking Buddy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-</div>
-</div></div></section>
-
-<section class="subscribe"><div class="container"><div class="subscribe-inner fade-in">
-<div class="subscribe-text"><h2>Stay sharp</h2><p>Weekly essays on cognitive sovereignty, AI in education, and what it means to think independently. Free. No spam. Unsubscribe anytime.</p></div>
-<div class="subscribe-form"><a href="https://smalaxos.substack.com/subscribe" class="subscribe-btn" target="_blank">Subscribe &mdash; it's free</a><p class="subscribe-note">Join on Substack. New essays every week.</p></div>
-</div></div></section>
+<p class="tb-close">Love is law. Let your lantern burn bright.</p>
+</article>
+</div></section>
 
 <footer><div class="container">
 <div class="footer-top">
