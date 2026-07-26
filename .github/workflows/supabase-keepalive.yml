@@ -1,0 +1,84 @@
+name: Supabase Keepalive
+
+# Pings the Supabase REST API on a schedule so the free-tier project
+# (ref: icjindkahocntifjpmdq) never auto-pauses after 7 days of inactivity.
+# Doubles as a volume report: prints how many assessment links exist and
+# how many assessments have been completed.
+
+on:
+  schedule:
+    # 12:00 UTC every Monday and Thursday
+    - cron: "0 12 * * 1,4"
+  workflow_dispatch: {}
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase and report row counts
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: https://icjindkahocntifjpmdq.supabase.co
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_ANON_KEY:-}" ]; then
+            echo "::error::SUPABASE_ANON_KEY secret is not set."
+            exit 1
+          fi
+
+          # Requests an exact row count without pulling any rows.
+          # Prefer: count=exact + Range: 0-0 => total appears in the
+          # Content-Range response header as "0-0/<total>" (or "*/<total>").
+          get_count() {
+            table="$1"
+
+            # Capture headers (stderr via -D) and HTTP status separately.
+            headers="$(mktemp)"
+            status="$(
+              curl -sS \
+                -o /dev/null \
+                -D "$headers" \
+                -w '%{http_code}' \
+                -H "apikey: ${SUPABASE_ANON_KEY}" \
+                -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+                -H "Prefer: count=exact" \
+                -H "Range: 0-0" \
+                "${SUPABASE_URL}/rest/v1/${table}?select=id"
+            )"
+
+            if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+              echo "::error::Request to '${table}' failed with HTTP ${status}."
+              echo "----- response headers -----"
+              cat "$headers"
+              rm -f "$headers"
+              exit 1
+            fi
+
+            # Content-Range looks like "0-0/1234"; take the part after the slash.
+            count="$(
+              grep -i '^content-range:' "$headers" \
+                | tr -d '\r' \
+                | sed 's/.*\///' \
+                | tr -d '[:space:]'
+            )"
+            rm -f "$headers"
+
+            if [ -z "$count" ] || ! echo "$count" | grep -qE '^[0-9]+$'; then
+              echo "::error::Could not parse row count for '${table}' from Content-Range header."
+              exit 1
+            fi
+
+            echo "$count"
+          }
+
+          links_count="$(get_count assessment_links)"
+          results_count="$(get_count assessment_results)"
+
+          echo "==================================================="
+          echo " Supabase keepalive volume report"
+          echo "==================================================="
+          echo " assessment_links   (links created):   ${links_count}"
+          echo " assessment_results (assessments done): ${results_count}"
+          echo "==================================================="
+          echo "Supabase project pinged successfully — it will stay awake."
