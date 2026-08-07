@@ -17,8 +17,8 @@ jobs:
     steps:
       - name: Check the key looks usable
         run: |
-          # The secret arrives via env rather than direct ${{ }} interpolation so a
-          # stray newline in the stored value can't break the shell script itself.
+          # The secret arrives through env rather than being interpolated into the
+          # script body, so a stray newline in it can't break the script itself.
           KEY=$(printf '%s' "$SUPABASE_ANON_KEY" | tr -d '[:space:]')
           if [ -z "$KEY" ]; then
             echo "SUPABASE_ANON_KEY is empty or not set on this repository."
