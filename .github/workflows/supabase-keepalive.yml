@@ -5,32 +5,59 @@ on:
     - cron: '0 12 * * 1,4'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   ping:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://icjindkahocntifjpmdq.supabase.co
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     steps:
+      - name: Check the key looks usable
+        run: |
+          # The secret arrives via env rather than direct ${{ }} interpolation so a
+          # stray newline in the stored value can't break the shell script itself.
+          KEY=$(printf '%s' "$SUPABASE_ANON_KEY" | tr -d '[:space:]')
+          if [ -z "$KEY" ]; then
+            echo "SUPABASE_ANON_KEY is empty or not set on this repository."
+            exit 1
+          fi
+          echo "Key length after trimming whitespace: ${#KEY}"
+          case "$KEY" in
+            eyJ*) echo "Key format: legacy anon JWT" ;;
+            sb_publishable_*) echo "Key format: publishable" ;;
+            *) echo "Key format: UNRECOGNIZED - expected it to start with eyJ or sb_publishable_"
+               exit 1 ;;
+          esac
+
       - name: Write keepalive row
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-            "https://icjindkahocntifjpmdq.supabase.co/rest/v1/keepalive" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          KEY=$(printf '%s' "$SUPABASE_ANON_KEY" | tr -d '[:space:]')
+          CODE=$(curl -s -o /tmp/write_body -w "%{http_code}" -X POST \
+            "$SUPABASE_URL/rest/v1/keepalive" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
             -H "Content-Type: application/json" \
             -H "Prefer: return=minimal" \
             -d '{"source":"github_actions"}')
           echo "Write status: $CODE"
           if [ "$CODE" != "201" ] && [ "$CODE" != "204" ]; then
             echo "KEEPALIVE WRITE FAILED"
+            echo "Response body:"
+            cat /tmp/write_body || true
             exit 1
           fi
           echo "Keepalive write succeeded"
 
       - name: Report assessment completions
         run: |
+          KEY=$(printf '%s' "$SUPABASE_ANON_KEY" | tr -d '[:space:]')
           RANGE=$(curl -s -I \
-            "https://icjindkahocntifjpmdq.supabase.co/rest/v1/assessment_results?select=id" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "$SUPABASE_URL/rest/v1/assessment_results?select=id" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
             -H "Prefer: count=exact" \
             -H "Range: 0-0" | grep -i content-range || echo "count unavailable")
           echo "ASSESSMENT COMPLETIONS: $RANGE"
