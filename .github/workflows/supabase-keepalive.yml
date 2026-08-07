@@ -1,0 +1,36 @@
+name: Supabase Keepalive
+
+on:
+  schedule:
+    - cron: '0 12 * * 1,4'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write keepalive row
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            "https://icjindkahocntifjpmdq.supabase.co/rest/v1/keepalive" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d '{"source":"github_actions"}')
+          echo "Write status: $CODE"
+          if [ "$CODE" != "201" ] && [ "$CODE" != "204" ]; then
+            echo "KEEPALIVE WRITE FAILED"
+            exit 1
+          fi
+          echo "Keepalive write succeeded"
+
+      - name: Report assessment completions
+        run: |
+          RANGE=$(curl -s -I \
+            "https://icjindkahocntifjpmdq.supabase.co/rest/v1/assessment_results?select=id" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Prefer: count=exact" \
+            -H "Range: 0-0" | grep -i content-range)
+          echo "ASSESSMENT COMPLETIONS: $RANGE"
