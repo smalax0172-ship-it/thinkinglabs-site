@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ski Survival | Temple Academy Games</title>
+<meta name="description" content="Go down the mountain. When it goes wrong, something absurd comes to get you, and it is never the same thing twice.">
+<meta property="og:title" content="Ski Survival">
+<meta property="og:description" content="Go down the mountain. When it goes wrong, something absurd comes to get you.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thinkinglabs.academy/ski-survival.html">
+<meta property="og:image" content="https://thinkinglabs.academy/img/03-rubeus-miracle.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#3f4a7d;
+    --sky-mid:#8a6f96;
+    --peach:#f0b287;
+    --sunset:#e8825e;
+    --snow:#e9edfa;
+    --snow-deep:#ccd5f0;
+    --ink:#282e4c;
+    --ink-soft:#5b6489;
+    --mint:#8ff0a4;
+    --gold:#f5c542;
+    --edge:rgba(40,46,76,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--snow);color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+  .nav{
+    position:sticky;top:0;z-index:20;
+    background:rgba(233,237,250,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--edge);
+  }
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:20px}
+  .brandmark{
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:.78rem;
+    letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--ink);
+  }
+  .brandmark span{color:var(--sunset)}
+  .navlinks{display:flex;gap:20px;font-size:.8rem}
+  .navlinks a{color:var(--ink-soft);text-decoration:none}
+  .navlinks a:hover,.navlinks a:focus-visible{color:var(--ink)}
+  @media(max-width:820px){.navlinks{display:none}}
+
+  /* hero */
+  .hero{
+    position:relative;color:#fff;overflow:hidden;padding:84px 0 0;
+    background:linear-gradient(168deg,#2f3866 0%,#6b5c8e 38%,#c1857f 66%,var(--peach) 100%);
+  }
+  .hero .wrap{position:relative;z-index:2}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.22em;
+    text-transform:uppercase;color:rgba(255,255,255,.82);margin-bottom:16px;
+  }
+  h1{
+    font-family:'Archivo',sans-serif;font-weight:800;
+    font-size:clamp(2.8rem,9.2vw,5.8rem);line-height:.94;
+    letter-spacing:-.035em;text-transform:uppercase;
+    text-shadow:0 2px 26px rgba(28,32,60,.3);
+  }
+  h1 .glow{color:var(--mint)}
+  .lede{margin-top:20px;max-width:44ch;font-size:1.14rem;color:rgba(255,255,255,.94)}
+  .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .btn{
+    display:inline-block;text-decoration:none;font-family:'Archivo',sans-serif;
+    font-weight:800;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;
+    padding:14px 24px;border:1.5px solid transparent;
+  }
+  .btn-light{background:#fff;color:var(--ink)}
+  .btn-light:hover,.btn-light:focus-visible{background:#eef1ff}
+  .btn-ghost-l{border-color:rgba(255,255,255,.6);color:#fff}
+  .btn-ghost-l:hover,.btn-ghost-l:focus-visible{background:#fff;color:var(--ink)}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover,.btn-primary:focus-visible{background:#39406b}
+  .btn-outline{border-color:var(--ink);color:var(--ink)}
+  .btn-outline:hover,.btn-outline:focus-visible{background:var(--ink);color:#fff}
+  .platforms{
+    margin-top:20px;font-family:'JetBrains Mono',monospace;font-size:.72rem;
+    letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.82);
+  }
+  .hero-shot{margin-top:48px;border-radius:10px 10px 0 0;overflow:hidden;box-shadow:0 -6px 60px rgba(26,30,58,.34)}
+
+  section{padding:76px 0;border-bottom:1px solid var(--edge)}
+  .marker{
+    display:flex;align-items:center;gap:11px;margin-bottom:16px;
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .pip{width:12px;height:12px;flex:none}
+  .pip-green{border-radius:50%;background:#4fae72}
+  .pip-blue{background:#4f7fc4}
+  .pip-black{background:var(--ink);transform:rotate(45deg);width:10px;height:10px}
+  h2{
+    font-family:'Archivo',sans-serif;font-weight:800;
+    font-size:clamp(1.75rem,4.3vw,2.7rem);line-height:1.05;
+    letter-spacing:-.02em;text-transform:uppercase;max-width:20ch;
+  }
+  .body-col{max-width:60ch;margin-top:20px;color:var(--ink-soft);font-size:1.05rem}
+  .body-col p + p{margin-top:15px}
+
+  /* rescue reel */
+  .rescue{background:linear-gradient(158deg,#f6e7dc 0%,#eed7cf 52%,#ddd4ea 100%)}
+  .rescue .body-col{color:#6a5a68}
+  .reel{display:grid;gap:22px;margin-top:34px}
+  .reel figure{border-radius:9px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(60,50,70,.16)}
+  .reel figcaption{padding:13px 16px;font-size:.9rem;color:var(--ink-soft);border-top:1px solid var(--edge)}
+  .reel-2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:760px){.reel-2{grid-template-columns:1fr}}
+
+  .runs{list-style:none;margin-top:30px;border-top:1px solid var(--edge)}
+  .runs li{
+    display:grid;grid-template-columns:180px 1fr;gap:22px;
+    padding:18px 0;border-bottom:1px solid var(--edge);
+  }
+  @media(max-width:640px){.runs li{grid-template-columns:1fr;gap:5px}}
+  .run-name{
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:.8rem;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
+  }
+  .run-desc{color:var(--ink-soft)}
+
+  .shot-wide{margin-top:32px;border-radius:9px;overflow:hidden;box-shadow:0 10px 32px rgba(40,46,76,.18);background:#fff}
+  .shot-wide figcaption{padding:13px 16px;font-size:.9rem;color:var(--ink-soft);border-top:1px solid var(--edge)}
+
+  .support{background:#fff}
+  .crossover{background:var(--snow-deep)}
+  .rowlinks{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+
+  footer{padding:46px 0 64px;font-size:.86rem;color:var(--ink-soft)}
+  .footlinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:18px}
+  .footlinks a{text-decoration:none;color:var(--ink-soft)}
+  .footlinks a:hover{color:var(--ink)}
+  .credit{margin-top:10px;font-size:.8rem;color:#79829f}
+  .lantern{margin-top:12px;color:#79829f;font-size:.82rem}
+
+  :focus-visible{outline:2px solid var(--sunset);outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brandmark" href="https://thinkinglabs.academy/">Temple Academy <span>Games</span></a>
+    <div class="navlinks">
+      <a href="#rescues">The rescues</a>
+      <a href="#run">The run</a>
+      <a href="#yeti">The Yeti</a>
+      <a href="#support">Support</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Temple Academy Games</div>
+    <h1>Ski <span class="glow">Survival</span></h1>
+    <p class="lede">Get down the mountain. When it goes wrong, something comes to get you, and it is never the same thing twice.</p>
+    <div class="ctas">
+      <a class="btn btn-light" href="#STEAM_URL">Wishlist on Steam</a>
+      <a class="btn btn-light" href="#APPSTORE_URL">Get it on the App Store</a>
+      <a class="btn btn-ghost-l" href="#rescues">See the rescues</a>
+    </div>
+    <div class="platforms">Windows &middot; Steam Deck &middot; iPhone and iPad</div>
+    <figure class="hero-shot"><img src="img/01-title.png" alt="Ski Survival title screen at sunrise, with a skier waiting on the slope and a prompt to tap to ride."></figure>
+  </div>
+</header>
+
+<section class="rescue" id="rescues">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-green"></span> The rescues</div>
+    <h2>Every wipeout summons something ridiculous</h2>
+    <div class="body-col">
+      <p>Most games punish a crash. This one answers it. Go down hard and the mountain sends help, and help is having a strange day.</p>
+      <p>You do not pick which one arrives. That is the point. Players compare notes about which ones they have seen, and there are ones you have not seen yet.</p>
+    </div>
+
+    <div class="reel">
+      <figure>
+        <img src="img/03-rubeus-miracle.png" alt="A winged brindle mastiff running across the snow beneath the words RUBEUS MIRACLE.">
+        <figcaption>Rubeus. A winged mastiff, carrying a bird, arriving exactly when the run should have ended.</figcaption>
+      </figure>
+    </div>
+
+    <div class="reel reel-2">
+      <figure>
+        <img src="img/05-hand-of-god.png" alt="An enormous hand reaching down into a dark chasm to retrieve a fallen skier.">
+        <figcaption>A giant hand, reaching all the way down into the chasm.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/06-marching-band.png" alt="A marching band in red uniforms arriving on the slope beside a crashed skier.">
+        <figcaption>The marching band. Nobody asked for the marching band.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="run">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-blue"></span> The run</div>
+    <h2>Distance is the goal. Flow is the reason to take the bad line.</h2>
+    <div class="body-col">
+      <p>Each level gives you a target and a rescue line to clear. Then the hill starts offering reasons to leave your line. Coins where you should not be. An animal that needs help. A UFO with a tractor beam and a countdown, which a thrown pole can settle if your timing is right.</p>
+      <p>Keep it clean and the flow multiplier climbs. Take the greedy line and it can climb faster, right up until it does not.</p>
+      <p>Easy mode is not the same hill made slower. It is a hill built so a kid and the person who taught them can both finish a run and mean it.</p>
+    </div>
+
+    <figure class="shot-wide">
+      <img src="img/04-animal-ufo.png" alt="A UFO descending over the slope with a tractor beam while a skier lines up a throw.">
+      <figcaption>UFO incoming. Pole, tuck, throw, or let it happen and lose the animal.</figcaption>
+    </figure>
+
+    <ul class="runs">
+      <li><span class="run-name">Flow multiplier</span><span class="run-desc">Ride clean and it builds. It is the difference between a good run and a story.</span></li>
+      <li><span class="run-name">Speed wax and scrub</span><span class="run-desc">Go faster, or dump speed before the thing you did not see coming.</span></li>
+      <li><span class="run-name">Jetpack burst</span><span class="run-desc">Held items that change what a run is for. Some help you go. Some help you save.</span></li>
+      <li><span class="run-name">Flip and dive</span><span class="run-desc">Air is scored. Landing it is optional and heavily encouraged.</span></li>
+      <li><span class="run-name">Touch and controller</span><span class="run-desc">The same game on a phone, a desktop, or a handheld. No keyboard required.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="yeti">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-black"></span> The roster</div>
+    <h2>Four skiers. One of them is not a person.</h2>
+    <div class="body-col">
+      <p>Each rider handles differently, and the Yeti has to be earned. He is heavier, he carries a first aid kit, and he clears things the others should not attempt.</p>
+    </div>
+    <figure class="shot-wide">
+      <img src="img/02-yeti-chasm.png" alt="A yeti on skis launching over a wide chasm with a flow multiplier of five on screen.">
+      <figcaption>Sixteen thousand points, flow at five times, and a chasm underneath.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-black"></span> Support</div>
+    <h2>Something broken, or an idea for the hill</h2>
+    <div class="body-col">
+      <p>One person makes this game. A bug report gets read by the person who wrote the bug, and a good idea can be in the next build.</p>
+      <p>Tell me what happened, what device you were on, and what you were doing when it happened. Screenshots help.</p>
+    </div>
+    <div class="rowlinks">
+      <a class="btn btn-primary" href="mailto:smalax0172@gmail.com?subject=Ski%20Survival%20support">Report a problem</a>
+      <a class="btn btn-outline" href="mailto:smalax0172@gmail.com?subject=Ski%20Survival%20idea">Suggest a rescue</a>
+    </div>
+  </div>
+</section>
+
+<section class="crossover">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-black"></span> Who made this</div>
+    <h2>Built by a physics teacher</h2>
+    <div class="body-col">
+      <p>Temple Academy Games is one person who teaches chemistry and physics, and who spends the rest of his time on how students learn to think for themselves before they hand the thinking to a machine. That work is called Thinking Labs.</p>
+      <p>If you came here for the game, stay for the game. If you have a kid who can get any answer in seconds and you have started to wonder what happens next, the second link is free and takes about ten minutes.</p>
+    </div>
+    <div class="rowlinks">
+      <a class="btn btn-outline" href="https://thinkinglabs.academy/ski-jump-game.html">Play the physics one</a>
+      <a class="btn btn-outline" href="https://cognitive-gap-assessment.vercel.app/register">Free assessment</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footlinks">
+      <a href="https://thinkinglabs.academy/">Thinking Labs</a>
+      <a href="https://smalaxos.substack.com">Substack</a>
+      <a href="https://smalax5.gumroad.com">Store</a>
+      <a href="mailto:smalax0172@gmail.com">Contact</a>
+    </div>
+    <div>&copy; 2026 Temple Academy. Ski Survival is a Temple Academy Games title.</div>
+    <div class="credit">Music: Upbeat Rock by nastelbom, Pixabay Content License.</div>
+    <div class="lantern">Love is law, let your lantern burn bright.</div>
+  </div>
+</footer>
+
+</body>
+</html>
