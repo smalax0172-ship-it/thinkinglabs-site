@@ -227,6 +227,13 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 .tb-btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--text-dark); padding: 15px 30px; font-weight: 600; font-size: 0.95rem; border-radius: 4px; letter-spacing: 0.03em; transition: all 0.25s; background: #fff; }
 .tb-btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
 .tb-close { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; color: var(--gold-dim); text-align: center; margin-top: 28px; }
+
+  /* ski-survival nav fix: hamburger up to 1200px so eleven links never clip */
+  @media (max-width: 1200px) {
+    .nav-links { display: none; }
+    .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--cream); padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+    .mobile-toggle { display: block; }
+  }
 </style>
 </head>
 <body>
@@ -234,7 +241,7 @@ footer { padding: 64px 0 40px; background: var(--charcoal); color: rgba(245,240,
 <a href="https://thinkinglabs.academy/" class="nav-brand" style="text-decoration:none;">Thinking Labs<span>by Temple Academy</span></a>
 <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
 <div class="nav-links" id="navLinks">
-<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="index.html#about">About</a><a href="research.html">Research</a><a href="schools.html">Schools</a><a href="ski-jumping.html">Try a Lesson</a><a href="ski-jump-game.html">Play</a><a href="private.html">Private Track</a><a href="thinking-buddy.html">Thinking Buddy</a>
+<a href="index.html#problem">The Problem</a><a href="index.html#framework">Five Dimensions</a><a href="index.html#products">Programs</a><a href="index.html#about">About</a><a href="research.html">Research</a><a href="schools.html">Schools</a><a href="ski-jumping.html">Try a Lesson</a><a href="ski-jump-game.html">Play</a><a href="private.html">Private Track</a><a href="thinking-buddy.html">Thinking Buddy</a><a href="ski-survival.html">Ski Survival</a>
 <a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
 </div></div></nav>
 

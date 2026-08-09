@@ -172,6 +172,12 @@ footer { background: var(--ink); border-top: 1px solid var(--ink-line); padding:
   .tiers { grid-template-columns: 1fr; }
   .sec { padding: 72px 0; }
 }
+
+  /* ski-survival nav fix: hamburger up to 1200px + working dark dropdown so eleven links never clip */
+  @media (max-width: 1200px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--warm-black); padding: 20px 24px; border-bottom: 1px solid var(--ink-line); gap: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.35); }
+    .mobile-toggle { display: block; }
+  }
 </style>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e71dd8b1364b49989406c98c657f37c9"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
@@ -190,7 +196,7 @@ footer { background: var(--ink); border-top: 1px solid var(--ink-line); padding:
       <a href="ski-jumping.html">Try a Lesson</a>
       <a href="ski-jump-game.html">Play</a>
       <a href="private.html">Private Track</a>
-      <a href="thinking-buddy.html">Thinking Buddy</a>
+      <a href="thinking-buddy.html">Thinking Buddy</a><a href="ski-survival.html">Ski Survival</a>
       <a href="https://cognitive-gap-assessment.vercel.app/register" class="nav-cta" target="_blank">Free Assessment</a>
     </div>
     <button class="mobile-toggle" id="mobileToggle"><span></span><span></span><span></span></button>
