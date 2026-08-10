@@ -34,7 +34,10 @@
     font-family:'Inter',system-ui,sans-serif;
     font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
   }
-  img{max-width:100%;display:block}
+  img{max-width:100%;height:auto;display:block}
+  .hero-shot img{aspect-ratio:1/1}
+  .reel img{aspect-ratio:2688/1242}
+  .shot-wide img{aspect-ratio:2688/1242}
   .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 
   .nav{
@@ -134,6 +137,8 @@
   .shot-wide figcaption{padding:13px 16px;font-size:.9rem;color:var(--ink-soft);border-top:1px solid var(--edge)}
 
   .support{background:#fff}
+  .privacy{background:#fff;scroll-margin-top:76px}
+  .privacy .updated{margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
   .crossover{background:var(--snow-deep)}
   .rowlinks{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
 
@@ -275,6 +280,21 @@
   </div>
 </section>
 
+<section class="privacy" id="privacy">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-black"></span> Privacy</div>
+    <h2>Privacy Policy for Ski Survival</h2>
+    <div class="body-col">
+      <p>Ski Survival does not collect, store, share, or sell personal information.</p>
+      <p>The app does not require an account. The app does not collect names, email addresses, location data, contacts, photos, health data, financial information, or user-generated content.</p>
+      <p>The app does not use third-party advertising or tracking. The app does not track users across apps or websites.</p>
+      <p>Ski Survival is a simple offline game. Any gameplay progress or settings are stored locally on the user's device only. The My Music feature does not access or inspect the player's music library. Audio from outside the game is managed by iOS.</p>
+      <p>If you have questions about this privacy policy, contact: <a href="mailto:smalax0172@gmail.com">smalax0172@gmail.com</a></p>
+      <p class="updated">Effective date: August 9, 2026</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="footlinks">
@@ -282,6 +302,7 @@
       <a href="https://smalaxos.substack.com">Substack</a>
       <a href="https://smalax5.gumroad.com">Store</a>
       <a href="mailto:smalax0172@gmail.com">Contact</a>
+      <a href="#privacy">Privacy</a>
     </div>
     <div>&copy; 2026 Temple Academy. Ski Survival is a Temple Academy Games title.</div>
     <div class="credit">Music: Upbeat Rock by nastelbom, Pixabay Content License.</div>
@@ -289,5 +310,14 @@
   </div>
 </footer>
 
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+function scrollToHash() {
+  if (!location.hash) return;
+  var target = document.getElementById(location.hash.slice(1));
+  if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+}
+window.addEventListener('load', function () { scrollToHash(); setTimeout(scrollToHash, 60); });
+</script>
 </body>
 </html>
