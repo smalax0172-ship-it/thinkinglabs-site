@@ -1,0 +1,5 @@
+{"jobs": [
+ {"id": 2001, "title": "Scientific Training Lead, Manufacturing", "absolute_url": "https://example.com/gh/2001", "location": {"name": "Norwood, Massachusetts"}, "offices": [], "content": "&lt;p&gt;Lead GMP scientific training programs.&lt;/p&gt;"},
+ {"id": 2002, "title": "Senior Scientist, Analytical Development", "absolute_url": "https://example.com/gh/2002", "location": {"name": "Cambridge, MA"}, "offices": [], "content": "&lt;p&gt;Run analytical methods.&lt;/p&gt;"},
+ {"id": 2003, "title": "Learning and Development Partner", "absolute_url": "https://example.com/gh/2003", "location": {"name": "Cambridge, MA"}, "offices": [], "content": "&lt;p&gt;Build learning programs.&lt;/p&gt;"}
+]}
