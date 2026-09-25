@@ -1,5 +1,0 @@
-[
- {"id": "a1", "text": "Learning Scientist", "hostedUrl": "https://example.com/lever/a1", "categories": {"location": "Pittsburgh, PA", "team": "Learning"}, "allLocations": ["Pittsburgh, PA"], "workplaceType": "hybrid", "country": "US", "descriptionPlain": "Study how people learn languages.", "lists": []},
- {"id": "a2", "text": "Curriculum Designer, English", "hostedUrl": "https://example.com/lever/a2", "categories": {"location": "Remote"}, "allLocations": ["Remote"], "workplaceType": "remote", "country": "US", "descriptionPlain": "Design language curriculum.", "lists": [{"text": "Requirements", "content": "&lt;li&gt;Teaching experience&lt;/li&gt;"}]},
- {"id": "a3", "text": "Backend Engineer", "hostedUrl": "https://example.com/lever/a3", "categories": {"location": "Boston, MA"}, "allLocations": ["Boston, MA"], "workplaceType": "onsite", "country": "US", "descriptionPlain": "Write services.", "lists": []}
-]
