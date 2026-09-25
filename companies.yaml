@@ -1,0 +1,92 @@
+# Companies the daily job scanner checks.
+#
+# Format (kept simple on purpose so it parses with the standard library):
+#
+#   - name: Company Name
+#     board: greenhouse | lever | ashby | auto
+#     slugs: slug1, slug2
+#
+# board "auto" tries Greenhouse, Lever, and Ashby for every slug listed and
+# keeps the first one that answers with a job list. Set board explicitly once
+# you know which one a company uses; that saves requests.
+#
+# A company whose slugs all fail is listed in the "Skipped companies" section
+# of the report. Companies on Workday, SuccessFactors, or iCIMS have no public
+# JSON board and will always land there unless they move.
+
+companies:
+  - name: Moderna
+    board: auto
+    slugs: modernatx, moderna
+
+  - name: Vertex Pharmaceuticals
+    board: auto
+    slugs: vertex, vertexpharmaceuticals, vrtx
+
+  - name: Takeda
+    board: auto
+    slugs: takeda
+
+  - name: Biogen
+    board: auto
+    slugs: biogen
+
+  - name: Alnylam
+    board: auto
+    slugs: alnylam, alnylampharmaceuticals
+
+  - name: Ginkgo Bioworks
+    board: auto
+    slugs: ginkgobioworks, ginkgo
+
+  - name: Insulet
+    board: auto
+    slugs: insulet, insuletcorporation
+
+  - name: Hologic
+    board: auto
+    slugs: hologic
+
+  - name: Waters Corporation
+    board: auto
+    slugs: waters, waterscorporation
+
+  - name: Thermo Fisher Scientific
+    board: auto
+    slugs: thermofisher, thermofisherscientific
+
+  - name: Bruker
+    board: auto
+    slugs: bruker
+
+  - name: Agilent
+    board: auto
+    slugs: agilent, agilenttechnologies
+
+  - name: Boston Scientific
+    board: auto
+    slugs: bostonscientific, bsci
+
+  - name: Anthropic
+    board: auto
+    slugs: anthropic
+
+  - name: Khan Academy
+    board: auto
+    slugs: khanacademy, khan
+
+  - name: Duolingo
+    board: auto
+    slugs: duolingo
+
+  - name: Coursera
+    board: auto
+    slugs: coursera
+
+  - name: Scale AI
+    board: auto
+    slugs: scaleai, scale
+
+  - name: Handshake
+    board: auto
+    slugs: joinhandshake, handshake

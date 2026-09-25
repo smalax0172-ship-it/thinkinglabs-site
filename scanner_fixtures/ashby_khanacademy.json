@@ -1,0 +1,5 @@
+{"jobs": [
+ {"id": "k1", "title": "Instructional Designer, Science", "jobUrl": "https://example.com/ashby/k1", "location": "Remote", "secondaryLocations": [], "isRemote": true, "address": {"postalAddress": {"addressCountry": "United States"}}, "descriptionPlain": "Design science lessons."},
+ {"id": "k2", "title": "Physics Content Creator", "jobUrl": "https://example.com/ashby/k2", "location": "Mountain View, CA", "secondaryLocations": [], "isRemote": false, "address": {"postalAddress": {"addressLocality": "Mountain View", "addressRegion": "CA", "addressCountry": "United States"}}, "descriptionPlain": "Make physics videos."},
+ {"id": "k3", "title": "Educator Success Manager", "jobUrl": "https://example.com/ashby/k3", "location": "Remote", "secondaryLocations": [{"location": "Boston, MA"}], "isRemote": true, "address": {"postalAddress": {"addressCountry": "United States"}}, "descriptionPlain": "Support teachers."}
+]}
