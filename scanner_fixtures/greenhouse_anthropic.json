@@ -1,7 +1,0 @@
-{"jobs": [
- {"id": 1001, "title": "Technical Training Specialist", "absolute_url": "https://example.com/gh/1001", "location": {"name": "Remote - US"}, "offices": [], "content": "&lt;p&gt;Design and deliver technical training for customers.&lt;/p&gt;"},
- {"id": 1002, "title": "Software Engineer, Infrastructure", "absolute_url": "https://example.com/gh/1002", "location": {"name": "San Francisco, CA"}, "offices": [], "content": "&lt;p&gt;Build distributed systems.&lt;/p&gt;"},
- {"id": 1003, "title": "Curriculum Developer, Education", "absolute_url": "https://example.com/gh/1003", "location": {"name": "London, UK"}, "offices": [], "content": "&lt;p&gt;Write courses.&lt;/p&gt;"},
- {"id": 1004, "title": "Content Strategist", "absolute_url": "https://example.com/gh/1004", "location": {"name": "Remote"}, "offices": [{"name": "United States"}], "content": "&lt;p&gt;Own the content roadmap.&lt;/p&gt;"},
- {"id": 1005, "title": "Model Evaluation Researcher", "absolute_url": "https://example.com/gh/1005", "location": {"name": "Remote - Canada"}, "offices": [], "content": "&lt;p&gt;Evaluate models.&lt;/p&gt;"}
-]}
