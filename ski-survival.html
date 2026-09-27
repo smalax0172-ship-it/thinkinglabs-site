@@ -96,6 +96,26 @@
   }
   .hero-shot{margin:48px auto 0;max-width:600px;border-radius:12px 12px 0 0;overflow:hidden;box-shadow:0 -6px 60px rgba(26,30,58,.34)}
 
+  .fest-banner{
+    background:var(--mint);color:#10162d;border-bottom:1px solid rgba(16,22,45,.18);
+  }
+  .fest-banner .wrap{
+    min-height:58px;display:flex;align-items:center;justify-content:center;gap:12px;
+    text-align:center;font-family:'Archivo',sans-serif;font-weight:800;
+    font-size:.86rem;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .fest-banner a{color:inherit;text-underline-offset:4px}
+
+  .trailer{background:#10162d;color:#fff}
+  .trailer .marker{color:rgba(255,255,255,.68)}
+  .trailer h2{max-width:22ch}
+  .trailer-frame{
+    margin-top:30px;border-radius:12px;overflow:hidden;background:#050817;
+    box-shadow:0 18px 50px rgba(8,12,32,.38);border:1px solid rgba(255,255,255,.14);
+  }
+  .trailer-frame video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#050817}
+  .trailer-note{margin-top:14px;color:rgba(255,255,255,.7);font-size:.88rem}
+
   section{padding:76px 0;border-bottom:1px solid var(--edge)}
   .marker{
     display:flex;align-items:center;gap:11px;margin-bottom:16px;
@@ -162,6 +182,7 @@
     <a class="brandmark" href="https://thinkinglabs.academy/">Temple Academy <span>Games</span></a>
     <div class="navlinks">
       <a href="#rescues">The rescues</a>
+      <a href="#trailer">Trailer</a>
       <a href="#run">The run</a>
       <a href="#yeti">The Yeti</a>
       <a href="#support">Support</a>
@@ -176,7 +197,7 @@
     <p class="lede">Get down the mountain. When it goes wrong, something comes to get you, and it is never the same thing twice.</p>
     <div class="ctas">
       <a class="btn btn-ghost-l" href="https://store.steampowered.com/app/5180810/" target="_blank" rel="noopener">Wishlist on Steam</a>
-      <span class="btn btn-ghost-l btn-soon" aria-disabled="true">Steam demo approved &middot; coming soon</span>
+      <a class="btn btn-light" href="https://store.steampowered.com/app/5180810/" target="_blank" rel="noopener">Play the free Steam demo</a>
       <a class="btn btn-light" href="https://apps.apple.com/us/app/ski-survival/id6799756519" target="_blank" rel="noopener">Get it on the App Store</a>
       <a class="btn btn-ghost-l" href="#rescues">See the rescues</a>
     </div>
@@ -184,6 +205,31 @@
     <figure class="hero-shot"><img src="img/hero.png" alt="A skier in a full tuck racing downhill just ahead of a towering wall of avalanche snow."></figure>
   </div>
 </header>
+
+<aside class="fest-banner" aria-label="Steam Next Fest announcement">
+  <div class="wrap">
+    <span>Steam Next Fest &middot; October 19&ndash;26, 2026</span>
+    <a href="https://store.steampowered.com/app/5180810/" target="_blank" rel="noopener">Wishlist and play the demo</a>
+  </div>
+</aside>
+
+<section class="trailer" id="trailer">
+  <div class="wrap">
+    <div class="marker"><span class="pip pip-green"></span> Official gameplay trailer</div>
+    <h2>The mountain gets stranger every time you fall</h2>
+    <div class="trailer-frame">
+      <video controls playsinline preload="metadata" poster="img/hero.png" aria-label="Ski Survival official gameplay trailer">
+        <source src="media/ski-survival-steam-demo-trailer.mp4" type="video/mp4">
+        Your browser does not support embedded video. <a href="media/ski-survival-steam-demo-trailer.mp4">Download the trailer.</a>
+      </video>
+    </div>
+    <p class="trailer-note">Recorded from the playable Steam demo. No cinematic stand-ins.</p>
+    <div class="rowlinks">
+      <a class="btn btn-light" href="https://store.steampowered.com/app/5180810/" target="_blank" rel="noopener">Play the free demo</a>
+      <a class="btn btn-ghost-l" href="https://store.steampowered.com/app/5180810/" target="_blank" rel="noopener">Wishlist Ski Survival</a>
+    </div>
+  </div>
+</section>
 
 <section class="rescue" id="rescues">
   <div class="wrap">
