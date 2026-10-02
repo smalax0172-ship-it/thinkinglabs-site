@@ -1,19 +1,22 @@
 ---
 name: open-ritual
-description: Use at the START of every session before doing any work. Loads project memory so no session starts from zero. Triggers on the first substantive request of any session.
+description: Use at the START of every session and again after any conversation summary or compaction, before doing any work. Loads the Spine, the Map, and project memory so no session starts from zero.
 ---
 
 # open-ritual
 
-This user's continuity lives in files. A session that starts without reading them will reinvent, contradict, or destroy past work.
+This user's continuity lives in files. A session that starts without reading them will reinvent, contradict, or destroy past work. A conversation summary does not carry these files forward, so a squeezed window counts as a new start.
 
-Before the first piece of real work in a session:
+Before the first piece of real work in a session, and again right after any conversation summary or compaction:
 
-1. Read CLAUDE.md in full.
-2. Read the project's punch list or task file if one exists.
-3. Scan the one-line summaries of files in docs/lessons/ and read in full only the lessons relevant to today's task.
-4. Prove the read: state in one line the current top punch-list item and one relevant lesson, quoted or closely paraphrased. If you cannot quote it, you did not read it.
-5. If nothing in the lessons is relevant to this task, say so explicitly rather than pretending relevance.
-6. Never re-decide something a lesson or the punch list already decided. Register it and build on it.
+1. Read THE SPINE with the Google Drive connector, read_file_content by the ID in the project instructions. Never use fetch, it returns title-only shells.
+2. Read THE MAP switchboard the same way, then open only the lane room the request points to and quote one live line from it.
+3. At a true start, also read SHIPPED BUT UNPUBLISHED and THE RUNNING HANDOVER, whose IDs are in the Spine.
+4. If working in a repo, read CLAUDE.md in full, the punch list or task file if one exists, and only the lessons in docs/lessons/ relevant to today's task.
+5. At a true start, say the verification phrase from the Spine once. After a summary or compaction, re-read silently and do not repeat the phrase.
+6. If the Drive connector is missing or a read fails, say so plainly before working. Never proceed as if the read happened.
+7. Before building anything, check the Map, Drive, and past chats for something that already exists. Never re-decide something the Spine, a lane room, a lesson, or the punch list already decided.
+8. Save everything made in the session to its proper existing Drive folder the same turn. Never invent a new top-level folder.
+9. End every reply with the closing line from the Spine.
 
-Keep the whole ritual under ten lines of output, then start the work.
+Keep the visible part of the ritual under ten lines of output, then start the work.
