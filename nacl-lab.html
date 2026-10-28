@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NaCl Dissolving in Water | Thinking Labs by Temple Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--panel:rgba(255,255,255,0.065);--line:rgba(255,255,255,0.14);
+  --muted:rgba(245,241,232,0.70);--text:#f6f1e8;--gold:#c8964e;--gold2:#f0c674;
+  --blue:#68d4ff;--red:#e54d4d;--green:#92ee94;--shadow:0 18px 60px rgba(0,0,0,0.45);
+  --radius:20px;--font-head:"Playfair Display",Georgia,serif;--font-body:"DM Sans",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;color:var(--text);font-family:var(--font-body);
+  background:radial-gradient(circle at 20% -10%,rgba(200,150,78,0.15),transparent 28rem),
+  radial-gradient(circle at 90% 10%,rgba(104,212,255,0.08),transparent 24rem),
+  linear-gradient(180deg,#0a0a0f 0%,#0c0c13 44%,#08080d 100%);}
+
+.shell{width:min(640px,100%);margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 12px 32px;}
+
+/* HEADER */
+.hero{border:1px solid var(--line);background:linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03));
+  box-shadow:var(--shadow);border-radius:24px;padding:20px 16px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:-2px;
+  background:radial-gradient(circle at 18% 20%,rgba(200,150,78,0.2),transparent 24%),
+  radial-gradient(circle at 85% 10%,rgba(104,212,255,0.1),transparent 24%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;}
+.brand-pill{display:inline-flex;align-items:center;gap:8px;color:var(--gold2);
+  border:1px solid rgba(200,150,78,0.35);background:rgba(200,150,78,0.1);
+  padding:6px 11px;border-radius:999px;font-weight:800;letter-spacing:0.04em;
+  text-transform:uppercase;font-size:0.7rem;}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px rgba(200,150,78,0.8);}
+h1{font-family:var(--font-head);font-size:clamp(1.8rem,7vw,3.2rem);margin-top:12px;letter-spacing:-0.03em;line-height:1.05;}
+.hero-sub{color:var(--muted);margin-top:10px;font-size:clamp(0.9rem,3vw,1.05rem);line-height:1.5;}
+
+/* TABS */
+.tab-nav{position:sticky;top:0;z-index:20;margin:12px 0;display:grid;
+  grid-template-columns:repeat(4,1fr);gap:5px;padding:6px;border-radius:16px;
+  background:rgba(10,10,15,0.85);border:1px solid var(--line);backdrop-filter:blur(16px);}
+.tab-btn{appearance:none;border:1px solid transparent;background:transparent;color:var(--muted);
+  border-radius:12px;min-height:42px;font:800 0.7rem/1 var(--font-body);padding:6px 4px;cursor:pointer;
+  transition:all 160ms ease;}
+.tab-btn:active{transform:scale(0.96);}
+.tab-btn.active{background:linear-gradient(135deg,rgba(200,150,78,0.25),rgba(200,150,78,0.08));
+  border-color:rgba(200,150,78,0.4);color:#fff7e7;}
+
+.panel{display:none;}.panel.active{display:block;}
+
+/* CARDS */
+.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.035));
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;}
+.card-pad{padding:14px;}
+
+/* CANVAS */
+canvas{display:block;width:100%;height:min(56vh,480px);min-height:340px;border-radius:16px;
+  border:1px solid rgba(255,255,255,0.1);background:#07080d;touch-action:none;margin:8px 0;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0;}
+.stat-card{border:1px solid var(--line);background:rgba(255,255,255,0.04);border-radius:14px;padding:10px;text-align:center;}
+.stat-card b{display:block;font-size:1.4rem;color:#fff;font-family:var(--font-head);letter-spacing:-0.03em;}
+.stat-card small{color:var(--muted);font-weight:700;font-size:0.68rem;}
+
+.progress-wrap{border:1px solid var(--line);background:rgba(0,0,0,0.24);border-radius:999px;height:14px;overflow:hidden;margin:8px 0;}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--blue));
+  box-shadow:0 0 20px rgba(104,212,255,0.4);border-radius:inherit;transition:width 220ms ease;}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;justify-content:center;}
+.legend span{border:1px solid var(--line);background:rgba(255,255,255,0.05);padding:5px 8px;
+  border-radius:999px;font-size:0.7rem;color:rgba(246,241,232,0.75);white-space:nowrap;}
+
+/* BUTTONS */
+.btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0;}
+.btn{appearance:none;border:1px solid rgba(200,150,78,0.4);border-radius:14px;min-height:44px;
+  padding:10px 8px;font:800 0.85rem/1 var(--font-body);cursor:pointer;transition:transform 160ms ease;}
+.btn:active{transform:scale(0.96);}
+.btn-primary{color:#140f06;background:linear-gradient(135deg,#f3c879,var(--gold));
+  box-shadow:0 12px 30px rgba(200,150,78,0.2);}
+.btn-secondary{color:var(--text);background:rgba(255,255,255,0.06);border-color:var(--line);}
+.btn-danger{color:#ef4444;background:rgba(220,38,38,0.12);border-color:rgba(220,38,38,0.2);}
+
+/* SLIDERS */
+.slider-block{border:1px solid var(--line);background:rgba(0,0,0,0.18);border-radius:16px;padding:11px;margin-bottom:8px;}
+.slider-head{display:flex;justify-content:space-between;color:rgba(246,241,232,0.9);font-weight:800;font-size:0.85rem;margin-bottom:6px;}
+input[type="range"]{width:100%;accent-color:var(--gold);cursor:pointer;}
+
+/* CALLOUT */
+.callout{margin:10px 0;border:1px solid rgba(104,212,255,0.3);
+  background:radial-gradient(circle at 10% 10%,rgba(104,212,255,0.18),transparent 32%),
+  linear-gradient(135deg,rgba(104,212,255,0.08),rgba(255,255,255,0.04));
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
+.callout[hidden]{display:none;}
+.callout h3{font-family:var(--font-head);font-size:1.3rem;margin-bottom:6px;}
+.callout p{color:rgba(246,241,232,0.85);line-height:1.55;font-size:0.9rem;}
+
+/* QUESTIONS */
+.phase-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:10px;}
+.phase-kicker{font-weight:900;letter-spacing:0.1em;text-transform:uppercase;font-size:0.68rem;}
+.phase-predict .phase-kicker{color:#9b8aff;}.phase-observe .phase-kicker{color:var(--gold2);}
+.phase-explain .phase-kicker{color:#92ee94;}.phase-extend .phase-kicker{color:#ff6b8a;}
+.phase-card h3{font-family:var(--font-head);font-size:1.3rem;margin:4px 0 6px;}
+.section-lede{color:var(--muted);font-size:0.85rem;margin-bottom:10px;line-height:1.45;}
+
+.q-card{border-top:1px solid rgba(255,255,255,0.1);padding-top:12px;margin-top:12px;}
+.q-card label{display:block;font-weight:700;line-height:1.45;margin-bottom:8px;font-size:0.9rem;}
+textarea{width:100%;min-height:90px;resize:vertical;border-radius:14px;
+  border:1px solid rgba(255,255,255,0.14);background:rgba(4,4,8,0.7);color:var(--text);
+  padding:10px;font:500 0.9rem/1.45 var(--font-body);outline:none;}
+textarea:focus{border-color:rgba(200,150,78,0.6);box-shadow:0 0 0 3px rgba(200,150,78,0.1);}
+textarea::placeholder{color:#555;}
+.check-btn{appearance:none;display:inline-block;margin-top:6px;padding:5px 12px;border-radius:8px;
+  border:1px solid rgba(200,150,78,0.2);background:transparent;color:var(--gold);
+  font:600 0.75rem/1 var(--font-body);cursor:pointer;}
+.model-answer{display:none;margin-top:8px;padding:11px;border-radius:14px;
+  border:1px solid rgba(104,212,255,0.2);background:rgba(104,212,255,0.06);
+  color:rgba(246,241,232,0.88);line-height:1.55;font-size:0.85rem;}
+.model-answer.visible{display:block;}
+
+/* VOCAB */
+.term-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+  border-radius:var(--radius);padding:14px;margin-bottom:8px;}
+.term-card h3{font-family:var(--font-head);font-size:1rem;color:var(--gold2);margin-bottom:4px;}
+.term-card p{font-size:0.82rem;line-height:1.55;color:var(--muted);margin-top:4px;}
+.term-card .sim-ctx{font-size:0.78rem;color:#666;font-style:italic;padding-left:10px;
+  border-left:2px solid rgba(200,150,78,0.15);margin-top:6px;}
+
+/* TEACHER */
+.note-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+  border-radius:var(--radius);padding:14px;margin-bottom:8px;}
+.note-card h3{font-family:var(--font-head);font-size:1rem;color:var(--gold2);margin-bottom:6px;}
+.note-card p{font-size:0.82rem;line-height:1.6;color:var(--muted);margin-top:4px;}
+.note-card .hl{color:var(--text);font-weight:600;}
+
+.footer{text-align:center;padding:16px;font-size:0.7rem;color:#444;}
+.footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand-pill"><div class="brand-dot"></div>Thinking Labs by Temple Academy</div>
+    <h1>NaCl Dissolving in Water</h1>
+    <p class="hero-sub">Interactive molecular simulation with guided investigation. See what happens at the nanometer scale when salt meets water.</p>
+  </div>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('guide')">Questions</button>
+  <button class="tab-btn" onclick="showTab('vocab')">Vocabulary</button>
+  <button class="tab-btn" onclick="showTab('sim')">Simulation</button>
+  <button class="tab-btn" onclick="showTab('teach')">Teacher</button>
+</nav>
+
+<!-- ==================== SIMULATION ==================== -->
+<div class="panel" id="panel-sim">
+  <div class="card"><div class="card-pad">
+    <canvas id="sim"></canvas>
+
+    <div class="legend">
+      <span>🟣 Na⁺</span><span>🟢 Cl⁻</span><span>🔴 O (δ⁻)</span><span>⚪ H (δ⁺)</span><span>🔵 Hydration Shell</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnDrop" onclick="dropSalt()">Drop Salt</button>
+      <button class="btn btn-secondary" id="btnSpeed" onclick="toggleSpeed()">Speed: 1×</button>
+      <button class="btn btn-danger" onclick="resetSim()">Reset</button>
+    </div>
+
+    <div class="slider-block">
+      <div class="slider-head"><span>Temperature</span><span id="tempLabel">25°C</span></div>
+      <input type="range" id="tempSlider" min="0" max="100" value="25" oninput="updateTemp(this.value)">
+    </div>
+    <div class="slider-block">
+      <div class="slider-head"><span>Crystal Size</span><span id="sizeLabel">3 × 3</span></div>
+      <input type="range" id="sizeSlider" min="2" max="5" value="3" step="1" oninput="updateSize(this.value)">
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><b id="sNa">0</b><small>Free Na⁺</small></div>
+      <div class="stat-card"><b id="sCl">0</b><small>Free Cl⁻</small></div>
+      <div class="stat-card"><b id="sHyd">0</b><small>Hydrated</small></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="pBar"></div></div>
+    <div style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:2px;">
+      <span id="sPct">0</span>% Dissolved · <span id="sTemp">25</span>°C
+    </div>
+
+    <div class="callout" id="callout" hidden>
+      <h3>Why Can't You See the Salt?</h3>
+      <p>Every Na⁺ and Cl⁻ ion is still there. Each one is now <strong style="color:var(--blue)">completely surrounded by water molecules</strong> — a hydration shell. The ions are spread apart and wrapped in water so thoroughly that they're invisible to your eye. <strong style="color:var(--blue)">Not gone. Hidden by water. That's what "dissolved" means.</strong></p>
+    </div>
+  </div></div>
+</div>
+
+<!-- ==================== GUIDED QUESTIONS ==================== -->
+<div class="panel active" id="panel-guide">
+  <div class="phase-card phase-predict">
+    <span class="phase-kicker">Phase 1 — Predict</span>
+    <h3>Before You Touch the Simulation</h3>
+    <p class="section-lede">Answer these FIRST. No peeking.</p>
+    <div class="q-card"><label>1. You drop salt into water. It "disappears." But atoms don't vanish. Where did the salt go?</label><textarea placeholder="Write your prediction..."></textarea></div>
+    <div class="q-card"><label>2. NaCl is made of Na⁺ and Cl⁻ ions. Water is polar — oxygen is δ⁻, hydrogen is δ⁺. Which end of water faces Na⁺? Which end faces Cl⁻? Why?</label><textarea placeholder="Which end faces which ion?"></textarea></div>
+    <div class="q-card"><label>3. If you increase the water temperature, will salt dissolve faster, slower, or the same? Explain.</label><textarea placeholder="Faster, slower, or same?"></textarea></div>
+  </div>
+
+  <div class="phase-card phase-observe">
+    <span class="phase-kicker">Phase 2 — Observe</span>
+    <h3>Run It. Watch Carefully.</h3>
+    <p class="section-lede">Switch to the Simulation tab, press "Drop Salt" and answer while watching.</p>
+    <div class="q-card"><label>4. Which ions break free first — center or edges? Why does that make sense?</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">Edge ions have fewer neighbors holding them. They're bonded on 2-3 sides instead of 4. Water attacks the exposed sides first. Dissolution always starts at the surface and works inward.</div></div>
+    <div class="q-card"><label>5. Watch the water molecules near the crystal. How do they orient? Which part faces Na⁺? Which faces Cl⁻?</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">Oxygen (red, δ⁻) faces Na⁺ — negative attracts positive. Hydrogen (white, δ⁺) faces Cl⁻ — positive attracts negative. This is the ion-dipole interaction that makes dissolving possible.</div></div>
+    <div class="q-card"><label>6. After an ion breaks free, describe what happens around it. What is the blue glow? How many water molecules surround it?</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">A hydration shell forms — 5-6 water molecules leave the surrounding water and arrange themselves around the freed ion, oriented with their charged ends facing inward. The blue glow represents this shell. It stabilizes the ion and prevents it from recombining with the crystal.</div></div>
+    <div class="q-card"><label>7. Drag temperature from 25°C to 80°C. Reset and drop salt again. What changed? Was your prediction correct?</label><textarea></textarea></div>
+  </div>
+
+  <div class="phase-card phase-explain">
+    <span class="phase-kicker">Phase 3 — Explain</span>
+    <h3>Make Sense of What You Saw</h3>
+    <p class="section-lede">Use vocabulary from the Vocabulary tab.</p>
+    <div class="q-card"><label>8. Explain the complete process of NaCl dissolving. Include: crystal lattice, ionic bonds, polarity, ion-dipole forces, and hydration shells. At least 3 sentences.</label><textarea style="min-height:100px;"></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Model Explanation</button>
+      <div class="model-answer">NaCl exists as a crystal lattice where Na⁺ and Cl⁻ ions are held by ionic bonds. Water molecules are polar — oxygen is δ⁻, hydrogen is δ⁺. They orient so oxygen faces Na⁺ and hydrogen faces Cl⁻. These ion-dipole forces pull edge ions until they overcome the ionic bonds. Once freed, 5-6 water molecules surround each ion forming a hydration shell that stabilizes it. The salt "disappears" because each ion is individually caged in water — not gone, just hidden.</div></div>
+    <div class="q-card"><label>9. A student says: "The water destroyed the salt." Is this correct? Use evidence from the simulation.</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">Incorrect. The Free Na⁺ and Free Cl⁻ counters prove every ion still exists. They were separated and hydrated, not destroyed. If you evaporated the water, the ions would find each other and reform the crystal. Dissolved ≠ destroyed.</div></div>
+    <div class="q-card"><label>10. Why does NaCl dissolve in water but NOT in oil? Use "polarity" in your answer.</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">Water is polar — it has partial charges that create ion-dipole forces strong enough to pull ions from the lattice. Oil is nonpolar — no partial charges, no ion-dipole interaction, no dissolving. Like dissolves like.</div></div>
+  </div>
+
+  <div class="phase-card phase-extend">
+    <span class="phase-kicker">Phase 4 — Extend</span>
+    <h3>Push Beyond the Simulation</h3>
+    <p class="section-lede">These require thinking, not searching.</p>
+    <div class="q-card"><label>11. Sugar (C₁₂H₂₂O₁₁) also dissolves in water, but it's molecular, not ionic. If there are no ions, how does water dissolve sugar?</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">Sugar has -OH groups on its surface that are polar. Water forms hydrogen bonds with these groups, pulling sugar molecules apart individually. No ions form — the molecule stays intact. That's why sugar water doesn't conduct electricity.</div></div>
+    <div class="q-card"><label>12. Dissolved NaCl conducts electricity. Dissolved sugar does not. Explain why.</label><textarea></textarea>
+      <button class="check-btn" onclick="toggleHint(this)">Check Your Thinking</button>
+      <div class="model-answer">NaCl produces free Na⁺ and Cl⁻ ions — charged particles that carry current. Sugar dissolves as whole neutral molecules with no charge. No free charges = no conductivity. NaCl is an electrolyte; sugar is a non-electrolyte.</div></div>
+    <div class="q-card"><label>13. An AI could answer every question on this page in seconds. But would it understand what dissolving means? Would you? What's the difference between getting the answer and understanding the process?</label><textarea style="min-height:80px;"></textarea></div>
+  </div>
+</div>
+
+<!-- ==================== VOCABULARY ==================== -->
+<div class="panel" id="panel-vocab" data-terms></div>
+
+<!-- ==================== TEACHER ==================== -->
+<div class="panel" id="panel-teach" data-notes></div>
+
+<footer class="footer">
+  <p>© 2026 Temple Academy · Built by Syd Malaxos</p>
+  <p style="margin-top:3px;"><a href="https://thinkinglabs.academy">thinkinglabs.academy</a> · <a href="https://smalaxos.substack.com">Substack</a> · <a href="https://a.co/d/0adownwx">The Book</a></p>
+  <p style="margin-top:6px;font-style:italic;color:var(--gold);font-family:var(--font-head);font-size:0.75rem;">"Love is law. Let your lantern burn bright."</p>
+</footer>
+
+</div><!-- shell -->
+
+<script>
+// ===== TABS =====
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+  if(id==='sim')setTimeout(resize,50);
+}
+function toggleHint(btn){const a=btn.nextElementSibling;a.classList.toggle('visible');btn.textContent=a.classList.contains('visible')?'Hide':'Check Your Thinking';}
+
+// ===== VOCAB (generated) =====
+const vocabData=[
+  {t:"Ionic Bond",d:"Electrostatic attraction between oppositely charged ions (Na⁺ and Cl⁻). Holds the crystal together.",s:"The dashed lines connecting ions in the lattice represent ionic bonds."},
+  {t:"Crystal Lattice",d:"A repeating 3D pattern of alternating positive and negative ions.",s:"The grid of alternating purple and green ions IS the crystal lattice."},
+  {t:"Polarity",d:"Uneven distribution of charge in a molecule. In water, oxygen is δ⁻ and hydrogen is δ⁺.",s:"The δ⁻ and δ⁺ labels on water molecules show polarity — the reason water can dissolve NaCl."},
+  {t:"Ion-Dipole Force",d:"Attraction between a charged ion and the partial charge on a polar molecule.",s:"Watch water orient around the crystal — oxygen toward Na⁺, hydrogen toward Cl⁻. That's ion-dipole force."},
+  {t:"Hydration Shell",d:"The organized layer of 4-6 water molecules surrounding a dissolved ion, stabilizing it in solution.",s:"The blue glow and orbiting water molecules around freed ions. This is why salt 'disappears.'"},
+  {t:"Dissociation",d:"The separation of an ionic compound into individual ions when dissolved. NaCl → Na⁺ + Cl⁻",s:"Every time an ion breaks free from the crystal, that's dissociation. The % Dissolved tracks it."},
+  {t:"Solvent",d:"The substance that does the dissolving. Water is the solvent here.",s:"The water molecules doing the work — pulling ions apart and stabilizing them."},
+  {t:"Solute",d:"The substance being dissolved. NaCl is the solute here.",s:"The crystal being broken apart and distributed through the water."},
+  {t:"Electrolyte",d:"A substance that produces free ions when dissolved, allowing the solution to conduct electricity.",s:"The freed Na⁺ and Cl⁻ counts show the electrolyte ions that would carry current."},
+  {t:"\"Like Dissolves Like\"",d:"Polar solvents dissolve polar/ionic solutes. Nonpolar solvents dissolve nonpolar solutes.",s:"Water (polar) dissolves NaCl (ionic). Oil (nonpolar) cannot."}
+];
+(function(){const el=document.querySelector('[data-terms]');vocabData.forEach(v=>{el.innerHTML+=`<div class="term-card"><h3>${v.t}</h3><p><strong>Definition:</strong> ${v.d}</p><p class="sim-ctx">In the simulation: ${v.s}</p></div>`;});})();
+
+// ===== TEACHER NOTES (generated) =====
+(function(){const el=document.querySelector('[data-notes]');
+const notes=[
+  {t:"Alignment",p:"NGSS: HS-PS1-3 (IMFs, dissolving). AP Chemistry: Unit 3. Van Geel: Chapters 4-5. Zumdahl: Chapter 10 (Liquids and Solids), Chapter 11 (Solutions)."},
+  {t:"Common Misconceptions",p:"• Dissolved = destroyed → The ion counters directly contradict this<br>• Water 'breaks' bonds → Ion-dipole forces OVERCOME ionic bonds; water provides a more stable arrangement<br>• Dissolving = melting → Dissolving = solute + solvent. Melting = phase change of a pure substance"},
+  {t:"Guided Questioning Structure",p:"Questions follow <span class='hl'>Observe → Hypothesize → Test</span> (BS Method). Phase 1 activates prior knowledge. Phase 2 creates cognitive conflict. Phase 3 builds explanation. Phase 4 transfers to new contexts. Question 13 connects to <span class='hl'>cognitive sovereignty</span>."},
+  {t:"How to Use This Lab",p:"1. Students answer Phase 1 BEFORE the simulation<br>2. Run simulation, answer Phase 2<br>3. Switch to Vocabulary tab to build language<br>4. Return to Phase 3 and Phase 4<br>5. Class discussion on Question 13"},
+  {t:"Extensions",p:"• Compare NaCl vs sugar dissolution (molecular vs ionic)<br>• Conductivity test: salt water vs sugar water vs pure water<br>• Saturated solutions: what happens with too much salt?<br>• Plot dissolving time vs temperature"}
+];
+notes.forEach(n=>{el.innerHTML+=`<div class="note-card"><h3>${n.t}</h3><p>${n.p}</p></div>`;});})();
+
+// ===== SIMULATION ENGINE =====
+const canvas=document.getElementById('sim'),ctx=canvas.getContext('2d');
+let W,H,dpr;
+function resize(){dpr=window.devicePixelRatio||1;const r=canvas.getBoundingClientRect();W=r.width;H=r.height;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+resize();window.addEventListener('resize',resize);
+
+let temperature=25,speed=1,frame=0,saltDropped=false;
+let crystalIons=[],freeIons=[],waterMols=[],totalIons=0;
+function rand(a,b){return Math.random()*(b-a)+a;}
+function dst(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+
+function makeW(x,y){return{x,y,vx:rand(-0.3,0.3),vy:rand(-0.3,0.3),angle:rand(0,Math.PI*2),va:rand(-0.02,0.02),assigned:null};}
+function initWater(){waterMols=[];for(let i=0;i<55;i++)waterMols.push(makeW(rand(15,W-15),rand(15,H-15)));}
+
+function buildCrystal(){
+  crystalIons=[];freeIons=[];
+  const sz=parseInt(document.getElementById('sizeSlider').value),sp=24;
+  const sx=W/2-(sz-1)*sp/2,sy=H/2-(sz-1)*sp/2;
+  for(let r=0;r<sz;r++)for(let c=0;c<sz;c++){
+    crystalIons.push({x:sx+c*sp,y:sy+r*sp,tx:sx+c*sp,ty:sy+r*sp,type:(r+c)%2===0?'Na':'Cl',
+      bound:true,dissolveTimer:rand(80,280)*(1+(100-temperature)/40),shellComplete:false,
+      shellWaters:[],vx:0,vy:0,hp:0});
+  }
+  totalIons=crystalIons.length;
+}
+
+function dropSalt(){if(saltDropped)return;saltDropped=true;buildCrystal();document.getElementById('btnDrop').style.opacity='0.4';document.getElementById('callout').hidden=true;}
+function resetSim(){saltDropped=false;crystalIons=[];freeIons=[];frame=0;document.getElementById('btnDrop').style.opacity='1';document.getElementById('callout').hidden=true;initWater();updateStats();}
+function toggleSpeed(){speed=speed===1?3:speed===3?6:1;document.getElementById('btnSpeed').textContent=`Speed: ${speed}×`;}
+function updateTemp(v){temperature=parseInt(v);document.getElementById('tempLabel').textContent=v+'°C';}
+function updateSize(v){document.getElementById('sizeLabel').textContent=v+' × '+v;}
+
+function updateStats(){
+  const na=freeIons.filter(i=>i.type==='Na').length;
+  const cl=freeIons.filter(i=>i.type==='Cl').length;
+  const hy=freeIons.filter(i=>i.shellComplete).length;
+  const pct=totalIons>0?Math.round((freeIons.length/totalIons)*100):0;
+  document.getElementById('sNa').textContent=na;
+  document.getElementById('sCl').textContent=cl;
+  document.getElementById('sHyd').textContent=hy;
+  document.getElementById('sPct').textContent=pct;
+  document.getElementById('sTemp').textContent=temperature;
+  document.getElementById('pBar').style.width=pct+'%';
+  if(totalIons>0&&pct>=100)document.getElementById('callout').hidden=false;
+}
+
+// DRAW
+function drawW(w,a){
+  const{x,y,angle}=w;a=a||0.55;const bL=7,bA=0.9;
+  const h1x=x+Math.cos(angle+bA)*bL,h1y=y+Math.sin(angle+bA)*bL;
+  const h2x=x+Math.cos(angle-bA)*bL,h2y=y+Math.sin(angle-bA)*bL;
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(h1x,h1y);ctx.strokeStyle=`rgba(255,255,255,${a*0.3})`;ctx.lineWidth=0.8;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(h2x,h2y);ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fillStyle=`rgba(255,68,102,${a})`;ctx.fill();
+  ctx.beginPath();ctx.arc(h1x,h1y,2.5,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${a*0.85})`;ctx.fill();
+  ctx.beginPath();ctx.arc(h2x,h2y,2.5,0,Math.PI*2);ctx.fill();
+  if(!w.assigned){ctx.font='6px DM Sans';ctx.fillStyle=`rgba(255,100,130,${a*0.7})`;ctx.fillText('δ⁻',x+5,y-1);
+    ctx.fillStyle=`rgba(180,180,255,${a*0.5})`;ctx.fillText('δ⁺',h1x+3,h1y);}
+}
+function drawIon(ion){
+  const isNa=ion.type==='Na',r=isNa?8:11,col=isNa?'#9b8aff':'#44d98c';
+  if(!ion.bound&&ion.shellWaters.length>0){
+    const sR=r+18+Math.sin(ion.hp)*3,sA=0.12+ion.shellWaters.length*0.03;
+    ctx.beginPath();ctx.arc(ion.x,ion.y,sR+10,0,Math.PI*2);
+    let g=ctx.createRadialGradient(ion.x,ion.y,r,ion.x,ion.y,sR+10);
+    g.addColorStop(0,`rgba(100,170,255,${sA})`);g.addColorStop(0.6,`rgba(100,170,255,${sA*0.4})`);g.addColorStop(1,'rgba(100,170,255,0)');
+    ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();ctx.arc(ion.x,ion.y,sR-2,0,Math.PI*2);ctx.strokeStyle=`rgba(100,170,255,${sA*0.8})`;
+    ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.stroke();ctx.setLineDash([]);
+    if(ion.shellComplete){ctx.beginPath();ctx.arc(ion.x,ion.y,sR+2,0,Math.PI*2);ctx.strokeStyle='rgba(100,200,255,0.25)';ctx.lineWidth=1.5;ctx.stroke();}
+  }
+  ctx.beginPath();ctx.arc(ion.x,ion.y,r,0,Math.PI*2);
+  let ig=ctx.createRadialGradient(ion.x-2,ion.y-2,0,ion.x,ion.y,r);
+  ig.addColorStop(0,isNa?'#b8aaff':'#66eaa8');ig.addColorStop(1,col);ctx.fillStyle=ig;ctx.fill();
+  ctx.font='bold 7px DM Sans';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(isNa?'Na⁺':'Cl⁻',ion.x,ion.y);ctx.textAlign='start';ctx.textBaseline='alphabetic';
+}
+
+// PHYSICS
+function update(){
+  const tf=0.5+temperature/50;
+  waterMols.forEach(w=>{
+    if(w.assigned)return;
+    w.vx+=rand(-0.06,0.06)*tf;w.vy+=rand(-0.06,0.06)*tf;
+    const mV=0.7*tf;w.vx=Math.max(-mV,Math.min(mV,w.vx));w.vy=Math.max(-mV,Math.min(mV,w.vy));
+    w.x+=w.vx*speed;w.y+=w.vy*speed;w.angle+=w.va*tf*speed;
+    if(w.x<10){w.x=10;w.vx*=-0.8;}if(w.x>W-10){w.x=W-10;w.vx*=-0.8;}
+    if(w.y<10){w.y=10;w.vy*=-0.8;}if(w.y>H-10){w.y=H-10;w.vy*=-0.8;}
+    if(saltDropped){let cl=null,mD=70;crystalIons.forEach(i=>{if(!i.bound)return;const d=dst(i,w);if(d<mD){mD=d;cl=i;}});
+    if(cl){const a=Math.atan2(cl.y-w.y,cl.x-w.x),o=cl.type==='Na'?0:Math.PI;let df=(a+o)-w.angle;
+      while(df>Math.PI)df-=Math.PI*2;while(df<-Math.PI)df+=Math.PI*2;w.angle+=df*0.04*speed;
+      w.vx+=Math.cos(a)*0.015;w.vy+=Math.sin(a)*0.015;}}
+  });
+  if(saltDropped){
+    crystalIons.forEach(ion=>{if(!ion.bound)return;
+      const vib=Math.sin(frame*0.12*tf)*(0.8+temperature/25);ion.x=ion.tx+rand(-1,1)*vib;ion.y=ion.ty+rand(-1,1)*vib;
+      let nb=0;crystalIons.forEach(o=>{if(o===ion||!o.bound)return;if(Math.hypot(o.tx-ion.tx,o.ty-ion.ty)<30)nb++;});
+      ion.dissolveTimer-=speed*tf*Math.max(0.4,1-nb*0.2);
+      if(ion.dissolveTimer<=0){ion.bound=false;ion.vx=rand(-0.8,0.8)*tf;ion.vy=rand(-0.8,0.8)*tf;freeIons.push(ion);
+        const sS=ion.type==='Na'?5:6;let rc=0;
+        const av=waterMols.filter(w=>!w.assigned).sort((a,b)=>dst(a,ion)-dst(b,ion));
+        for(let w of av){if(rc>=sS)break;w.assigned=ion;ion.shellWaters.push(w);rc++;}
+        while(ion.shellWaters.length<sS){const nw=makeW(ion.x+rand(-20,20),ion.y+rand(-20,20));nw.assigned=ion;ion.shellWaters.push(nw);waterMols.push(nw);}
+      }
+    });
+    freeIons.forEach(ion=>{
+      ion.vx+=rand(-0.08,0.08)*tf;ion.vy+=rand(-0.08,0.08)*tf;
+      const mV=0.5*tf;ion.vx=Math.max(-mV,Math.min(mV,ion.vx));ion.vy=Math.max(-mV,Math.min(mV,ion.vy));
+      ion.x+=ion.vx*speed;ion.y+=ion.vy*speed;
+      if(ion.x<20){ion.x=20;ion.vx*=-1;}if(ion.x>W-20){ion.x=W-20;ion.vx*=-1;}
+      if(ion.y<20){ion.y=20;ion.vy*=-1;}if(ion.y>H-20){ion.y=H-20;ion.vy*=-1;}
+      freeIons.forEach(o=>{if(o===ion)return;const d=dst(o,ion);if(d<40&&d>0){ion.vx-=(o.x-ion.x)/d*0.04;ion.vy-=(o.y-ion.y)/d*0.04;}});
+      ion.hp+=0.03*speed;
+      const sR=(ion.type==='Na'?8:11)+15;
+      ion.shellWaters.forEach((w,i)=>{const tW=ion.shellWaters.length,bA=(i/tW)*Math.PI*2+ion.hp*0.3;
+        const tX=ion.x+Math.cos(bA)*sR,tY=ion.y+Math.sin(bA)*sR;
+        w.x+=(tX-w.x)*0.06*speed;w.y+=(tY-w.y)*0.06*speed;
+        w.angle=Math.atan2(ion.y-w.y,ion.x-w.x)+(ion.type==='Na'?0:Math.PI);
+      });
+      ion.shellComplete=ion.shellWaters.length>=(ion.type==='Na'?5:6);
+    });
+  }
+  updateStats();
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // Background
+  const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#07101a');bg.addColorStop(0.55,'#07080d');bg.addColorStop(1,'#0d0c14');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // Diagonal grid
+  ctx.save();ctx.globalAlpha=0.35;ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.8;
+  for(let x=-44;x<W+44;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H*0.25,H);ctx.stroke();}
+  for(let y=0;y<H+44;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y-W*0.25);ctx.stroke();}
+  ctx.restore();
+  // Free water
+  waterMols.filter(w=>!w.assigned).forEach(w=>drawW(w,0.45));
+  if(saltDropped){
+    // Bonds
+    const bd=crystalIons.filter(i=>i.bound);
+    for(let i=0;i<bd.length;i++)for(let j=i+1;j<bd.length;j++)if(Math.hypot(bd[i].tx-bd[j].tx,bd[i].ty-bd[j].ty)<30){
+      ctx.beginPath();ctx.moveTo(bd[i].x,bd[i].y);ctx.lineTo(bd[j].x,bd[j].y);
+      ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.setLineDash([2,3]);ctx.stroke();ctx.setLineDash([]);}
+    bd.forEach(i=>drawIon(i));
+    freeIons.forEach(ion=>{ion.shellWaters.forEach(w=>drawW(w,0.75));drawIon(ion);});
+  }
+  // Scale bar
+  const sbX=W-80,sbY=H-22;
+  ctx.fillStyle='rgba(200,150,78,0.7)';ctx.beginPath();ctx.roundRect(sbX,sbY,50,4,2);ctx.fill();
+  ctx.fillStyle='rgba(200,150,78,0.5)';ctx.font='bold 8px DM Sans';ctx.fillText('~1 nm',sbX+4,sbY-5);
+  frame++;
+}
+
+function loop(){update();draw();requestAnimationFrame(loop);}
+initWater();loop();
+</script>
+</body>
+</html>
